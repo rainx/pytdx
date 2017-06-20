@@ -15,6 +15,11 @@ from pytdx.parser.get_security_quotes import GetSecurityQuotesCmd
 from pytdx.parser.get_security_count import GetSecurityCountCmd
 from pytdx.parser.get_security_list import GetSecurityList
 from pytdx.parser.get_index_bars import GetIndexBarsCmd
+from pytdx.parser.get_minute_time_data import GetMinuteTimeData
+from pytdx.parser.get_history_minute_time_data import GetHistoryMinuteTimeData
+from pytdx.parser.get_transaction_data import GetTransactionData
+
+from pytdx.params import TDXParams
 
 from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
 
@@ -90,6 +95,21 @@ class TdxHq_API(object):
         cmd.setParams(market, start)
         return cmd.call_api()
 
+    def get_minute_time_data(self, market, code):
+        cmd = GetMinuteTimeData(self.client)
+        cmd.setParams(market, code)
+        return cmd.call_api()
+
+    def get_history_minute_time_data(self, market, code, date):
+        cmd = GetHistoryMinuteTimeData(self.client)
+        cmd.setParams(market, code, date)
+        return cmd.call_api()
+
+    def get_transaction_data(self, market, code, start, count):
+        cmd = GetTransactionData(self.client)
+        cmd.setParams(market, code, start, count)
+        return cmd.call_api()
+
 if __name__ == '__main__':
     import pprint
 
@@ -109,5 +129,18 @@ if __name__ == '__main__':
         log.info("获取指数k线")
         data = api.get_index_bars(9,1, '000001', 1, 2)
         pprint.pprint(data)
+        log.info("查询分时行情")
+        data = api.get_minute_time_data(TDXParams.MARKET_SH, '600300')
+        pprint.pprint(data)
+
+        log.info("查询历史分时行情")
+        data = api.get_history_minute_time_data(TDXParams.MARKET_SH, '600300', 20161209)
+        pprint.pprint(data)
+        log.info("查询分时成交")
+        data = api.get_transaction_data(TDXParams.MARKET_SZ, '000001', 0, 10)
+        pprint.pprint(data)
+
         api.disconnect()
+
+
 
