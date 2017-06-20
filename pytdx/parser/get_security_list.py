@@ -6,15 +6,6 @@ import struct
 
 class GetSecurityList(BaseParser):
 
-    def setup(self):
-        self.client.send(bytes.fromhex(u'd0c9ccd6a4c8af0000008fc22540130000d500c9ccbdf0d7ea00000002'))
-        header = self.client.recv(0x10)
-        print(header)
-        size = int.from_bytes(header[-4: -2], 'little')
-        body = self.client.recv(size)
-        print(body)
-
-
     def setParams(self, market, start):
         pkg = bytearray.fromhex(u'0c 01 18 64 01 01 06 00 06 00 50 04')
         pkg_param = struct.pack("<HH", market, start)
@@ -23,4 +14,36 @@ class GetSecurityList(BaseParser):
 
     def parseResponse(self, body_buf):
 
-        return body_buf
+        pos = 0
+        num = int.from_bytes(body_buf[:2], 'little')
+        pos += 2
+        stocks = []
+        for i in range(num):
+
+            # b'880023d\x00\xd6\xd0\xd0\xa1\xc6\xbd\xbe\xf9.9\x04\x00\x02\x9a\x99\x8cA\x00\x00\x00\x00'
+            # 880023 100 中小平均 276782 2 17.575001 0 80846648
+
+            one_bytes = body_buf[pos: pos + 29]
+
+            (code, volunit,
+             name_bytes, reversed_bytes1,
+             pre_close_raw, reversed_bytes2) = struct.unpack("<6sH8s5sI4s", one_bytes)
+
+            code = code.decode("utf-8")
+            name = name_bytes.decode("gbk")
+            pre_close = get_volume(pre_close_raw)
+            pos += 29
+
+            one = OrderedDict(
+                [
+                    ('code', code),
+                    ('volunit', volunit),
+                    ('name', name),
+                    ('pre_close', pre_close),
+                ]
+            )
+
+            stocks.append(one)
+
+
+        return stocks

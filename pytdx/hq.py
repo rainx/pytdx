@@ -14,6 +14,9 @@ from pytdx.parser.get_security_bars import GetSecurityBarsCmd
 from pytdx.parser.get_security_quotes import GetSecurityQuotesCmd
 from pytdx.parser.get_security_count import GetSecurityCountCmd
 from pytdx.parser.get_security_list import GetSecurityList
+from pytdx.parser.get_index_bars import GetIndexBarsCmd
+
+from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
 
 CONNECT_TIMEOUT = 5.000
 RECV_HEADER_LEN = 0x10
@@ -21,9 +24,7 @@ RECV_HEADER_LEN = 0x10
 class TdxHq_API(object):
 
     def __init__(self):
-        ip = None
-        current_ip = None
-        client = None
+        self.need_setup = True
 
 
 
@@ -45,6 +46,9 @@ class TdxHq_API(object):
             log.debug("connection expired")
             return False
         log.debug("connected!")
+
+        if self.need_setup:
+            self.setup()
         return True
 
     def disconnect(self):
@@ -54,10 +58,20 @@ class TdxHq_API(object):
             self.client.close()
             log.debug("disconnected")
 
+    def setup(self):
+        SetupCmd1(self.client).call_api()
+        SetupCmd2(self.client).call_api()
+        SetupCmd3(self.client).call_api()
+
     #### API List
 
     def get_security_bars(self, category, market, code, start, count):
         cmd = GetSecurityBarsCmd(self.client)
+        cmd.setParams(category, market, code, start, count)
+        return cmd.call_api()
+
+    def get_index_bars(self, category, market, code, start, count):
+        cmd = GetIndexBarsCmd(self.client)
         cmd.setParams(category, market, code, start, count)
         return cmd.call_api()
 
@@ -90,6 +104,10 @@ if __name__ == '__main__':
         log.info("获取 深市 股票数量")
         pprint.pprint(api.get_security_count(0))
         log.info("获取股票列表")
-        pprint.pprint(api.get_security_list(1, 255))
+        stocks = api.get_security_list(1, 255)
+        pprint.pprint(stocks)
+        log.info("获取指数k线")
+        data = api.get_index_bars(9,1, '000001', 1, 2)
+        pprint.pprint(data)
         api.disconnect()
 

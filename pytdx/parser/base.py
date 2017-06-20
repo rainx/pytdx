@@ -33,7 +33,7 @@ class BaseParser(object):
 
         self.rsp_header = None
         self.rsp_body = None
-        self.custom_header_len = None
+        self.rsp_header_len = RSP_HEADER_LEN
 
     def setParams(self, *args, **xargs):
         """
@@ -66,10 +66,10 @@ class BaseParser(object):
             log.debug("send bytes error")
             raise SendRequestPkgFails("send fails")
         else:
-            head_buf = self.client.recv(RSP_HEADER_LEN)
+            head_buf = self.client.recv(self.rsp_header_len)
             if DEBUG:
                 log.debug("recv head_buf:" + str(head_buf)  + " |len is :" + str(len(head_buf)))
-            if len(head_buf) == RSP_HEADER_LEN:
+            if len(head_buf) == self.rsp_header_len:
                 _, _, _, zipsize, unzipsize = struct.unpack("<IIIHH", head_buf)
                 if DEBUG:
                     log.debug("zip size is: " + str(zipsize))
