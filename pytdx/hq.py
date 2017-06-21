@@ -21,6 +21,8 @@ from pytdx.parser.get_transaction_data import GetTransactionData
 from pytdx.parser.get_history_transaction_data import GetHistoryTransactionData
 from pytdx.parser.get_company_info_category import GetCompanyInfoCategory
 from pytdx.parser.get_company_info_content import GetCompanyInfoContent
+from pytdx.parser.get_xdxr_info import GetXdXrInfo
+from pytdx.parser.get_finance_info import GetFinanceInfo
 
 from pytdx.params import TDXParams
 
@@ -128,6 +130,16 @@ class TdxHq_API(object):
         cmd.setParams(market, code, filename, start, length)
         return cmd.call_api()
 
+    def get_xdxr_info(self, market, code):
+        cmd = GetXdXrInfo(self.client)
+        cmd.setParams(market, code)
+        return cmd.call_api()
+
+    def get_finance_info(self, market, code):
+        cmd = GetFinanceInfo(self.client)
+        cmd.setParams(market, code)
+        return cmd.call_api()
+
 if __name__ == '__main__':
     import pprint
 
@@ -165,6 +177,13 @@ if __name__ == '__main__':
         log.info("读取公司信息-最新提示")
         data = api.get_company_info_content(0, '000001', '000001.txt', 2037337, 101)
         pprint.pprint(data)
+        log.info("读取除权除息信息")
+        data = api.get_xdxr_info(1, '600300')
+        pprint.pprint(data)
+        log.info("读取财务信息")
+        data = api.get_finance_info(0, '000001')
+        pprint.pprint(data)
+
         api.disconnect()
 
 
