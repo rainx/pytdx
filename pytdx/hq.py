@@ -18,6 +18,7 @@ from pytdx.parser.get_index_bars import GetIndexBarsCmd
 from pytdx.parser.get_minute_time_data import GetMinuteTimeData
 from pytdx.parser.get_history_minute_time_data import GetHistoryMinuteTimeData
 from pytdx.parser.get_transaction_data import GetTransactionData
+from pytdx.parser.get_history_transaction_data import GetHistoryTransactionData
 
 from pytdx.params import TDXParams
 
@@ -110,6 +111,11 @@ class TdxHq_API(object):
         cmd.setParams(market, code, start, count)
         return cmd.call_api()
 
+    def get_history_transaction_data(self, market, code, start, count, date):
+        cmd = GetHistoryTransactionData(self.client)
+        cmd.setParams(market, code, start, count, date)
+        return cmd.call_api()
+
 if __name__ == '__main__':
     import pprint
 
@@ -132,14 +138,15 @@ if __name__ == '__main__':
         log.info("查询分时行情")
         data = api.get_minute_time_data(TDXParams.MARKET_SH, '600300')
         pprint.pprint(data)
-
         log.info("查询历史分时行情")
         data = api.get_history_minute_time_data(TDXParams.MARKET_SH, '600300', 20161209)
         pprint.pprint(data)
         log.info("查询分时成交")
         data = api.get_transaction_data(TDXParams.MARKET_SZ, '000001', 0, 30)
         pprint.pprint(data)
-
+        log.info("查询历史分时成交")
+        data = api.get_history_transaction_data(TDXParams.MARKET_SZ, '000001', 0, 10, 20170209)
+        pprint.pprint(data)
         api.disconnect()
 
 
