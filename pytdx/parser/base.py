@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from pytdx.log import DEBUG, log
 import zlib
 import struct

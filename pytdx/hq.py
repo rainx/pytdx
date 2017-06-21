@@ -1,10 +1,14 @@
+# coding=utf-8
+
 #
-# This is a migrate to python verion of https://github.com/280185386/tdxhq/blob/master/TDXHQ/TDXHQ.cpp
 # Just for practising
 #
+
+
 import os
 import socket
 import sys
+
 
 if __name__ == '__main__':
     sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
