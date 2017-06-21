@@ -1,5 +1,5 @@
 from pytdx.parser.base import BaseParser
-from pytdx.helper import get_datetime, get_volume, get_price
+from pytdx.helper import get_datetime, get_volume, get_price, get_time
 from collections import OrderedDict
 import struct
 
@@ -14,26 +14,31 @@ class GetTransactionData(BaseParser):
 
     def parseResponse(self, body_buf):
         pos = 0
-        num = int.from_bytes(body_buf[:2])
+        num = int.from_bytes(body_buf[:2], 'little')
         pos += 2
         ticks = []
+        last_price = 0
         for i in range(num):
             ### ?? get_time
             # \x80\x03 = 14:56
 
-            pos+=2
-            price, pos = get_price(body_buf, pos)
+            hour, minute, pos = get_time(body_buf, pos)
+
+            price_raw, pos = get_price(body_buf, pos)
             vol, pos = get_price(body_buf, pos)
             num, pos = get_price(body_buf, pos)
             buyorsell, pos = get_price(body_buf, pos)
             _, pos = get_price(body_buf, pos)
 
+            last_price = last_price + price_raw
+
             tick = OrderedDict(
                 [
-                    ("price", price),
+                    ("time", "%02d:%02d" % (hour, minute)),
+                    ("price", last_price/100),
                     ("vol", vol),
                     ("num", num),
-                    ("buyorsell", buyorsell)
+                    ("buyorsell", buyorsell),
                 ]
             )
 

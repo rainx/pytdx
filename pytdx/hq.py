@@ -137,7 +137,7 @@ if __name__ == '__main__':
         data = api.get_history_minute_time_data(TDXParams.MARKET_SH, '600300', 20161209)
         pprint.pprint(data)
         log.info("查询分时成交")
-        data = api.get_transaction_data(TDXParams.MARKET_SZ, '000001', 0, 10)
+        data = api.get_transaction_data(TDXParams.MARKET_SZ, '000001', 0, 30)
         pprint.pprint(data)
 
         api.disconnect()

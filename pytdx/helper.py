@@ -109,3 +109,12 @@ def get_datetime(category, buffer, pos):
     pos += 4
 
     return year, month, day, hour, minute, pos
+
+
+def get_time(buffer, pos):
+    (tminutes, ) = struct.unpack("<H", buffer[pos: pos + 2])
+    hour = int(tminutes / 60)
+    minute = tminutes % 60
+    pos += 2
+
+    return hour, minute, pos
