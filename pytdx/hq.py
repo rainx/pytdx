@@ -19,6 +19,8 @@ from pytdx.parser.get_minute_time_data import GetMinuteTimeData
 from pytdx.parser.get_history_minute_time_data import GetHistoryMinuteTimeData
 from pytdx.parser.get_transaction_data import GetTransactionData
 from pytdx.parser.get_history_transaction_data import GetHistoryTransactionData
+from pytdx.parser.get_company_info_category import GetCompanyInfoCategory
+from pytdx.parser.get_company_info_content import GetCompanyInfoContent
 
 from pytdx.params import TDXParams
 
@@ -116,6 +118,16 @@ class TdxHq_API(object):
         cmd.setParams(market, code, start, count, date)
         return cmd.call_api()
 
+    def get_company_info_category(self, market, code):
+        cmd = GetCompanyInfoCategory(self.client)
+        cmd.setParams(market, code)
+        return cmd.call_api()
+
+    def get_company_info_content(self, market, code, filename, start, length):
+        cmd = GetCompanyInfoContent(self.client)
+        cmd.setParams(market, code, filename, start, length)
+        return cmd.call_api()
+
 if __name__ == '__main__':
     import pprint
 
@@ -146,6 +158,12 @@ if __name__ == '__main__':
         pprint.pprint(data)
         log.info("查询历史分时成交")
         data = api.get_history_transaction_data(TDXParams.MARKET_SZ, '000001', 0, 10, 20170209)
+        pprint.pprint(data)
+        log.info("查询公司信息目录")
+        data = api.get_company_info_category(TDXParams.MARKET_SZ, '000001')
+        pprint.pprint(data)
+        log.info("读取公司信息-最新提示")
+        data = api.get_company_info_content(0, '000001', '000001.txt', 2037337, 101)
         pprint.pprint(data)
         api.disconnect()
 
