@@ -33,7 +33,7 @@ class GetXdXrInfo(BaseParser):
             return []
 
         pos += 9 # skip 9
-        num = int.from_bytes(body_buf[pos: pos+2], 'little')
+        (num, ) = struct.unpack("<H", body_buf[pos:pos+2])
         pos += 2
 
         rows = []

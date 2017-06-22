@@ -43,4 +43,5 @@ class GetSecurityCountCmd(BaseParser):
         self.send_pkg = pkg
 
     def parseResponse(self, body_buf):
-        return int.from_bytes(body_buf[:2], 'little')
+        (num, ) = struct.unpack("<H", body_buf[:2])
+        return num

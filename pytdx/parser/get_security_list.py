@@ -17,7 +17,7 @@ class GetSecurityList(BaseParser):
     def parseResponse(self, body_buf):
 
         pos = 0
-        num = int.from_bytes(body_buf[:2], 'little')
+        (num, ) = struct.unpack("<H", body_buf[:2])
         pos += 2
         stocks = []
         for i in range(num):

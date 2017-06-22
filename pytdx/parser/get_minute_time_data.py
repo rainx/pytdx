@@ -55,7 +55,7 @@ Out[40]: (0, 18)
     """
     def parseResponse(self, body_buf):
         pos = 0
-        num = int.from_bytes(body_buf[:4], 'little')
+        (num, ) = struct.unpack("<H", body_buf[:2])
         last_price = 0
         pos += 4
         prices = []

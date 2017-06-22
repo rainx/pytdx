@@ -3,6 +3,7 @@
 from pytdx.log import DEBUG, log
 import zlib
 import struct
+import sys
 
 
 class SocketClientNotReady(BaseException):
@@ -89,7 +90,10 @@ class BaseParser(object):
                     log.debug("不需要解压")
                 else:
                     log.debug("需要解压")
-                    unziped_data = zlib.decompress(body_buf)
+                    if sys.version_info[0] == 2:
+                        unziped_data = zlib.decompress(buffer(body_buf))
+                    else:
+                        unziped_data = zlib.decompress(body_buf)
                     body_buf = unziped_data
                     ## 解压
                 if DEBUG:

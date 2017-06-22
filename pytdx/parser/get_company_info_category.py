@@ -27,7 +27,7 @@ class GetCompanyInfoCategory(BaseParser):
     """
     def parseResponse(self, body_buf):
         pos = 0
-        num = int.from_bytes(body_buf[:2], u'little')
+        (num, ) = struct.unpack("<H", body_buf[:2])
         pos += 2
 
         category = []

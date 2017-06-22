@@ -27,7 +27,7 @@ class GetHistoryMinuteTimeData(BaseParser):
 
     def parseResponse(self, body_buf):
         pos = 0
-        num = int.from_bytes(body_buf[:2], 'little')
+        (num, ) = struct.unpack("<H", body_buf[:2])
         last_price = 0
         # 跳过了4个字节，实在不知道是什么意思
         pos += 6

@@ -1,11 +1,14 @@
 # coding=utf-8
 
 import logging
+import os
 
-DEBUG = True
+DEBUG = os.getenv("TDX_DEBUG", "")
 
 if DEBUG:
     LOGLEVEL = logging.DEBUG
+else:
+    LOGLEVEL = logging.INFO
 
 log = logging.getLogger("PYTDX")
 
