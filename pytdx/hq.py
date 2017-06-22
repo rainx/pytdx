@@ -8,7 +8,7 @@
 import os
 import socket
 import sys
-
+import pandas as pd
 
 if __name__ == '__main__':
     sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
@@ -39,8 +39,6 @@ class TdxHq_API(object):
 
     def __init__(self):
         self.need_setup = True
-
-
 
     def connect(self, ip, port):
         """
@@ -143,6 +141,14 @@ class TdxHq_API(object):
         cmd = GetFinanceInfo(self.client)
         cmd.setParams(market, code)
         return cmd.call_api()
+
+    def to_df(self, v):
+        if isinstance(v, list):
+            return pd.DataFrame(data=v)
+        elif isinstance(v, dict):
+            return pd.DataFrame(data=[v,])
+        else:
+            return pd.DataFrame(data=[ {'value': v}])
 
 if __name__ == '__main__':
     import pprint
