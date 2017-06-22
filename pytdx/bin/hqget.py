@@ -12,7 +12,8 @@ if __name__ == '__main__':
 
 from pytdx.hq import TdxHq_API
 from pytdx.params import TDXParams
-
+import pandas as pd
+import pickle
 
 api = TdxHq_API()
 
@@ -115,7 +116,8 @@ def disconnect():
 @click.command()
 @click.option('-f', '--function', default=0, type=click.INT, help="选择使用的功能")
 @click.option('--df/--no-df', default=True, help="是否使用Pandas Dataframe显示")
-def main(function, df):
+@click.option('-o', '--output', default="-", help="保存到文件，默认不保存")
+def main(function, df, output):
     click.secho("连接中.... ", fg="green")
     connect()
     click.secho("连接成功！", fg="green")
@@ -132,35 +134,45 @@ def main(function, df):
             value = click.prompt('请输入要使用的功能', type=int)
             if value == last:
                 break
-            click.secho("你选择的是功能 " + str(value) + " : " + FUNCTION_LIST[value][0])
-            click.secho("-" * 20)
-
-            click.secho(FUNCTION_LIST[value][1])
-            params_str = click.prompt("请输入参数 ", type=str, default=FUNCTION_LIST[value][3])
-            params = [p.strip() for p in params_str.split(",")]
-            click.secho("-" * 20)
-            try:
-                result = FUNCTION_LIST[value][2](params)
-                if df:
-                    result = api.to_df(result)
-                    print(result)
-                else:
-                    pprint.pprint(result)
-            except Exception as e:
-                click.secho("发生错误，错误信息为： " + str(e), fg='red')
-
+            run_function(df, value)
             click.secho("-" * 20)
             click.echo("按任意键继续")
             click.getchar()
+    elif function in FUNCTION_LIST.keys():
+        value = function
+        result = run_function(df, value)
 
-
-    elif function == 1:
-        pass
+        if (result is not None) and (output != "-"):
+            click.secho("写入结果到 " + output)
+            if isinstance(result, pd.DataFrame):
+                result.to_csv(output)
+            else:
+                with open(output, "wb") as f:
+                    pickle.dump(result, f)
 
     click.secho("断开连接中.... ", fg="green")
     disconnect()
     click.secho("断开连接成功！", fg="green")
 
+
+def run_function(df, value):
+    click.secho("你选择的是功能 " + str(value) + " : " + FUNCTION_LIST[value][0])
+    click.secho("-" * 20)
+    click.secho(FUNCTION_LIST[value][1])
+    params_str = click.prompt("请输入参数 ", type=str, default=FUNCTION_LIST[value][3])
+    params = [p.strip() for p in params_str.split(",")]
+    click.secho("-" * 20)
+    try:
+        result = FUNCTION_LIST[value][2](params)
+        if df:
+            result = api.to_df(result)
+            click.secho(str(result), bold=True)
+            return result
+        else:
+            pprint.pprint(result)
+            return result
+    except Exception as e:
+        click.secho("发生错误，错误信息为： " + str(e), fg='red')
 
 
 if __name__ == '__main__':

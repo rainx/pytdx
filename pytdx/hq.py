@@ -148,7 +148,7 @@ class TdxHq_API(object):
         elif isinstance(v, dict):
             return pd.DataFrame(data=[v,])
         else:
-            return pd.DataFrame(data=[ {'value': v}])
+            return pd.DataFrame(data=[{'value': v}])
 
 if __name__ == '__main__':
     import pprint
