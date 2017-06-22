@@ -14,6 +14,7 @@ from pytdx.hq import TdxHq_API
 from pytdx.params import TDXParams
 import pandas as pd
 import pickle
+from functools import reduce
 
 api = TdxHq_API()
 
@@ -112,12 +113,22 @@ def connect():
 def disconnect():
     api.disconnect()
 
+if sys.version_info[0] == 2:
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+
+FUNCTION_LIST_STR = "0 : 使用交互式接口\n"
+for x, y in FUNCTION_LIST.items():
+    FUNCTION_LIST_STR = FUNCTION_LIST_STR + str(x) + " : " + y[0] + "\n"
 
 @click.command()
-@click.option('-f', '--function', default=0, type=click.INT, help="选择使用的功能")
+@click.option('-f', '--function', default=0, type=click.INT, help="选择使用的功能" + "\n" + FUNCTION_LIST_STR)
 @click.option('--df/--no-df', default=True, help="是否使用Pandas Dataframe显示")
 @click.option('-o', '--output', default="-", help="保存到文件，默认不保存")
 def main(function, df, output):
+    """
+    股票行情获取程序， 作者RainX<i@rainx.cc>
+    """
     click.secho("连接中.... ", fg="green")
     connect()
     click.secho("连接成功！", fg="green")
