@@ -29,7 +29,7 @@ RSP_HEADER_LEN = 0x10
 
 class BaseParser(object):
 
-    def __init__(self, client):
+    def __init__(self, client, lock=None):
         self.client = client
         self.data = None
         self.send_pkg = None
@@ -37,6 +37,11 @@ class BaseParser(object):
         self.rsp_header = None
         self.rsp_body = None
         self.rsp_header_len = RSP_HEADER_LEN
+
+        if lock:
+            self.lock = lock
+        else:
+            self.lock = None
 
     def setParams(self, *args, **xargs):
         """
@@ -51,7 +56,16 @@ class BaseParser(object):
     def setup(self):
         pass
 
+
     def call_api(self):
+        if self.lock:
+            with self.lock:
+                log.debug("sending thread lock api call")
+                result = self._call_api()
+        else:
+            result = self._call_api()
+        return result
+    def _call_api(self):
 
         self.setup()
 

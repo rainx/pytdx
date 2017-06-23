@@ -361,6 +361,13 @@ api.get_xdxr_info(1, '600300')
 api.get_finance_info(0, '000001')
 ```
 
+### 多线程支持
+
+由于Python的特性，一般情况下，不太建议使用多线程代码，如果需要并发访问，建议使用多进程来实现，如果要使用多线程版本，请在初始化时设置multithread参数为True
+
+```python
+api = TdxHq_API(multithread=True)
+```
 
 ### 调试模式
 

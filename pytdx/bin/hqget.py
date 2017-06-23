@@ -16,7 +16,13 @@ import pandas as pd
 import pickle
 from functools import reduce
 
-api = TdxHq_API()
+
+mtstr = os.getenv("TDX_MT", "")
+mt = False
+if mtstr:
+    mt = True
+
+api = TdxHq_API(multithread=mt)
 
 
 def get_security_quotes(params):

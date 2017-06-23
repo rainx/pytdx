@@ -31,14 +31,19 @@ from pytdx.parser.get_finance_info import GetFinanceInfo
 from pytdx.params import TDXParams
 
 from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
+import threading
 
 CONNECT_TIMEOUT = 5.000
 RECV_HEADER_LEN = 0x10
 
 class TdxHq_API(object):
 
-    def __init__(self):
+    def __init__(self, multithread=False):
         self.need_setup = True
+        if multithread:
+            self.lock = threading.Lock()
+        else:
+            self.lock = None
 
     def connect(self, ip, port):
         """
@@ -67,8 +72,11 @@ class TdxHq_API(object):
     def disconnect(self):
         if self.client:
             log.debug("disconnecting")
-            self.client.shutdown(socket.SHUT_RDWR)
-            self.client.close()
+            try:
+                self.client.shutdown(socket.SHUT_RDWR)
+                self.client.close()
+            except Exception as e:
+                log.debug(str(e))
             log.debug("disconnected")
 
     def close(self):
@@ -77,6 +85,7 @@ class TdxHq_API(object):
         :return:
         """
         self.disconnect()
+
 
     def __enter__(self):
         return self
@@ -92,67 +101,67 @@ class TdxHq_API(object):
     #### API List
 
     def get_security_bars(self, category, market, code, start, count):
-        cmd = GetSecurityBarsCmd(self.client)
+        cmd = GetSecurityBarsCmd(self.client, lock=self.lock)
         cmd.setParams(category, market, code, start, count)
         return cmd.call_api()
 
     def get_index_bars(self, category, market, code, start, count):
-        cmd = GetIndexBarsCmd(self.client)
+        cmd = GetIndexBarsCmd(self.client, lock=self.lock)
         cmd.setParams(category, market, code, start, count)
         return cmd.call_api()
 
     def get_security_quotes(self, all_stock):
-        cmd = GetSecurityQuotesCmd(self.client)
+        cmd = GetSecurityQuotesCmd(self.client, lock=self.lock)
         cmd.setParams(all_stock)
         return cmd.call_api()
 
     def get_security_count(self, market):
-        cmd = GetSecurityCountCmd(self.client)
+        cmd = GetSecurityCountCmd(self.client, lock=self.lock)
         cmd.setParams(market)
         return cmd.call_api()
 
     def get_security_list(self, market, start):
-        cmd = GetSecurityList(self.client)
+        cmd = GetSecurityList(self.client, lock=self.lock)
         cmd.setParams(market, start)
         return cmd.call_api()
 
     def get_minute_time_data(self, market, code):
-        cmd = GetMinuteTimeData(self.client)
+        cmd = GetMinuteTimeData(self.client, lock=self.lock)
         cmd.setParams(market, code)
         return cmd.call_api()
 
     def get_history_minute_time_data(self, market, code, date):
-        cmd = GetHistoryMinuteTimeData(self.client)
+        cmd = GetHistoryMinuteTimeData(self.client, lock=self.lock)
         cmd.setParams(market, code, date)
         return cmd.call_api()
 
     def get_transaction_data(self, market, code, start, count):
-        cmd = GetTransactionData(self.client)
+        cmd = GetTransactionData(self.client, lock=self.lock)
         cmd.setParams(market, code, start, count)
         return cmd.call_api()
 
     def get_history_transaction_data(self, market, code, start, count, date):
-        cmd = GetHistoryTransactionData(self.client)
+        cmd = GetHistoryTransactionData(self.client, lock=self.lock)
         cmd.setParams(market, code, start, count, date)
         return cmd.call_api()
 
     def get_company_info_category(self, market, code):
-        cmd = GetCompanyInfoCategory(self.client)
+        cmd = GetCompanyInfoCategory(self.client, lock=self.lock)
         cmd.setParams(market, code)
         return cmd.call_api()
 
     def get_company_info_content(self, market, code, filename, start, length):
-        cmd = GetCompanyInfoContent(self.client)
+        cmd = GetCompanyInfoContent(self.client, lock=self.lock)
         cmd.setParams(market, code, filename, start, length)
         return cmd.call_api()
 
     def get_xdxr_info(self, market, code):
-        cmd = GetXdXrInfo(self.client)
+        cmd = GetXdXrInfo(self.client, lock=self.lock)
         cmd.setParams(market, code)
         return cmd.call_api()
 
     def get_finance_info(self, market, code):
-        cmd = GetFinanceInfo(self.client)
+        cmd = GetFinanceInfo(self.client, lock=self.lock)
         cmd.setParams(market, code)
         return cmd.call_api()
 
