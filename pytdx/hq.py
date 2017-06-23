@@ -61,7 +61,8 @@ class TdxHq_API(object):
 
         if self.need_setup:
             self.setup()
-        return True
+
+        return self
 
     def disconnect(self):
         if self.client:
@@ -69,6 +70,19 @@ class TdxHq_API(object):
             self.client.shutdown(socket.SHUT_RDWR)
             self.client.close()
             log.debug("disconnected")
+
+    def close(self):
+        """
+        disconnect的别名，为了支持 with closing(obj): 语法
+        :return:
+        """
+        self.disconnect()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
 
     def setup(self):
         SetupCmd1(self.client).call_api()
