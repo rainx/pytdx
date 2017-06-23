@@ -141,7 +141,13 @@ def connect():
         if not c:
             raise Exception("无法连接")
         else:
-            break;
+            break
+
+def connect_to(ipandport):
+    ip, port = ipandport.split(":")
+    c = api.connect(ip, int(port))
+    if not c:
+        raise Exception("无法连接")
 
 def disconnect():
     api.disconnect()
@@ -158,12 +164,18 @@ for x, y in FUNCTION_LIST.items():
 @click.option('-f', '--function', default=0, type=click.INT, help="选择使用的功能" + "\n" + FUNCTION_LIST_STR)
 @click.option('--df/--no-df', default=True, help="是否使用Pandas Dataframe显示")
 @click.option('-o', '--output', default="-", help="保存到文件，默认不保存")
-def main(function, df, output):
+@click.option('-s', '--server', default="-", type=click.STRING, help="连接的服务器，设定之后直接连接该服务器，无需选择" )
+
+def main(function, df, output, server):
     """
     股票行情获取程序， 作者RainX<i@rainx.cc>
     """
     click.secho("连接中.... ", fg="green")
-    connect()
+    if server == '-':
+        connect()
+    else:
+        connect_to(server)
+
     click.secho("连接成功！", fg="green")
     if function == 0:
 
