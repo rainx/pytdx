@@ -108,7 +108,7 @@ class GetSecurityQuotesCmd(BaseParser):
 
             one_stock = OrderedDict([
                 ("market", market),
-                ("code", code),
+                ("code", code.decode("utf-8")),
                 ("active1", active1),
                 ("price", self._cal_price(price, 0)),
                 ("last_close", self._cal_price(price, last_close_diff)),
