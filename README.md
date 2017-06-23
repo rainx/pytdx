@@ -30,7 +30,7 @@ Python3.6+
 
 或者
 
-> pip install github page 
+> pip install git+https://github.com/rainx/pytdx
 ```
 
 命令行
