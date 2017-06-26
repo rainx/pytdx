@@ -39,7 +39,7 @@ class GetHistoryMinuteTimeData(BaseParser):
             last_price = last_price + price_raw
             price = OrderedDict(
                 [
-                    ("price", last_price / 100),
+                    ("price", float(last_price)/100),
                     ("vol", vol)
                 ]
             )

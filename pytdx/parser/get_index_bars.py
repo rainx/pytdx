@@ -111,4 +111,4 @@ class GetIndexBarsCmd(BaseParser):
         return klines
 
     def _cal_price1000(self, base_p, diff):
-        return (base_p + diff)/1000
+        return float(base_p + diff)/1000

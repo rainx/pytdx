@@ -12,6 +12,7 @@ setup(name='pytdx',
       install_requires=[
           'click',
           'pandas',
+          'six'
       ],
       entry_points={
           'console_scripts': [

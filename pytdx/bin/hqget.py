@@ -234,6 +234,10 @@ def run_function(df, value):
             pprint.pprint(result)
             return result
     except Exception as e:
+        import traceback
+        print('-' * 60)
+        traceback.print_exc(file=sys.stdout)
+        print('-' * 60)
         click.secho("发生错误，错误信息为： " + str(e), fg='red')
 
 

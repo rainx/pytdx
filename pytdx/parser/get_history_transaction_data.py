@@ -44,7 +44,7 @@ class GetHistoryTransactionData(BaseParser):
             tick = OrderedDict(
                 [
                     ("time", "%02d:%02d" % (hour, minute)),
-                    ("price", last_price/100),
+                    ("price", float(last_price)/100),
                     ("vol", vol),
                     ("buyorsell", buyorsell),
                 ]

@@ -9,6 +9,7 @@
             return (base_p + diff)/1000
         to  return float(base_p + diff)/1000
 * 将返回财务数据里的代码转化为字符串类型(bytes -> str)
+* 修复了python2 在 读取 byte[pos] 的时候换个python3 行为不同的bug
 
 1.1
 ------

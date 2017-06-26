@@ -1,14 +1,14 @@
 # coding=utf-8
 
 import struct
+import six
 
 
 #### XXX: 分析了一下，貌似是类似utf-8的编码方式保存有符号数字
 def get_price(data, pos):
     pos_byte = 6
-    bdata = data[pos]
+    bdata = indexbytes(data, pos)
     intdata = bdata & 0x3f
-
     if bdata & 0x40:
         sign = True
     else:
@@ -17,7 +17,7 @@ def get_price(data, pos):
     if bdata & 0x80:
         while True:
             pos += 1
-            bdata = data[pos]
+            bdata = indexbytes(data, pos)
             intdata += (bdata & 0x7f) << pos_byte
             pos_byte += 7
 
@@ -120,3 +120,13 @@ def get_time(buffer, pos):
     pos += 2
 
     return hour, minute, pos
+
+def indexbytes(data, pos):
+
+    if six.PY2:
+        if type(data) is bytearray:
+            return data[pos]
+        else:
+            return six.indexbytes(data, pos)
+    else:
+        return data[pos]
