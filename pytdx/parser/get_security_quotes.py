@@ -64,7 +64,8 @@ class GetSecurityQuotesCmd(BaseParser):
             # reversed_bytes0, pos = get_price(body_buf, pos)
             # 应该是 -price
             reversed_bytes1, pos = get_price(body_buf, pos)
-            assert (reversed_bytes1 == -price)
+            # print('reversed_bytes1:' + str(reversed_bytes1)  + ",price" + str(price))
+            # assert (reversed_bytes1 == -price)
             vol, pos = get_price(body_buf, pos)
             cur_vol, pos = get_price(body_buf, pos)
             (amount_raw,) = struct.unpack("<I", body_buf[pos: pos + 4])
