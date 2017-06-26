@@ -208,7 +208,7 @@ if __name__ == '__main__':
         data = api.get_company_info_category(TDXParams.MARKET_SZ, '000001')
         pprint.pprint(data)
         log.info("读取公司信息-最新提示")
-        data = api.get_company_info_content(0, '000001', '000001.txt', 2037337, 101)
+        data = api.get_company_info_content(0, '000001', '000001.txt', 0, 10)
         pprint.pprint(data)
         log.info("读取除权除息信息")
         data = api.get_xdxr_info(1, '600300')

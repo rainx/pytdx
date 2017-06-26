@@ -60,7 +60,7 @@ def get_company_info_category(params):
     return (api.get_company_info_category(int(params[0]), params[1]))
 
 def get_company_info_content(params):
-    return (api.get_company_info_content(int(params[0]), params[1], params[2], int(params[3]), int(params[4])))
+    return (api.get_company_info_content(int(params[0]), params[1].encode("utf-8"), params[2].encode("utf-8"), int(params[3]), int(params[4])))
 
 def get_xdxr_info(params):
     return (api.get_xdxr_info(int(params[0]), params[1]))
@@ -105,7 +105,7 @@ start -> 指定的范围开始位置; count -> 用户要请求的 K 线数目
         (8, ['查询分笔成交', '参数：市场代码， 股票代码，起始位置， 数量 如： 0,000001,0,10', get_transaction_data, '0,000001,0,10']),
         (9, ['查询历史分笔成交', '参数：市场代码， 股票代码，起始位置，日期 数量 如： 0,000001,0,10,20170209', get_history_transaction_data, '0,000001,0,10,20170209']),
         (10, ['查询公司信息目录','参数：市场代码， 股票代码， 如： 0,000001 或 1,600300', get_company_info_category, '0,000001']),
-        (11, ['读取公司信息详情', '参数：市场代码， 股票代码, 文件名, 起始位置， 数量, 如：0,000001,000001.txt,2054363,9221', get_company_info_content, '0,000001,000001.txt,2054363,9221']),
+        (11, ['读取公司信息详情', '参数：市场代码， 股票代码, 文件名, 起始位置， 数量, 如：0,000001,000001.txt,2054363,9221', get_company_info_content, '0,000001,000001.txt,0,10']),
         (12, ['读取除权除息信息', '参数：市场代码， 股票代码， 如： 0,000001 或 1,600300', get_xdxr_info, '0,000001']),
         (13, ['读取财务信息', '参数：市场代码， 股票代码， 如： 0,000001 或 1,600300', get_finance_info, '0,000001']),
     ]

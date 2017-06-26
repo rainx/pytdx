@@ -1,4 +1,8 @@
 
+1.4
+------
+* 修复hqget在python2下获取公司信息详情的时候的错误
+
 1.3
 ------
 * 去掉了一个错误的 assert : assert (reversed_bytes1 == -price)
