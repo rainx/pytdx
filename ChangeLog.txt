@@ -1,4 +1,14 @@
 
+1.2
+------
+* 修复python2.7下整除的bug ,类似， 感谢dHydra数据群的 流水
+    流水  11:07:46
+    @徐景-RainX 2.7中这个除法是有问题的
+    流水  11:08:19
+        def _cal_price1000(self, base_p, diff):
+            return (base_p + diff)/1000
+        to  return float(base_p + diff)/1000
+* 将返回财务数据里的代码转化为字符串类型(bytes -> str)
 
 1.1
 ------

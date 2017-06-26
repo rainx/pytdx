@@ -90,7 +90,7 @@ class GetFinanceInfo(BaseParser):
         return OrderedDict(
             [
                 ("market", market),
-                ("code", code),
+                ("code", code.decode("utf-8")),
                 ("liutongguben", _get_v(liutongguben)),
                 ('province', province),
                 ('industry', industry),

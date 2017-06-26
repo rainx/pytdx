@@ -156,4 +156,4 @@ class GetSecurityQuotesCmd(BaseParser):
         return stocks
 
     def _cal_price(self, base_p, diff):
-        return (base_p + diff)/100
+        return float(base_p + diff)/100
