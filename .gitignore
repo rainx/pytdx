@@ -166,3 +166,5 @@ ENV/
 # End of https://www.gitignore.io/api/python<Plug>PeepOpenycharm
 
 .idea
+
+/test.py
