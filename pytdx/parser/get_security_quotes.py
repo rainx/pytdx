@@ -102,11 +102,19 @@ class GetSecurityQuotesCmd(BaseParser):
             bid_vol5, pos = get_price(body_buf, pos)
             ask_vol5, pos = get_price(body_buf, pos)
 
-            (reversed_bytes4, reversed_bytes5, reversed_bytes6,
-             reversed_bytes7, reversed_bytes8, reversed_bytes9,
-             active2) = struct.unpack("<HbbbbHH", body_buf[pos: pos + 10])
+            # (reversed_bytes4, reversed_bytes5, reversed_bytes6,
+            #  reversed_bytes7, reversed_bytes8, reversed_bytes9,
+            #  active2) = struct.unpack("<HbbbbHH", body_buf[pos: pos + 10])
+            # pos += 10
 
-            pos += 10
+            reversed_bytes4 = struct.unpack("<H", body_buf[pos:pos+2])
+            pos += 2
+            reversed_bytes5, pos = get_price(body_buf, pos)
+            reversed_bytes6, pos = get_price(body_buf, pos)
+            reversed_bytes7, pos = get_price(body_buf, pos)
+            reversed_bytes8, pos = get_price(body_buf, pos)
+            (reversed_bytes9, active2) = struct.unpack("<HH", body_buf[pos: pos + 4])
+            pos += 4
 
             one_stock = OrderedDict([
                 ("market", market),
