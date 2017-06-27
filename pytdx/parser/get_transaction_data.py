@@ -4,11 +4,12 @@ from pytdx.parser.base import BaseParser
 from pytdx.helper import get_datetime, get_volume, get_price, get_time
 from collections import OrderedDict
 import struct
+import six
 
 class GetTransactionData(BaseParser):
 
     def setParams(self, market, code, start, count):
-        if type(code) is str:
+        if type(code) is six.text_type:
             code = code.encode("utf-8")
         pkg = bytearray.fromhex(u'0c 17 08 01 01 01 0e 00 0e 00 c5 0f')
         pkg.extend(struct.pack("<H6sHH", market, code, start, count))

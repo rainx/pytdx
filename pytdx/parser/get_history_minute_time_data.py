@@ -4,6 +4,7 @@ from pytdx.parser.base import BaseParser
 from pytdx.helper import get_datetime, get_volume, get_price
 from collections import OrderedDict
 import struct
+import six
 
 class GetHistoryMinuteTimeData(BaseParser):
 
@@ -15,10 +16,10 @@ class GetHistoryMinuteTimeData(BaseParser):
         :return:
         """
 
-        if type(date) is str:
+        if (type(date) is six.text_type) or (type(date) is six.binary_type):
             date = int(date)
 
-        if type(code) is str:
+        if type(code) is six.text_type:
             code = code.encode("utf-8")
 
         pkg = bytearray.fromhex(u'0c 01 30 00 01 01 0d 00 0d 00 b4 0f')

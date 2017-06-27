@@ -4,15 +4,16 @@ from pytdx.parser.base import BaseParser
 from pytdx.helper import get_datetime, get_volume, get_price
 from collections import OrderedDict
 import struct
+import six
 
 
 class GetCompanyInfoContent(BaseParser):
 
     def setParams(self, market, code, filename, start, length):
-        if type(code) is str:
+        if type(code) is six.text_type:
             code = code.encode("utf-8")
 
-        if type(filename) is str:
+        if type(filename) is six.text_type:
             filename = filename.encode("utf-8")
 
         if len(filename) != 80:

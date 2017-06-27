@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='pytdx',
-      version='1.4',
+      version='1.5',
       description='A Python Interface to TDX protocol',
       author='RainX<Jing Xu>',
       author_email='i@rainx.cc',

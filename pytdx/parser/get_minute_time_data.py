@@ -4,11 +4,12 @@ from pytdx.parser.base import BaseParser
 from pytdx.helper import get_datetime, get_volume, get_price
 from collections import OrderedDict
 import struct
+import six
 
 class GetMinuteTimeData(BaseParser):
 
     def setParams(self, market, code):
-        if type(code) is str:
+        if type(code) is six.text_type:
             code = code.encode("utf-8")
         pkg = bytearray.fromhex(u'0c 1b 08 00 01 01 0e 00 0e 00 1d 05')
         pkg.extend(struct.pack("<H6sI", market, code, 0))

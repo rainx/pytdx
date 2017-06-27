@@ -4,6 +4,7 @@ from pytdx.parser.base import BaseParser
 from pytdx.helper import get_datetime, get_volume, get_price
 from collections import OrderedDict
 import struct
+import six
 
 class GetSecurityQuotesCmd(BaseParser):
 
@@ -34,7 +35,7 @@ class GetSecurityQuotesCmd(BaseParser):
         pkg = bytearray(pkg_header)
         for stock in all_stock:
             market, code = stock
-            if type(code) is str:
+            if type(code) is six.text_type:
                 code = code.encode("utf-8")
                 one_stock_pkg = struct.pack("<B6s", market, code)
                 pkg.extend(one_stock_pkg)

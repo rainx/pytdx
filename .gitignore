@@ -168,3 +168,4 @@ ENV/
 .idea
 
 /test.py
+/debug
