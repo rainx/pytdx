@@ -172,7 +172,6 @@ for x, y in FUNCTION_LIST.items():
 @click.option('--df/--no-df', default=True, help="是否使用Pandas Dataframe显示")
 @click.option('-o', '--output', default="-", help="保存到文件，默认不保存")
 @click.option('-s', '--server', default="-", type=click.STRING, help="连接的服务器，设定之后直接连接该服务器，无需选择" )
-
 def main(function, df, output, server):
     """
     股票行情获取程序， 作者RainX<i@rainx.cc>
