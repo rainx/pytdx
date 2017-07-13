@@ -168,8 +168,8 @@ class TdxHq_API(object):
 
     def get_k_data(self, code, start,end):
         # 具体详情参见 https://github.com/rainx/pytdx/issues/5
-        if str(code)[1]==6:
-        #0 - 深圳， 1 - 上海
+        if str(code)[0]=='6':
+            #0 - 深圳， 1 - 上海
             market_code=1
         else:
             market_code=0
