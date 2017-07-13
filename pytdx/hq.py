@@ -168,7 +168,11 @@ class TdxHq_API(object):
 
     def get_k_data(self, code, start,end):
         # 具体详情参见 https://github.com/rainx/pytdx/issues/5
-
+        if str(code)[1]==6:
+        #0 - 深圳， 1 - 上海
+            market_code=1
+        else:
+            market_code=0
         start_date=get_real_trade_date(start,1)
         end_date=get_real_trade_date(end,-1)
         index_0=str(datetime.date.today())
@@ -178,7 +182,7 @@ class TdxHq_API(object):
         
         index_of_end=index_of_index_0-index_of_index_end
         index_length=index_of_index_end+1-index_of_index_start
-        return  self.get_security_bars(9, 0, code,index_of_end, index_length)  # 返回普通list
+        return  self.get_security_bars(9, market_code, code,index_of_end, index_length)  # 返回普通list
         
 
     def to_df(self, v):
