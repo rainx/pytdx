@@ -27,11 +27,11 @@ from pytdx.parser.get_company_info_category import GetCompanyInfoCategory
 from pytdx.parser.get_company_info_content import GetCompanyInfoContent
 from pytdx.parser.get_xdxr_info import GetXdXrInfo
 from pytdx.parser.get_finance_info import GetFinanceInfo
-
+from pytdx.util import get_real_trade_date,trade_date_sse
 from pytdx.params import TDXParams
 
 from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
-import threading
+import threading,datetime
 
 CONNECT_TIMEOUT = 5.000
 RECV_HEADER_LEN = 0x10
@@ -165,6 +165,22 @@ class TdxHq_API(object):
         cmd.setParams(market, code)
         return cmd.call_api()
 
+
+    def get_k_data(self, code, start,end):
+        # 具体详情参见 https://github.com/rainx/pytdx/issues/5
+
+        start_date=get_real_trade_date(start,1)
+        end_date=get_real_trade_date(end,-1)
+        index_0=str(datetime.date.today())
+        index_of_index_0=trade_date_sse.index(index_0)
+        index_of_index_end=trade_date_sse.index(end_date)
+        index_of_index_start=trade_date_sse.index(start_date)
+        
+        index_of_end=index_of_index_0-index_of_index_end
+        index_length=index_of_index_end+1-index_of_index_start
+        return  self.get_security_bars(9, 0, code,index_of_end, index_length)  # 返回普通list
+        
+
     def to_df(self, v):
         if isinstance(v, list):
             return pd.DataFrame(data=v)
@@ -215,6 +231,9 @@ if __name__ == '__main__':
         pprint.pprint(data)
         log.info("读取财务信息")
         data = api.get_finance_info(0, '000001')
+        pprint.pprint(data)
+        log.info("日线级别k线获取函数")
+        data =api.get_k_data('000001','2017-07-01','2017-07-10')
         pprint.pprint(data)
 
         api.disconnect()
