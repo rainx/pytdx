@@ -1,7 +1,7 @@
 
 1.7
 ------
-* 支持Reader类读取通达信导出的数据文件
+* 支持Reader类读取通达信导出的数据文件 参见 https://github.com/rainx/pytdx/issues/5 感谢 @yutiansut
 
 1.6
 ------
