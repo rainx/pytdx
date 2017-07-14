@@ -365,6 +365,13 @@ api.get_xdxr_info(1, '600300')
 api.get_finance_info(0, '000001')
 ```
 
+#### 14 : 读取k线信息
+参数：市场代码， 开始时间， 结束时间
+```python
+get_k_data('000001','2017-07-03','2017-07-10')
+```
+参考 https://github.com/rainx/pytdx/issues/5
+
 ### 多线程支持
 
 由于Python的特性，一般情况下，不太建议使用多线程代码，如果需要并发访问，建议使用多进程来实现，如果要使用多线程版本，请在初始化时设置multithread参数为True
