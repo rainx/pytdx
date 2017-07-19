@@ -1,4 +1,8 @@
 
+1.8
+------
+* 修复关于除权除息信息错误的bug, 后续还有待进一步完善  issue ： https://github.com/rainx/pytdx/issues/8
+
 1.7
 ------
 * 支持Reader类读取通达信导出的数据文件 参见 https://github.com/rainx/pytdx/issues/5 感谢 @yutiansut
