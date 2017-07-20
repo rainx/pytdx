@@ -90,6 +90,8 @@ Python3.6+
 请输入要使用的功能:
 ```
 
+```1.9版本更新``` ： 增加了--all参数，可以获取更多服务器列表 
+
 输入参数并获取结果
 
 ```bash
@@ -388,7 +390,16 @@ api = TdxHq_API(multithread=True)
 > TDX_DEBUG=1 hqget -f 1 
 ```
 
+### 行情服务器列表
 
+为了方便连接服务器，我把一些常用的服务器列表整理到到 ```hosts.py``` 文件中. 在程序中可以通过
+
+```python
+from pytdx.config.hosts import hq_hosts
+```
+获取列表, 列表里的数据参考了 https://github.com/rainx/pytdx/issues/3
+
+欢迎补充并发送pr
 
 ## Reader接口
 

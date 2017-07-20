@@ -1,4 +1,10 @@
 
+1.9
+------
+* 更新了主机列表, 参考 issue: https://github.com/rainx/pytdx/issues/3
+* 增加了部分常量定义 https://github.com/rainx/pytdx/issues/7
+* hqget 增加了 --all 参数，以支持获取全部股票列表
+
 1.8
 ------
 * 修复关于除权除息信息错误的bug, 后续还有待进一步完善  issue ： https://github.com/rainx/pytdx/issues/8
