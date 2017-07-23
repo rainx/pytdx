@@ -17,6 +17,7 @@ from pytdx.log import DEBUG, log
 from pytdx.parser.ex_setup_commands import ExSetupCmd1
 from pytdx.parser.ex_get_markets import GetMarkets
 from pytdx.parser.ex_get_instrument_count import GetInstrumentCount
+from pytdx.parser.ex_get_instrument_quote import GetInstrumentQuote
 
 
 from pytdx.params import TDXParams
@@ -114,6 +115,10 @@ class TdxExHq_API(object):
         cmd = GetInstrumentCount(self.client)
         return cmd.call_api()
 
+    def get_instrument_quote(self, market, code):
+        cmd = GetInstrumentQuote(self.client)
+        cmd.setParams(market, code)
+        return cmd.call_api()
 
 if __name__ == '__main__':
     import pprint
@@ -124,3 +129,5 @@ if __name__ == '__main__':
         pprint.pprint(api.get_markets())
         log.info("查询市场中商品数量")
         pprint.pprint(api.get_instrument_count())
+        log.info("查询行情")
+        pprint.pprint(api.get_instrument_quote(47, "IF1709"))
