@@ -41,9 +41,11 @@ class GetXdXrInfo(BaseParser):
         for i in range(num):
             market, code = struct.unpack(u"<B6s", body_buf[:7])
             pos += 7
+            # noused = struct.unpack(u"<B", body_buf[pos: pos+1])
             pos += 1 #skip a byte
             year, month, day, hour, minite, pos = get_datetime(9, body_buf, pos)
-            pos += 1 #skip a byte
+            (category, ) = struct.unpack(u"<B", body_buf[pos: pos+1])
+            pos += 1
 
 
 
@@ -51,7 +53,7 @@ class GetXdXrInfo(BaseParser):
             # b'\x00\xc0\x0fF' => 9200.00000
             # b'\x00@\x83E' => 4200.0000
 
-            cash_raw, peigu_price_raw, songgu_num_raw, peigu_percent_raw = struct.unpack("<IIII", body_buf[pos: pos + 16])
+            panqianliutong_raw, qianzongguben_raw, panhouliutong_raw, houzongguben_raw = struct.unpack("<IIII", body_buf[pos: pos + 16])
             pos += 16
 
             def _get_v(v):
@@ -66,10 +68,11 @@ class GetXdXrInfo(BaseParser):
                     ('year', year),
                     ('month', month),
                     ('day', day),
-                    ('cash', _get_v(cash_raw)),
-                    ('peigu_price', _get_v(peigu_price_raw)),
-                    ('songgu_num', _get_v(songgu_num_raw)),
-                    ('peigu_percent', _get_v(peigu_percent_raw)),
+                    ('category', category),
+                    ('panqianliutong', _get_v(panqianliutong_raw)),
+                    ('panhouliutong', _get_v(panhouliutong_raw)),
+                    ('qianzongguben', _get_v(qianzongguben_raw)),
+                    ('houzongguben', _get_v(houzongguben_raw)),
                 ]
             )
             rows.append(row)

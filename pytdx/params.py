@@ -36,3 +36,8 @@ class TDXParams:
     KLINE_TYPE_YEARLY = 11
 
 
+    # ref : https://github.com/rainx/pytdx/issues/7
+    # 分笔行情最多2000条
+    MAX_TRANSACTION_COUNT = 2000
+    # k先数据最多800条
+    MAX_KLINE_COUNT = 800

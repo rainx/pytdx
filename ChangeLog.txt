@@ -1,4 +1,18 @@
 
+1.9
+------
+* 更新了主机列表, 参考 issue: https://github.com/rainx/pytdx/issues/3
+* 增加了部分常量定义 https://github.com/rainx/pytdx/issues/7
+* hqget 增加了 --all 参数，以支持获取全部股票列表
+
+1.8
+------
+* 修复关于除权除息信息错误的bug, 后续还有待进一步完善  issue ： https://github.com/rainx/pytdx/issues/8
+
+1.7
+------
+* 支持Reader类读取通达信导出的数据文件 参见 https://github.com/rainx/pytdx/issues/5 感谢 @yutiansut
+
 1.6
 ------
 * 调整GetSecurityQuotesCmd，修复了后几个字节解析的时候的错误，使其不会再解析某些股票的时候pos计算错误，导致后续的股票无法解析
