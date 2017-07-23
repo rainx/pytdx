@@ -446,6 +446,24 @@ df.to_csv("/tmp/000001.csv")
 
 ```
 
+### 读取通达信的分钟K线（目前支持1，5分钟k线）
+```
+from pytdx.reader import TdxMinBarReader, TdxFileNotFoundException
+reader = TdxMinBarReader()
+df = reader.get_df("/Users/rainx/Downloads/sh000001.5")
+
+In [2]: df
+Out[2]:
+                        open     high      low    close        amount  \
+date
+2015-07-09 09:35:00  3432.45  3454.14  3374.32  3423.61  6.189348e+10
+2015-07-09 09:40:00  3420.56  3424.16  3395.07  3396.33  2.341652e+10
+
+                        volume
+date
+2015-07-09 09:35:00  618934736
+2015-07-09 09:40:00  234165181
+```
 
 ## 其它
 

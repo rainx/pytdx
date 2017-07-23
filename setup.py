@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pytdx',
-    version='1.9',
+    version='1.10',
     description='A Python Interface to TDX protocol',
     author='RainX<Jing Xu>',
     author_email='i@rainx.cc',
@@ -17,7 +17,9 @@ setup(
     ],
     entry_points={
           'console_scripts': [
-              'hqget=pytdx.bin.hqget:main'
+              'hqget=pytdx.bin.hqget:main',
+              'hqreader=pytdx.bin.hqreader:main'
+
           ]
       }
     )

@@ -5,18 +5,15 @@ import pandas as pd
 import os
 
 import struct
+from pytdx.reader.base_reader import TdxFileNotFoundException, TdxNotAssignVipdocPathException
+from pytdx.reader.base_reader import BaseReader
+
 """
 读取通达信数据
 """
 
 
-class TdxFileNotFoundException(Exception):
-    pass
-
-class TdxNotAssignVipdocPathException(Exception):
-    pass
-
-class TdxDailyBarReader:
+class TdxDailyBarReader(BaseReader):
 
     def __init__(self, vipdoc_path=None):
         self.vipdoc_path = vipdoc_path
@@ -40,10 +37,6 @@ class TdxDailyBarReader:
             return self.unpack_records('<IIIIIfII', content)
         return []
 
-    def unpack_records(self, format, data):
-        record_struct = struct.Struct(format)
-        return (record_struct.unpack_from(data, offset)
-                for offset in range(0, len(data), record_struct.size))
 
     def get_df(self, code_or_file, exchange=None):
 
