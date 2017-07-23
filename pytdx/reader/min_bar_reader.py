@@ -61,7 +61,7 @@ class TdxMinBarReader(BaseReader):
                     ('volume', row[7]),
                     #('unknown', row[8])
                 ]))
-            return data;
+            return data
         return []
 
     def get_df(self, code_or_file, exchange=None):
