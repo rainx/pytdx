@@ -1,4 +1,11 @@
 
+
+1.10
+------
+* 更新了reader中读取通达信1，5分钟k线的数据文件的方法， TdxMinBarReader
+* try hqreader -d min ~/Downloads/sh000001.5
+* 写了一半的exhq读取，请忽略，当初应该搞个单独的分支的，懒了...
+
 1.9
 ------
 * 更新了主机列表, 参考 issue: https://github.com/rainx/pytdx/issues/3
