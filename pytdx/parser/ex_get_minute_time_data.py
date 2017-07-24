@@ -50,7 +50,7 @@ class GetMinuteTimeData(BaseParser):
                 ("price", price),
                 ("avg_price", avg_price),
                 ("volume", volume),
-                ("amount", amount),
+                ("open_interest", amount),
             ]))
 
         return result
