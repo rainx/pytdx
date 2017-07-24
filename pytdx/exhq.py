@@ -18,6 +18,7 @@ from pytdx.parser.ex_setup_commands import ExSetupCmd1
 from pytdx.parser.ex_get_markets import GetMarkets
 from pytdx.parser.ex_get_instrument_count import GetInstrumentCount
 from pytdx.parser.ex_get_instrument_quote import GetInstrumentQuote
+from pytdx.parser.ex_get_minute_time_data import GetMinuteTimeData
 
 
 from pytdx.params import TDXParams
@@ -120,6 +121,11 @@ class TdxExHq_API(object):
         cmd.setParams(market, code)
         return cmd.call_api()
 
+    def get_minute_time_data(self, market, code):
+        cmd = GetMinuteTimeData(self.client)
+        cmd.setParams(market, code)
+        return cmd.call_api()
+
 if __name__ == '__main__':
     import pprint
 
@@ -131,3 +137,5 @@ if __name__ == '__main__':
         pprint.pprint(api.get_instrument_count())
         log.info("查询行情")
         pprint.pprint(api.get_instrument_quote(47, "IF1709"))
+        log.info("查询分时行情")
+        pprint.pprint(api.get_minute_time_data(47, "IF1709"))
