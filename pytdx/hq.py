@@ -45,7 +45,7 @@ class TdxHq_API(object):
         else:
             self.lock = None
 
-    def connect(self, ip, port):
+    def connect(self, ip='101.227.73.20', port=7709):
         """
 
         :param ip:  服务器ip 地址
