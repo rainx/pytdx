@@ -1,4 +1,6 @@
-
+1.11
+------
+* 追加exhq get_minute_time_data 接口
 
 1.10
 ------
