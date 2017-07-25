@@ -24,9 +24,8 @@ from pytdx.parser.ex_get_minute_time_data import GetMinuteTimeData
 from pytdx.params import TDXParams
 
 import threading,datetime
+from pytdx.base_socket_client import BaseSocketClient, update_last_ack_time
 
-CONNECT_TIMEOUT = 5.000
-RECV_HEADER_LEN = 0x10
 
 """
 In [7]: 0x7e
@@ -45,86 +44,37 @@ In [8]: (len(body)-2)/126
 Out[8]: 64.0
 """
 
-class TdxExHq_API(object):
-
-    def __init__(self, multithread=False):
-        self.need_setup = True
-        if multithread:
-            self.lock = threading.Lock()
-        else:
-            self.lock = None
-
-    def connect(self, ip, port):
-        """
-
-        :param ip:  服务器ip 地址
-        :param port:  服务器端口
-        :return: 是否连接成功 True/False
-        """
-
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(CONNECT_TIMEOUT)
-        log.debug("connecting to server : %s on port :%d" % (ip, port))
-        try:
-            self.client.connect((ip, port))
-        except socket.timeout as e:
-            print(str(e))
-            log.debug("connection expired")
-            return False
-        log.debug("connected!")
-
-        if self.need_setup:
-            self.setup()
-
-        return self
-
-    def disconnect(self):
-        if self.client:
-            log.debug("disconnecting")
-            try:
-                self.client.shutdown(socket.SHUT_RDWR)
-                self.client.close()
-            except Exception as e:
-                log.debug(str(e))
-            log.debug("disconnected")
-
-    def close(self):
-        """
-        disconnect的别名，为了支持 with closing(obj): 语法
-        :return:
-        """
-        self.disconnect()
-
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+class TdxExHq_API(BaseSocketClient):
 
     def setup(self):
         ExSetupCmd1(self.client).call_api()
 
-
     ### API LIST
 
+    @update_last_ack_time
     def get_markets(self):
         cmd = GetMarkets(self.client)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_instrument_count(self):
         cmd = GetInstrumentCount(self.client)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_instrument_quote(self, market, code):
         cmd = GetInstrumentQuote(self.client)
         cmd.setParams(market, code)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_minute_time_data(self, market, code):
         cmd = GetMinuteTimeData(self.client)
         cmd.setParams(market, code)
         return cmd.call_api()
+
+    def do_heartbeat(self):
+        self.get_instrument_count()
 
 if __name__ == '__main__':
     import pprint

@@ -25,7 +25,7 @@ class HqHeartBeatThread(Thread):
             if self.client and (time.time() - self.api.last_ack_time > self.heartbeat_interval):
                 try:
                     # 发送一个获取股票数量的包作为心跳包
-                    self.api.get_security_count(random.randint(0, 1))
+                    self.api.do_heartbeat()
                 except Exception as e:
                     log.debug(str(e))
 

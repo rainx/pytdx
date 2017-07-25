@@ -33,103 +33,12 @@ from pytdx.heartbeat import HqHeartBeatThread
 
 from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
 import threading,datetime
-import time
-import functools
+import random
 
-CONNECT_TIMEOUT = 5.000
-RECV_HEADER_LEN = 0x10
-DEFAULT_HEARTBEAT_INTERVAL = 10.0
+from pytdx.base_socket_client import BaseSocketClient, update_last_ack_time
 
 
-def update_last_ack_time(func):
-    @functools.wraps(func)
-    def wrapper(self, *args, **kw):
-        self.last_ack_time = time.time()
-        log.debug("last ack time update to " + str(self.last_ack_time))
-        try:
-            ret = func(self, *args, **kw)
-        except Exception as e:
-            self.last_transaction_failed = True
-            ret = None
-            raise e
-        finally:
-            return ret
-    return wrapper
-
-
-class TdxHq_API(object):
-
-    def __init__(self, multithread=False, heartbeat=False):
-        self.need_setup = True
-        if multithread or heartbeat:
-            self.lock = threading.Lock()
-        else:
-            self.lock = None
-
-        self.client = None
-        self.heartbeat = heartbeat
-        self.heartbeat_thread = None
-        self.stop_event = None
-        self.heartbeat_interval = DEFAULT_HEARTBEAT_INTERVAL # 默认10秒一个心跳包
-        self.last_ack_time = time.time()
-        self.last_transaction_failed = False
-
-    def connect(self, ip, port):
-        """
-
-        :param ip:  服务器ip 地址
-        :param port:  服务器端口
-        :return: 是否连接成功 True/False
-        """
-
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(CONNECT_TIMEOUT)
-        log.debug("connecting to server : %s on port :%d" % (ip, port))
-        try:
-            self.client.connect((ip, port))
-        except socket.timeout as e:
-            print(str(e))
-            log.debug("connection expired")
-            return False
-        log.debug("connected!")
-
-        if self.need_setup:
-            self.setup()
-
-        self.stop_event = threading.Event()
-        self.heartbeat_thread = HqHeartBeatThread(self, self.stop_event, self.heartbeat_interval)
-        self.heartbeat_thread.start()
-        return self
-
-    def disconnect(self):
-
-        if self.heartbeat_thread and \
-            self.heartbeat_thread.is_alive():
-            self.stop_event.set()
-
-        if self.client:
-            log.debug("disconnecting")
-            try:
-                self.client.shutdown(socket.SHUT_RDWR)
-                self.client.close()
-                self.client = None
-            except Exception as e:
-                log.debug(str(e))
-            log.debug("disconnected")
-
-    def close(self):
-        """
-        disconnect的别名，为了支持 with closing(obj): 语法
-        :return:
-        """
-        self.disconnect()
-
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
+class TdxHq_API(BaseSocketClient):
 
     def setup(self):
         SetupCmd1(self.client).call_api()
@@ -216,6 +125,9 @@ class TdxHq_API(object):
         cmd.setParams(market, code)
         return cmd.call_api()
 
+    def do_heartbeat(self):
+        self.get_security_count(random.randint(0, 1))
+
 
     def get_k_data(self, code, start,end):
         # 具体详情参见 https://github.com/rainx/pytdx/issues/5
@@ -235,14 +147,6 @@ class TdxHq_API(object):
         index_length=index_of_index_end+1-index_of_index_start
         return self.get_security_bars(9, market_code, code,index_of_end, index_length)  # 返回普通list
         
-
-    def to_df(self, v):
-        if isinstance(v, list):
-            return pd.DataFrame(data=v)
-        elif isinstance(v, dict):
-            return pd.DataFrame(data=[v,])
-        else:
-            return pd.DataFrame(data=[{'value': v}])
 
 if __name__ == '__main__':
     import pprint
