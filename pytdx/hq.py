@@ -29,21 +29,50 @@ from pytdx.parser.get_xdxr_info import GetXdXrInfo
 from pytdx.parser.get_finance_info import GetFinanceInfo
 from pytdx.util import get_real_trade_date,trade_date_sse
 from pytdx.params import TDXParams
+from pytdx.heartbeat import HqHeartBeatThread
 
 from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
 import threading,datetime
+import time
+import functools
 
 CONNECT_TIMEOUT = 5.000
 RECV_HEADER_LEN = 0x10
+DEFAULT_HEARTBEAT_INTERVAL = 10.0
+
+
+def update_last_ack_time(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kw):
+        self.last_ack_time = time.time()
+        log.debug("last ack time update to " + str(self.last_ack_time))
+        try:
+            ret = func(self, *args, **kw)
+        except Exception as e:
+            self.last_transaction_failed = True
+            ret = None
+            raise e
+        finally:
+            return ret
+    return wrapper
+
 
 class TdxHq_API(object):
 
-    def __init__(self, multithread=False):
+    def __init__(self, multithread=False, heartbeat=False):
         self.need_setup = True
-        if multithread:
+        if multithread or heartbeat:
             self.lock = threading.Lock()
         else:
             self.lock = None
+
+        self.client = None
+        self.heartbeat = heartbeat
+        self.heartbeat_thread = None
+        self.stop_event = None
+        self.heartbeat_interval = DEFAULT_HEARTBEAT_INTERVAL # 默认10秒一个心跳包
+        self.last_ack_time = time.time()
+        self.last_transaction_failed = False
 
     def connect(self, ip, port):
         """
@@ -67,14 +96,23 @@ class TdxHq_API(object):
         if self.need_setup:
             self.setup()
 
+        self.stop_event = threading.Event()
+        self.heartbeat_thread = HqHeartBeatThread(self, self.stop_event, self.heartbeat_interval)
+        self.heartbeat_thread.start()
         return self
 
     def disconnect(self):
+
+        if self.heartbeat_thread and \
+            self.heartbeat_thread.is_alive():
+            self.stop_event.set()
+
         if self.client:
             log.debug("disconnecting")
             try:
                 self.client.shutdown(socket.SHUT_RDWR)
                 self.client.close()
+                self.client = None
             except Exception as e:
                 log.debug(str(e))
             log.debug("disconnected")
@@ -100,66 +138,79 @@ class TdxHq_API(object):
 
     #### API List
 
+    @update_last_ack_time
     def get_security_bars(self, category, market, code, start, count):
         cmd = GetSecurityBarsCmd(self.client, lock=self.lock)
         cmd.setParams(category, market, code, start, count)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_index_bars(self, category, market, code, start, count):
         cmd = GetIndexBarsCmd(self.client, lock=self.lock)
         cmd.setParams(category, market, code, start, count)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_security_quotes(self, all_stock):
         cmd = GetSecurityQuotesCmd(self.client, lock=self.lock)
         cmd.setParams(all_stock)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_security_count(self, market):
         cmd = GetSecurityCountCmd(self.client, lock=self.lock)
         cmd.setParams(market)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_security_list(self, market, start):
         cmd = GetSecurityList(self.client, lock=self.lock)
         cmd.setParams(market, start)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_minute_time_data(self, market, code):
         cmd = GetMinuteTimeData(self.client, lock=self.lock)
         cmd.setParams(market, code)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_history_minute_time_data(self, market, code, date):
         cmd = GetHistoryMinuteTimeData(self.client, lock=self.lock)
         cmd.setParams(market, code, date)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_transaction_data(self, market, code, start, count):
         cmd = GetTransactionData(self.client, lock=self.lock)
         cmd.setParams(market, code, start, count)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_history_transaction_data(self, market, code, start, count, date):
         cmd = GetHistoryTransactionData(self.client, lock=self.lock)
         cmd.setParams(market, code, start, count, date)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_company_info_category(self, market, code):
         cmd = GetCompanyInfoCategory(self.client, lock=self.lock)
         cmd.setParams(market, code)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_company_info_content(self, market, code, filename, start, length):
         cmd = GetCompanyInfoContent(self.client, lock=self.lock)
         cmd.setParams(market, code, filename, start, length)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_xdxr_info(self, market, code):
         cmd = GetXdXrInfo(self.client, lock=self.lock)
         cmd.setParams(market, code)
         return cmd.call_api()
 
+    @update_last_ack_time
     def get_finance_info(self, market, code):
         cmd = GetFinanceInfo(self.client, lock=self.lock)
         cmd.setParams(market, code)
@@ -182,7 +233,7 @@ class TdxHq_API(object):
         
         index_of_end=index_of_index_0-index_of_index_end
         index_length=index_of_index_end+1-index_of_index_start
-        return  self.get_security_bars(9, market_code, code,index_of_end, index_length)  # 返回普通list
+        return self.get_security_bars(9, market_code, code,index_of_end, index_length)  # 返回普通list
         
 
     def to_df(self, v):
