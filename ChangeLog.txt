@@ -1,3 +1,6 @@
+1.12
+* pr #13 简化用户输入 https://github.com/rainx/pytdx/pull/13
+
 1.11
 ------
 * 追加exhq get_minute_time_data 接口
