@@ -1,8 +1,10 @@
 1.13
+------
 * 增加心跳包heartbeat参数，自动创建心跳包线程
 * 将HqAPI和 ExHqAPI部分逻辑放到BaseSocketClient里
 
 1.12
+------
 * pr #13 简化用户输入 https://github.com/rainx/pytdx/pull/13
 
 1.11
