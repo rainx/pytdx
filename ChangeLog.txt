@@ -1,3 +1,7 @@
+1.14
+------
+* 增加判断，只在heartbeat=True的时候启动heartbeat线程
+
 1.13
 ------
 * 增加心跳包heartbeat参数，自动创建心跳包线程

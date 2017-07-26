@@ -97,9 +97,10 @@ class BaseSocketClient(object):
         if self.need_setup:
             self.setup()
 
-        self.stop_event = threading.Event()
-        self.heartbeat_thread = HqHeartBeatThread(self, self.stop_event, self.heartbeat_interval)
-        self.heartbeat_thread.start()
+        if self.heartbeat:
+            self.stop_event = threading.Event()
+            self.heartbeat_thread = HqHeartBeatThread(self, self.stop_event, self.heartbeat_interval)
+            self.heartbeat_thread.start()
         return self
 
     def disconnect(self):
