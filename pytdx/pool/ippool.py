@@ -20,13 +20,19 @@ ips 应该还是一个 (ip ,port) 对的列表，如
 
 class BaseIPPool(object):
 
-    def __init__(self):
-        self.hq_class = None
-
-    def setup(self, hq_class):
+    def __init__(self, hq_class):
         self.hq_class = hq_class
 
+    def setup(self):
+        pass
+
     def teardown(self):
+        pass
+
+    def sync_get_top_n(self, num):
+        pass
+
+    def add_to_pool(self, ip):
         pass
 
 
@@ -35,17 +41,24 @@ class RandomIPPool(BaseIPPool):
     获取一个随机的优先级列表
     """
 
-    def __init__(self, ips):
+    def __init__(self, hq_class, ips):
         """
         :param ips: ip should be a list
         """
-        super(RandomIPPool, self).__init__()
+        super(RandomIPPool, self).__init__(hq_class)
         self.ips = ips
 
     def get_ips(self):
         random.shuffle(self.ips)
         return self.ips
 
+    def sync_get_top_n(self, num):
+        ips= self.get_ips()
+        return ips[:num]
+
+    def add_to_pool(self, ip):
+        if ip not in self.ips:
+            self.ips.append(ip)
 
 
 class AvailableIPPool(BaseIPPool):
@@ -54,8 +67,8 @@ class AvailableIPPool(BaseIPPool):
     我们启动一个新的线程，周期性的进行更新
     """
 
-    def __init__(self, ips):
-        super(AvailableIPPool, self).__init__()
+    def __init__(self, hq_class, ips):
+        super(AvailableIPPool, self).__init__(hq_class)
         self.ips = ips
         self.sorted_ips = None
         self.worker_thread = None
@@ -63,12 +76,11 @@ class AvailableIPPool(BaseIPPool):
         self.stop_event = threading.Event()
         self.wait_interval = 20 * 60
 
-    def setup(self, hq_class):
-        super(AvailableIPPool, self).setup(hq_class)
+    def setup(self):
+        super(AvailableIPPool, self).setup()
 
         self.worker_thread = threading.Thread(target=self.run)
         self.worker_thread.start()
-
 
     def get_ips(self):
         if not self.sorted_ips:
@@ -78,30 +90,48 @@ class AvailableIPPool(BaseIPPool):
 
     def teardown(self):
         self.stop_event.set()
+        if self.worker_thread.is_alive():
+            self.worker_thread.join()
         self.worker_thread = None
 
     def run(self):
         log.debug("pool thread start ")
         while not self.stop_event.is_set():
-            _available_ips = OrderedDict()
-            for ip in self.ips:
-                ip_addr, port = ip
-                api = self.hq_class(multithread=False, heartbeat=False)
-                try:
-                    with api.connect(ip_addr, port):
-                        start_ts = time.time()
-                        api.do_heartbeat()
-                        end_ts = time.time()
-                        diff_ts = end_ts - start_ts
-                        _available_ips[diff_ts] = ip
-                        log.debug("time diff is %f for %s" % (diff_ts, _available_ips))
-                except Exception as e:
-                    log.debug("can not use %s:%d the exception is %s" % (ip_addr, port, str(e)) )
-                    continue
+            _available_ips = self.get_all_available_ips()
             sorted_keys = sorted(_available_ips)
             with self.sorted_ips_lock:
                 self.sorted_ips = OrderedDict((key, _available_ips[key]) for key in sorted_keys)
             self.stop_event.wait(self.wait_interval)
+
+    def get_all_available_ips(self):
+        """
+        循环测试所有连接的连接速度和有效性
+        :return:
+        """
+        _available_ips = OrderedDict()
+        for ip in self.ips:
+            ip_addr, port = ip
+            api = self.hq_class(multithread=False, heartbeat=False)
+            try:
+                with api.connect(ip_addr, port):
+                    start_ts = time.time()
+                    api.do_heartbeat()
+                    end_ts = time.time()
+                    diff_ts = end_ts - start_ts
+                    _available_ips[diff_ts] = ip
+                    log.debug("time diff is %f for %s" % (diff_ts, _available_ips))
+            except Exception as e:
+                log.debug("can not use %s:%d the exception is %s" % (ip_addr, port, str(e)))
+                continue
+        return _available_ips
+
+    def sync_get_top_n(self, num):
+        _ips = list(self.get_all_available_ips().values())
+        return _ips[:min(len(_ips), num)]
+
+    def add_to_pool(self, ip):
+        if ip not in self.ips:
+            self.ips.append(ip)
 
 
 if __name__ == "__main__":
@@ -118,11 +148,17 @@ if __name__ == "__main__":
     log.addHandler(ch)
 
     ips = [(v[1], v[2]) for v in hq_hosts]
-    pool = AvailableIPPool(ips)
-    pool.wait_interval = 1
-    pool.setup(TdxHq_API)
-    log.debug("ready to sleep 100")
-    time.sleep(100)
+    pool = AvailableIPPool(TdxHq_API, ips)
+    pool.wait_interval = 60 * 5
+    pool.setup()
+    sleep_time = 130
+    log.debug("ready to sleep %d" % sleep_time )
+    time.sleep(sleep_time)
+    log.debug("sleep done")
+    ips = pool.get_ips()
+    log.debug(str(pool.get_ips()))
+    log.debug("ready to teardown")
     pool.teardown()
+
 
 
