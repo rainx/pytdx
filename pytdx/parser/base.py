@@ -118,5 +118,5 @@ class BaseParser(object):
 
             else:
                 log.debug("head_buf is not 0x10")
-                raise ResponseHeaderRecvFails("head_buf is not 0x10")
+                raise ResponseHeaderRecvFails("head_buf is not 0x10 : " + str(head_buf))
 
