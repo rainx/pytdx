@@ -1,3 +1,7 @@
+1.16
+------
+* 增加了扩展行情里面的获取k线接口 eg. api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, 8, "10000843")
+
 1.15
 ------
 * 在 get_security_list 接口中增加了 小数点位数 (decimal_point) 列 https://github.com/rainx/pytdx/issues/16
