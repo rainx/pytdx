@@ -62,15 +62,15 @@ class GetInstrumentBars(BaseParser):
 
         for i in range(ret_count):
             year, month, day, hour, minute, pos = get_datetime(self.category, body_buf, pos)
-            (open_price, close, high, low, vol, amount, price) = struct.unpack("<ffffIIf", body_buf[pos: pos+28])
+            (open_price, high, low, close, position, trade, price) = struct.unpack("<ffffIIf", body_buf[pos: pos+28])
             pos += 28
             kline = OrderedDict([
                 ("open", open_price),
-                ("close", close),
                 ("high", high),
                 ("low", low),
-                ("vol", vol),
-                ("amount", amount),
+                ("close", close),
+                ("position", position),
+                ("trade", trade),
                 ("price", price),
                 ("year", year),
                 ("month", month),
