@@ -28,8 +28,8 @@ class GetSecurityList(BaseParser):
             one_bytes = body_buf[pos: pos + 29]
 
             (code, volunit,
-             name_bytes, reversed_bytes1,
-             pre_close_raw, reversed_bytes2) = struct.unpack("<6sH8s5sI4s", one_bytes)
+             name_bytes, reversed_bytes1, decimal_point,
+             pre_close_raw, reversed_bytes2) = struct.unpack("<6sH8s4sBI4s", one_bytes)
 
             code = code.decode("utf-8")
             name = name_bytes.decode("gbk")
@@ -40,6 +40,7 @@ class GetSecurityList(BaseParser):
                 [
                     ('code', code),
                     ('volunit', volunit),
+                    ('decimal_point', decimal_point),
                     ('name', name),
                     ('pre_close', pre_close),
                 ]

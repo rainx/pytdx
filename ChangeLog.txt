@@ -1,3 +1,16 @@
+1.17
+------
+* 修正了get_instrument_bars接口的ohlc位置对应错误的bug
+* 修改了对应的列名 vol, amount -> position, trade
+
+1.16
+------
+* 增加了扩展行情里面的获取k线接口 eg. api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, 8, "10000843")
+
+1.15
+------
+* 在 get_security_list 接口中增加了 小数点位数 (decimal_point) 列 https://github.com/rainx/pytdx/issues/16
+
 1.14
 ------
 * 增加判断，只在heartbeat=True的时候启动heartbeat线程

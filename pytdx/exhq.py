@@ -19,6 +19,7 @@ from pytdx.parser.ex_get_markets import GetMarkets
 from pytdx.parser.ex_get_instrument_count import GetInstrumentCount
 from pytdx.parser.ex_get_instrument_quote import GetInstrumentQuote
 from pytdx.parser.ex_get_minute_time_data import GetMinuteTimeData
+from pytdx.parser.ex_get_instrument_bars import GetInstrumentBars
 
 
 from pytdx.params import TDXParams
@@ -67,6 +68,12 @@ class TdxExHq_API(BaseSocketClient):
         cmd.setParams(market, code)
         return cmd.call_api()
 
+    #@update_last_ack_time
+    def get_instrument_bars(self, category, market, code):
+        cmd = GetInstrumentBars(self.client)
+        cmd.setParams(category, market, code, start=0, count=0)
+        return cmd.call_api()
+
     @update_last_ack_time
     def get_minute_time_data(self, market, code):
         cmd = GetMinuteTimeData(self.client)
@@ -80,16 +87,20 @@ if __name__ == '__main__':
     import pprint
 
     api = TdxExHq_API()
-    with api.connect('61.152.107.141', 7727):
+    with api.connect('121.14.110.210', 7727):
         log.info("获取市场代码")
-        pprint.pprint(api.get_markets())
+        #pprint.pprint(api.to_df(api.get_markets()))
         log.info("查询市场中商品数量")
-        pprint.pprint(api.get_instrument_count())
-        log.info("查询行情")
-        #pprint.pprint(api.get_instrument_quote(47, "IF1709"))
+        #pprint.pprint(api.get_instrument_count())
+        log.info("查询五档行情")
+        #pprint.pprint(api.to_df(api.get_instrument_quote(47, "IF1709")))
         #pprint.pprint(api.get_instrument_quote(8, "10000889"))
-        pprint.pprint(api.get_instrument_quote(31, "00020"))
+        #pprint.pprint(api.get_instrument_quote(31, "00020"))
         log.info("查询分时行情")
-        #pprint.pprint(api.get_minute_time_data(47, "IF1709"))
+        #pprint.pprint(api.to_df(api.get_minute_time_data(47, "IF1709")))
         #pprint.pprint(api.get_minute_time_data(8, "10000889"))
         #pprint.pprint(api.get_minute_time_data(31, "00020"))
+
+        log.info("查询k线")
+        #pprint.pprint(api.to_df(api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, 8, "10000843")))
+        pprint.pprint(api.to_df(api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, 31, "00700")))
