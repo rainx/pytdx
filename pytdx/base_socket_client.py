@@ -74,6 +74,8 @@ class BaseSocketClient(object):
         self.heartbeat_interval = DEFAULT_HEARTBEAT_INTERVAL # 默认10秒一个心跳包
         self.last_ack_time = time.time()
         self.last_transaction_failed = False
+        self.ip = None
+        self.port = None
 
     def connect(self, ip='101.227.73.20', port=7709):
         """
@@ -88,6 +90,8 @@ class BaseSocketClient(object):
         log.debug("connecting to server : %s on port :%d" % (ip, port))
         try:
             self.client.connect((ip, port))
+            self.ip = ip
+            self.port = port
         except socket.timeout as e:
             print(str(e))
             log.debug("connection expired")
