@@ -38,9 +38,9 @@ class GetInstrumentInfo(BaseParser):
             (category, market, unused_bytes, code_raw, name_raw, desc_raw) = \
                 struct.unpack("<BB3s9s17s9s", body_buf[pos: pos+40])
 
-            code = code_raw.decode("gbk")
-            name = name_raw.decode("gbk")
-            desc = desc_raw.decode("gbk")
+            code = code_raw.decode("gbk", 'ignore')
+            name = name_raw.decode("gbk", 'ignore')
+            desc = desc_raw.decode("gbk", 'ignore')
 
             one = OrderedDict(
                 [
