@@ -20,6 +20,7 @@ from pytdx.parser.ex_get_instrument_count import GetInstrumentCount
 from pytdx.parser.ex_get_instrument_quote import GetInstrumentQuote
 from pytdx.parser.ex_get_minute_time_data import GetMinuteTimeData
 from pytdx.parser.ex_get_instrument_bars import GetInstrumentBars
+from pytdx.parser.ex_get_instrument_info import GetInstrumentInfo
 
 
 from pytdx.params import TDXParams
@@ -68,7 +69,7 @@ class TdxExHq_API(BaseSocketClient):
         cmd.setParams(market, code)
         return cmd.call_api()
 
-    #@update_last_ack_time
+    @update_last_ack_time
     def get_instrument_bars(self, category, market, code):
         cmd = GetInstrumentBars(self.client)
         cmd.setParams(category, market, code, start=0, count=0)
@@ -78,6 +79,12 @@ class TdxExHq_API(BaseSocketClient):
     def get_minute_time_data(self, market, code):
         cmd = GetMinuteTimeData(self.client)
         cmd.setParams(market, code)
+        return cmd.call_api()
+
+    @update_last_ack_time
+    def get_instrument_info(self, start, count=100):
+        cmd = GetInstrumentInfo(self.client)
+        cmd.setParams(start, count)
         return cmd.call_api()
 
     def do_heartbeat(self):
@@ -91,7 +98,7 @@ if __name__ == '__main__':
         log.info("获取市场代码")
         #pprint.pprint(api.to_df(api.get_markets()))
         log.info("查询市场中商品数量")
-        #pprint.pprint(api.get_instrument_count())
+        pprint.pprint(api.get_instrument_count())
         log.info("查询五档行情")
         #pprint.pprint(api.to_df(api.get_instrument_quote(47, "IF1709")))
         #pprint.pprint(api.get_instrument_quote(8, "10000889"))
@@ -103,4 +110,6 @@ if __name__ == '__main__':
 
         log.info("查询k线")
         #pprint.pprint(api.to_df(api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, 8, "10000843")))
-        pprint.pprint(api.to_df(api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, 31, "00700")))
+        #pprint.pprint(api.to_df(api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, 31, "00700")))
+        log.info("查询代码列表")
+        pprint.pprint(api.to_df(api.get_instrument_info(10000, 98)))

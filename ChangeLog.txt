@@ -1,3 +1,19 @@
+1.21
+------
+* Reader 支持 lc1, lc5 文件格式
+
+1.20
+------
+* 修复了exhq get_instrument_info(10000, 98)取不到数据, change to name = name_raw.decode("gbk", 'ignore')
+
+1.19
+------
+* 合并了hqpool分支，增加行情备选连接池支持
+
+1.18
+------
+* 增加了扩展行情的 查询代码列表 `get_instrument_info`
+
 1.17
 ------
 * 修正了get_instrument_bars接口的ohlc位置对应错误的bug
