@@ -1,3 +1,7 @@
+1.22
+------
+* 解决扩展行情，无法指定数据长度的问题 https://github.com/rainx/pytdx/issues/22 wopalm
+
 1.21
 ------
 * Reader 支持 lc1, lc5 文件格式
