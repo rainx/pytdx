@@ -72,7 +72,7 @@ class TdxExHq_API(BaseSocketClient):
     @update_last_ack_time
     def get_instrument_bars(self, category, market, code):
         cmd = GetInstrumentBars(self.client)
-        cmd.setParams(category, market, code, start=0, count=0)
+        cmd.setParams(category, market, code, start=0, count=700)
         return cmd.call_api()
 
     @update_last_ack_time
