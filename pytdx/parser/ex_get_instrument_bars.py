@@ -46,7 +46,7 @@ class GetInstrumentBars(BaseParser):
 
         #count
         last_value = 0x00f00000
-        pkg.extend(struct.pack('<B9sHHHI', market, code, category, count, start, last_value))
+        pkg.extend(struct.pack('<B9sHHIH', market, code, category, 0, start, count))
         self.send_pkg = pkg
 
     def parseResponse(self, body_buf):
