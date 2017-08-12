@@ -8,11 +8,10 @@ import struct
 
 class GetHistoryTransactionData(BaseParser):
 
-    def setParams(self, market, code, start, count, date):
-        # print(six.text_type)
-
+    def setParams(self, market, code, date, start, count):
         # if type(code) is six.text_type:
         code = code.encode("utf-8")
+
         # if type(date) is (type(date) is six.text_type) or (type(date) is six.binary_type):
         #     date = int(date)
 
@@ -29,7 +28,7 @@ class GetHistoryTransactionData(BaseParser):
         result = []
         for i in range(num):
 
-            (raw_time, price, avg_price, volume, amount) = struct.unpack("<HIIIH", body_buf[pos: pos + 16])
+            (raw_time, price, volume, zengcang, nature) = struct.unpack("<HIIIH", body_buf[pos: pos + 16])
 
             pos += 16
             hour = raw_time // 60
@@ -39,9 +38,9 @@ class GetHistoryTransactionData(BaseParser):
                 ("hour", hour),
                 ("minute", minute),
                 ("price", price),
-                ("avg_price", avg_price),
                 ("volume", volume),
-                ("open_interest", amount),
+                ("zengcang", zengcang),
+                ("nature", nature),
             ]))
 
         return result

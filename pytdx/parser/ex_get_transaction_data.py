@@ -24,7 +24,7 @@ class GetTransactionData(BaseParser):
         result = []
         for i in range(num):
 
-            (raw_time, price, avg_price, volume, amount) = struct.unpack("<HIIIH", body_buf[pos: pos + 16])
+            (raw_time, price, volume, zengcang, nature) = struct.unpack("<HIIIH", body_buf[pos: pos + 16])
 
             pos += 16
             hour = raw_time // 60
@@ -34,9 +34,9 @@ class GetTransactionData(BaseParser):
                 ("hour", hour),
                 ("minute", minute),
                 ("price", price),
-                ("avg_price", avg_price),
                 ("volume", volume),
-                ("open_interest", amount),
+                ("zengcang", zengcang),
+                ("nature", nature),
             ]))
 
         return result

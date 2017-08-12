@@ -87,21 +87,21 @@ class TdxExHq_API(BaseSocketClient):
         return cmd.call_api()
 
     @update_last_ack_time
-    def get_history_minute_time_data(self, market, code, date=20160811):
+    def get_history_minute_time_data(self, market, code, date):
         cmd = GetHistoryMinuteTimeData(self.client)
         cmd.setParams(market, code, date=date)
         return cmd.call_api()
 
     @update_last_ack_time
-    def get_transaction_data(self, market, code, start=300, count=240):
+    def get_transaction_data(self, market, code, start=0, count=1800):
         cmd = GetTransactionData(self.client)
         cmd.setParams(market, code, start=start, count=count)
         return cmd.call_api()
 
     @update_last_ack_time
-    def get_history_transaction_data(self, market, code, start=0, count=240, date=20160811):
+    def get_history_transaction_data(self, market, code, date, start=0, count=1800):
         cmd = GetHistoryTransactionData(self.client)
-        cmd.setParams(market, code, start=start, count=count, date=date)
+        cmd.setParams(market, code, date, start=start, count=count)
         return cmd.call_api()
 
     @update_last_ack_time
@@ -132,13 +132,13 @@ if __name__ == '__main__':
         #pprint.pprint(api.to_df(api.get_minute_time_data(47, "IFL0")))
         #pprint.pprint(api.to_df(api.get_minute_time_data(8, "10000889")).tail())
         #pprint.pprint(api.get_minute_time_data(31, "00020"))
-        # log.info("查询历史分时行情")
-        # pprint.pprint(api.to_df(api.get_history_minute_time_data(31, "00020")).tail())
+        log.info("查询历史分时行情")
+        pprint.pprint(api.to_df(api.get_history_minute_time_data(31, "00020", 20170811)).tail())
         # log.info("查询分时成交")
         # pprint.pprint(api.to_df(api.get_transaction_data(31, "00020")).tail())
 
         log.info("查询历史分时成交")
-        pprint.pprint(api.to_df(api.get_history_transaction_data(31, "00020")).tail())
+        pprint.pprint(api.to_df(api.get_history_transaction_data(31, "00020", 20170811)).tail())
         #data = api.get_history_minute_time_data(47, 'IFL0', 20170811)
         # pprint.pprint(data)
 
