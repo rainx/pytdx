@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pytdx',
-    version='1.23',
+    version='1.24',
     description='A Python Interface to TDX protocol',
     author='RainX<Jing Xu>',
     author_email='i@rainx.cc',

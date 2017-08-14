@@ -134,8 +134,8 @@ if __name__ == '__main__':
         #pprint.pprint(api.get_minute_time_data(31, "00020"))
         log.info("查询历史分时行情")
         pprint.pprint(api.to_df(api.get_history_minute_time_data(31, "00020", 20170811)).tail())
-        # log.info("查询分时成交")
-        # pprint.pprint(api.to_df(api.get_transaction_data(31, "00020")).tail())
+        log.info("查询分时成交")
+        pprint.pprint(api.to_df(api.get_transaction_data(31, "00020")).tail())
 
         log.info("查询历史分时成交")
         pprint.pprint(api.to_df(api.get_history_transaction_data(31, "00020", 20170811)).tail())
