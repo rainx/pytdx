@@ -1,10 +1,10 @@
 1.24
 ------
-增加 TdxExHqDailyBarReader ，用于读取扩展行情（如期货，现货，期权等）的盘后日线数据 https://github.com/rainx/pytdx/issues/25
+* 增加 TdxExHqDailyBarReader ，用于读取扩展行情（如期货，现货，期权等）的盘后日线数据 https://github.com/rainx/pytdx/issues/25
 
 1.23
 ------
-增加历史分时行情，分时成交，历史分时成交 https://github.com/rainx/pytdx/pull/24 wopalm
+* 增加历史分时行情，分时成交，历史分时成交 https://github.com/rainx/pytdx/pull/24 wopalm
 
 1.22
 ------
