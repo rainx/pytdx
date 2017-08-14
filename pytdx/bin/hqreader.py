@@ -9,11 +9,21 @@ if __name__ == '__main__':
 from pytdx.reader import TdxDailyBarReader, TdxFileNotFoundException, TdxNotAssignVipdocPathException
 from pytdx.reader import TdxMinBarReader
 from pytdx.reader import TdxLCMinBarReader
+from pytdx.reader import TdxExHqDailyBarReader
+
+
+Help_Text = '''
+数据文件格式，
+ - daily 代表日K线
+ - ex_daily 代表扩展行情的日线
+ - min 代表5分钟或者1分钟线
+ - lc 代表lc1, lc5格式的分钟线
+'''
 
 @click.command()
 @click.argument("input", type=click.Path(exists=True))
 @click.option("-o", '--output', help="")
-@click.option("-d", "--datatype", default="daily", help="数据文件格式， daily 代表日K线, min 代表5分钟或者1分钟线, lc 代表lc1, lc5格式的分钟线")
+@click.option("-d", "--datatype", default="daily", help=Help_Text)
 def main(input, output, datatype):
     """
     通达信数据文件读取
@@ -21,6 +31,8 @@ def main(input, output, datatype):
 
     if datatype == 'daily':
         reader = TdxDailyBarReader()
+    elif datatype == 'ex_daily':
+        reader = TdxExHqDailyBarReader()
     elif datatype == 'lc':
         reader = TdxLCMinBarReader()
     else:
