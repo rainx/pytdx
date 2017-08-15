@@ -1,3 +1,7 @@
+1.26
+------
+* 增加了 KLINE_TYPE_EXHQ_1MIN = 7 用于获取扩展行情分钟K线 via mi-fox 
+
 1.25
 ------
 * 修复了get_k_data 因为停牌导致的时间索引错位的问题 https://github.com/rainx/pytdx/pull/26 yutiansut
