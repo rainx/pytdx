@@ -1,3 +1,7 @@
+1.27
+------
+* commit 新的get_k_data , 支持任意时间段 任意时间长度 任意股票 https://github.com/rainx/pytdx/pull/27 yutiansut
+
 1.26
 ------
 * 增加了 KLINE_TYPE_EXHQ_1MIN = 7 用于获取扩展行情分钟K线 via mi-fox 
