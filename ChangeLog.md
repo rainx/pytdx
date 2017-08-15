@@ -1,3 +1,7 @@
+1.25
+------
+* 修复了get_k_data 因为停牌导致的时间索引错位的问题 https://github.com/rainx/pytdx/pull/26 yutiansut
+
 1.24
 ------
 * 增加 TdxExHqDailyBarReader ，用于读取扩展行情（如期货，现货，期权等）的盘后日线数据 https://github.com/rainx/pytdx/issues/25
