@@ -132,6 +132,9 @@ class TdxHq_API(BaseSocketClient):
 
     def get_k_data(self, code, start_date, end_date):
         # 具体详情参见 https://github.com/rainx/pytdx/issues/5
+        # 具体详情参见 https://github.com/rainx/pytdx/issues/21
+
+        # 新版一劳永逸偷懒写法zzz
         if str(code)[0] == '6':
             # 0 - 深圳， 1 - 上海
             market_code = 1
@@ -146,39 +149,16 @@ class TdxHq_API(BaseSocketClient):
         start_date = get_real_trade_date(start_date, 1)
         end_date = get_real_trade_date(end_date, -1)
 
+        data = []
 
-        # 判断end_date在哪个位置
-        index_0 = str(datetime.date.today())
-        index_of_index_0 = trade_date_sse.index(index_0)
-        index_of_index_end = trade_date_sse.index(
-            end_date)  # 这是我们想要的date 在那个trade_date里的位置
-        index_of_index_start = trade_date_sse.index(start_date)
+        for i in range(10):
+            data += self.get_security_bars(9, 0, code, (9 - i) * 800, 800)
 
-        index_of_end = index_of_index_0 - index_of_index_end
-        #data = api.to_df(api.get_security_bars(9, market_code, code,index_of_end, 1))
-        # 这是拿到的真实的date
-        date = str(list(self.to_df(self.get_security_bars(
-            9, market_code, code, index_of_end, 1))['datetime'])[0])[0:10]
-
-        def judge_date(date, index_of_index_end, index_of_end):
-            while abs(index_of_index_end - trade_date_sse.index(date)) != 0:
-                index_of_end -= index_of_index_end - \
-                    trade_date_sse.index(date)  # 这个是实际拿到的时间的位置
-                date = str(list(self.to_df(self.get_security_bars(
-                    9, market_code, code, index_of_end, 1))['datetime'])[0])[0:10]
-                return index_of_end
-
-        index_of_end = judge_date(date, index_of_index_end, index_of_end)
-        index_length = index_of_index_end + 1 - index_of_index_start + 20
-
-        # data = api.get_security_bars(9, market_code, code,index_of_end, index_length)  # 返回普通list
-        data = self.to_df(self.get_security_bars(
-            9, market_code, code, index_of_end, index_length))  # 返回DataFrame
+        data = self.to_df(data)
         data['date'] = data['datetime'].apply(lambda x: x[0:10])
         data = data.set_index('date')
         data = data.drop(['year', 'month', 'day', 'hour',
-                            'minute', 'datetime'], axis=1)
-
+                          'minute', 'datetime'], axis=1)
         return data[start_date:end_date]
 
 
