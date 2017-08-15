@@ -1,3 +1,7 @@
+1.28
+------
+* 添加 get_history_instrument_bars_range 接口，可以根据一个时间范围下载历史k线信息 https://github.com/rainx/pytdx/pull/28 mifox
+
 1.27
 ------
 * commit 新的get_k_data , 支持任意时间段 任意时间长度 任意股票 https://github.com/rainx/pytdx/pull/27 yutiansut

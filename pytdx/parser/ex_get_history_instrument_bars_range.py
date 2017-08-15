@@ -5,10 +5,10 @@ from pytdx.parser.base import BaseParser
 from pytdx.helper import get_datetime, get_volume, get_price
 from collections import OrderedDict
 import struct
-import hexdump
+#import hexdump
 from pytdx.log import DEBUG, log
 
-class GetHistoryMinuteTimeData2(BaseParser):
+class GetHistoryInstrumentBarsRange(BaseParser):
     def __init__(self, *args, **kvargs):
         self.seqid = 1
         BaseParser.__init__(self, *args, **kvargs)
@@ -26,7 +26,7 @@ class GetHistoryMinuteTimeData2(BaseParser):
         pkg.extend(struct.pack("<B9s",  market, code))
         pkg.extend(bytearray.fromhex('07 00'))
         pkg.extend(struct.pack("<LL", date,date2))
-        print(hexdump.hexdump(pkg))   
+        #print(hexdump.hexdump(pkg))
         self.send_pkg = pkg
 #      
         
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     from pytdx.exhq import TdxExHq_API
     api = TdxExHq_API()
     with api.connect('61.152.107.141', 7727):
-        x = api.to_df(api.get_history_minute_time_data2(74, "BABA", 20170613,20170620))
+        x = api.to_df(api.get_history_instrument_bars_range(74, "BABA", 20170613,20170620))
         pprint.pprint(x.tail())
 
         
