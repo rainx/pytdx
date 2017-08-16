@@ -1,3 +1,8 @@
+1.29
+------
+* 添加对通达信gbbq文件的解析类GbbqReader
+* 可以使用 hqreader -d gbbq _path_to_gbbq_file_ -o some_output_file.csv 保存股本变迁数据
+
 1.28
 ------
 * 添加 get_history_instrument_bars_range 接口，可以根据一个时间范围下载历史k线信息 https://github.com/rainx/pytdx/pull/28 mifox

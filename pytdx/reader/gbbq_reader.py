@@ -11,7 +11,7 @@ import sys
 class GbbqReader(object):
 
 
-    def get_def(self, fname):
+    def get_df(self, fname):
         if sys.version_info.major == 2:
             bin_keys = bytearray.fromhex(self.hexdump_keys)
         else:
@@ -91,5 +91,5 @@ class GbbqReader(object):
 
 
 if __name__ == '__main__':
-    result = GbbqReader().get_def("/Users/rainx/tmp/gbbq")
+    result = GbbqReader().get_df("/Users/rainx/tmp/gbbq")
     print(result)
