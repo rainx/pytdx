@@ -1,11 +1,29 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
+import os
+
+PYTDX_CYTHON = os.getenv("PYTDX_CYTHON", None)
+
+if PYTDX_CYTHON:
+    from Cython.Build import cythonize
+    cythonkw = {
+        "ext_modules": cythonize("pytdx/reader/c_gbbq_reader.pyx")
+    }
+else:
+    cythonkw = {}
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except (IOError, ImportError):
+    long_description = ''
+
 
 setup(
     name='pytdx',
-    version='1.26',
+    version='1.29',
     description='A Python Interface to TDX protocol',
+    long_description=long_description,
     author='RainX<Jing Xu>',
     author_email='i@rainx.cc',
     url='https://github.com/rainx/pytdx',
@@ -21,6 +39,7 @@ setup(
               'hqreader=pytdx.bin.hqreader:main'
 
           ]
-      }
+      },
+    **cythonkw,
     )
 

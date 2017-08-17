@@ -156,6 +156,7 @@ class TdxHq_API(BaseSocketClient):
 
         data = self.to_df(data)
         data['date'] = data['datetime'].apply(lambda x: x[0:10])
+        data['date'] = pd.to_datetime(data['date'])
         data = data.set_index('date')
         data = data.drop(['year', 'month', 'day', 'hour',
                           'minute', 'datetime'], axis=1)

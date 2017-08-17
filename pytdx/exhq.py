@@ -24,6 +24,7 @@ from pytdx.parser.ex_get_transaction_data import GetTransactionData
 from pytdx.parser.ex_get_history_transaction_data import GetHistoryTransactionData
 from pytdx.parser.ex_get_instrument_bars import GetInstrumentBars
 from pytdx.parser.ex_get_instrument_info import GetInstrumentInfo
+from pytdx.parser.ex_get_history_instrument_bars_range import GetHistoryInstrumentBarsRange
 
 
 from pytdx.params import TDXParams
@@ -102,6 +103,12 @@ class TdxExHq_API(BaseSocketClient):
     def get_history_transaction_data(self, market, code, date, start=0, count=1800):
         cmd = GetHistoryTransactionData(self.client)
         cmd.setParams(market, code, date, start=start, count=count)
+        return cmd.call_api()
+
+    @update_last_ack_time
+    def get_history_instrument_bars_range(self, market, code, start, end):
+        cmd = GetHistoryInstrumentBarsRange(self.client)
+        cmd.setParams(market, code, start, end)
         return cmd.call_api()
 
     @update_last_ack_time

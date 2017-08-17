@@ -1,3 +1,24 @@
+1.29
+------
+* 添加对通达信gbbq文件的解析类GbbqReader
+* 可以使用 hqreader -d gbbq _path_to_gbbq_file_ -o some_output_file.csv 保存股本变迁数据
+
+1.28
+------
+* 添加 get_history_instrument_bars_range 接口，可以根据一个时间范围下载历史k线信息 https://github.com/rainx/pytdx/pull/28 mifox
+
+1.27
+------
+* commit 新的get_k_data , 支持任意时间段 任意时间长度 任意股票 https://github.com/rainx/pytdx/pull/27 yutiansut
+
+1.26
+------
+* 增加了 KLINE_TYPE_EXHQ_1MIN = 7 用于获取扩展行情分钟K线 via mi-fox 
+
+1.25
+------
+* 修复了get_k_data 因为停牌导致的时间索引错位的问题 https://github.com/rainx/pytdx/pull/26 yutiansut
+
 1.24
 ------
 * 增加 TdxExHqDailyBarReader ，用于读取扩展行情（如期货，现货，期权等）的盘后日线数据 https://github.com/rainx/pytdx/issues/25
