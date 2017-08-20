@@ -1,3 +1,7 @@
+1.30
+------
+* 修复 exhqapi.get_transaction_data里的增仓数据不正确, 性质数据对不上 https://github.com/rainx/pytdx/issues/31
+
 1.29
 ------
 * 添加对通达信gbbq文件的解析类GbbqReader
