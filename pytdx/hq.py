@@ -136,6 +136,7 @@ class TdxHq_API(BaseSocketClient):
 
         # 新版一劳永逸偷懒写法zzz
         market_code = 1 if str(code)[0] == '6' else 0
+        #https://github.com/rainx/pytdx/issues/33
         # 0 - 深圳， 1 - 上海
         start_date = get_real_trade_date(start_date, 1)
         end_date = get_real_trade_date(end_date, -1)
