@@ -38,6 +38,13 @@ class GetXdXrInfo(BaseParser):
         pos += 2
 
         rows = []
+
+        def _get_v(v):
+            if v == 0:
+                return 0
+            else:
+                return get_volume(v)
+
         for i in range(num):
             market, code = struct.unpack(u"<B6s", body_buf[:7])
             pos += 7
@@ -53,15 +60,22 @@ class GetXdXrInfo(BaseParser):
             # b'\x00\xc0\x0fF' => 9200.00000
             # b'\x00@\x83E' => 4200.0000
 
-            panqianliutong_raw, qianzongguben_raw, panhouliutong_raw, houzongguben_raw = struct.unpack("<IIII", body_buf[pos: pos + 16])
+            suogu = None
+            panqianliutong, panhouliutong, qianzongguben, houzongguben = None, None, None, None
+            songzhuangu, fenhong, peigu, peigujia = None, None, None, None
+            if category == 1:
+                fenhong, peigujia, songzhuangu, peigu  = struct.unpack("<ffff", body_buf[pos: pos + 16])
+            elif category == 11:
+                (_, _, suogu_raw, _) = struct.unpack("<IIII", body_buf[pos: pos + 16])
+                suogu = _get_v(suogu_raw)
+            else :
+                panqianliutong_raw, qianzongguben_raw, panhouliutong_raw, houzongguben_raw = struct.unpack("<IIII", body_buf[pos: pos + 16])
+                panqianliutong = _get_v(panqianliutong_raw)
+                panhouliutong = _get_v(panhouliutong_raw)
+                qianzongguben = _get_v(qianzongguben_raw)
+                houzongguben = _get_v(houzongguben_raw)
+
             pos += 16
-
-            def _get_v(v):
-                if v == 0:
-                    return 0
-                else:
-                    return get_volume(v)
-
 
             row = OrderedDict(
                 [
@@ -69,12 +83,26 @@ class GetXdXrInfo(BaseParser):
                     ('month', month),
                     ('day', day),
                     ('category', category),
-                    ('panqianliutong', _get_v(panqianliutong_raw)),
-                    ('panhouliutong', _get_v(panhouliutong_raw)),
-                    ('qianzongguben', _get_v(qianzongguben_raw)),
-                    ('houzongguben', _get_v(houzongguben_raw)),
+                    ('fenhong', fenhong),
+                    ('peigujia', peigujia),
+                    ('songzhuangu', songzhuangu),
+                    ('peigu', peigu),
+                    ('suogu', suogu),
+                    ('panqianliutong', panqianliutong),
+                    ('panhouliutong', panhouliutong),
+                    ('qianzongguben', qianzongguben),
+                    ('houzongguben', houzongguben),
                 ]
             )
             rows.append(row)
 
         return rows
+
+
+if __name__ == '__main__':
+
+    from pytdx.hq import TdxHq_API
+    api = TdxHq_API()
+    with api.connect():
+        print(api.to_df(api.get_xdxr_info(1, '600300')))
+

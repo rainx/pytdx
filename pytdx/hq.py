@@ -135,22 +135,12 @@ class TdxHq_API(BaseSocketClient):
         # 具体详情参见 https://github.com/rainx/pytdx/issues/21
 
         # 新版一劳永逸偷懒写法zzz
-        if str(code)[0] == '6':
-            # 0 - 深圳， 1 - 上海
-            market_code = 1
-        else:
-            market_code = 0
-        if str(code)[0] == '6':
-            # 0 - 深圳， 1 - 上海
-            market_code = 1
-        else:
-            market_code = 0
-
+        market_code = 1 if str(code)[0] == '6' else 0
+        #https://github.com/rainx/pytdx/issues/33
+        # 0 - 深圳， 1 - 上海
         start_date = get_real_trade_date(start_date, 1)
         end_date = get_real_trade_date(end_date, -1)
-
         data = []
-
         for i in range(10):
             data += self.get_security_bars(9, 0, code, (9 - i) * 800, 800)
 
