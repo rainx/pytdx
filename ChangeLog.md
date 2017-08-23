@@ -1,3 +1,9 @@
+1.32
+------
+* merge pr https://github.com/rainx/pytdx/pull/34
+* 增加对 get_security_bars 的注释：如果一个股票当天停牌，那天的K线还是能取到，成交量为0
+* 上线了trade模块，但是trade模块需配合TdxTradeServer使用（一个Windows 上的 C++ 开发的Server端）
+
 1.31
 ------
 * 修复除息除权信息错误，增加 fenhong  peigujia  songzhuangu  peigu suogu 字段 https://github.com/rainx/pytdx/issues/8
