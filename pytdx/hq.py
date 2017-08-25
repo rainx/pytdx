@@ -49,6 +49,7 @@ class TdxHq_API(BaseSocketClient):
 
     # API List
 
+    # Notice：，如果一个股票当天停牌，那天的K线还是能取到，成交量为0
     @update_last_ack_time
     def get_security_bars(self, category, market, code, start, count):
         cmd = GetSecurityBarsCmd(self.client, lock=self.lock)

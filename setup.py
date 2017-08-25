@@ -29,9 +29,10 @@ setup(
     url='https://github.com/rainx/pytdx',
     packages=find_packages(),
     install_requires=[
-          'click',
-          'pandas',
-          'six'
+            'click',
+            'pandas',
+            'six',
+            'cryptography'
     ],
     entry_points={
           'console_scripts': [
