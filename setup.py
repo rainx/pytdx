@@ -41,6 +41,6 @@ setup(
 
           ]
       },
-    **cythonkw,
+    **cythonkw
     )
 
