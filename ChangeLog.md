@@ -1,3 +1,7 @@
+1.33
+------
+修复 Python2.x 无法安装的问题 https://github.com/rainx/pytdx/issues/36
+
 1.32
 ------
 * merge pr https://github.com/rainx/pytdx/pull/34
