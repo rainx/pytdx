@@ -21,7 +21,7 @@ except (IOError, ImportError):
 
 setup(
     name='pytdx',
-    version='1.33',
+    version='1.34',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
     author='RainX<Jing Xu>',

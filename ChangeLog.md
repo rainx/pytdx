@@ -1,3 +1,9 @@
+1.34
+------
+增加了 https://github.com/rainx/pytdx/issues/38 IP寻优的简单办法 
+xdxr https://github.com/rainx/pytdx/issues/37 修改了对 11, 12, 13, 14 类别的支持， 针对13，14，增加了 fenshu xingquanjia 字段
+
+
 1.33
 ------
 修复 Python2.x 无法安装的问题 https://github.com/rainx/pytdx/issues/36
