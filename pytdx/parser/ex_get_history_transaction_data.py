@@ -4,7 +4,7 @@ from pytdx.parser.base import BaseParser
 from pytdx.helper import get_datetime, get_volume, get_price
 from collections import OrderedDict
 import struct
-
+import datetime
 
 class GetHistoryTransactionData(BaseParser):
 
@@ -19,6 +19,7 @@ class GetHistoryTransactionData(BaseParser):
         pkg = bytearray.fromhex('01 01 30 00 02 01 16 00 16 00 06 24')
         pkg.extend(struct.pack("<IB9siH", date, market, code, start, count))
         self.send_pkg = pkg
+        self.date = date
 
     def parseResponse(self, body_buf):
 
@@ -28,19 +29,79 @@ class GetHistoryTransactionData(BaseParser):
         result = []
         for i in range(num):
 
-            (raw_time, price, volume, zengcang, nature) = struct.unpack("<HIIIH", body_buf[pos: pos + 16])
+            (raw_time, price, volume, zengcang, direction) = struct.unpack("<HIIiH", body_buf[pos: pos + 16])
 
             pos += 16
+            year = self.date // 10000
+            month = self.date % 10000 // 100
+            day = self.date % 100
             hour = raw_time // 60
             minute = raw_time % 60
+            second = direction % 10000
+            nature = direction #### 为了老用户接口的兼容性，已经转换为使用 nature_value
+            value = direction // 10000
+            # 对于大于59秒的值，属于无效数值
+            if second > 59:
+                second = 0
+            date = datetime.datetime(year, month, day, hour, minute, second)
+
+            if value == 0:
+                direction = 1
+                if zengcang > 0:
+                    natrue_name = "多开"
+                elif zengcang == 0:
+                    natrue_name = "多换"
+                else:
+                    if volume == -zengcang:
+                        natrue_name = "双平"
+                    else:
+                        natrue_name = "空平"
+            elif value == 1:
+                direction = -1
+                if zengcang > 0:
+                    natrue_name = "空开"
+                elif zengcang == 0:
+                    natrue_name = "空换"
+                else:
+                    if volume == -zengcang:
+                        natrue_name = "双平"
+                    else:
+                        natrue_name = "多平"
+            else:
+                direction = 0
+                if zengcang > 0:
+                    if volume > zengcang:
+                        natrue_name = "开仓"
+                    elif volume == zengcang:
+                        natrue_name = "双开"
+                elif zengcang < 0:
+                    if volume > -zengcang:
+                        natrue_name = "平仓"
+                    elif volume == -zengcang:
+                        natrue_name = "双平"
+                else:
+                    natrue_name = "换手"
 
             result.append(OrderedDict([
+                ("date", date),
                 ("hour", hour),
                 ("minute", minute),
                 ("price", price),
                 ("volume", volume),
                 ("zengcang", zengcang),
+                ("natrue_name", natrue_name),
                 ("nature", nature),
+
             ]))
 
         return result
+
+
+if __name__ == '__main__':
+
+    from pytdx.exhq import TdxExHq_API
+
+    api = TdxExHq_API()
+    with api.connect('121.14.110.210', 7727):
+        print(api.to_df(api.get_history_transaction_data(47, 'IFL0', 20170811)))
+        print(api.to_df(api.get_history_transaction_data(31, "00020", 20170811)))
