@@ -90,6 +90,7 @@ class GetHistoryTransactionData(BaseParser):
                 ("volume", volume),
                 ("zengcang", zengcang),
                 ("natrue_name", natrue_name),
+                ("direction", direction),
                 ("nature", nature),
 
             ]))

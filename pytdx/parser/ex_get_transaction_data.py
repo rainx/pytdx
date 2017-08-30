@@ -5,7 +5,7 @@ from pytdx.helper import get_datetime, get_volume, get_price, get_time
 from collections import OrderedDict
 import struct
 import six
-
+import datetime
 
 class GetTransactionData(BaseParser):
 
@@ -34,6 +34,8 @@ class GetTransactionData(BaseParser):
 
             if second > 59:
                 second = 0
+
+            date = datetime.datetime.combine(datetime.date.today(), datetime.time(hour,minute,second))
 
             value = direction // 10000
             if value == 0:
@@ -75,6 +77,7 @@ class GetTransactionData(BaseParser):
 
 
             result.append(OrderedDict([
+                ("date", date),
                 ("hour", hour),
                 ("minute", minute),
                 ("second", second),
@@ -85,6 +88,7 @@ class GetTransactionData(BaseParser):
                 ("nature_mark", nature // 10000),
                 ("nature_value", nature % 10000),
                 ("nature_name", nature_name),
+                ("direction", direction),
             ]))
 
         return result
