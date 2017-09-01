@@ -1,3 +1,8 @@
+1.36
+------
+* fix bugs that break on call get_security_quotes on py2.7
+* 修复 get_security_quotes 在没有行情的时候报错 https://github.com/rainx/pytdx/issues/44
+
 1.35
 ------
 * 修复 exhqapi.get_transaction_data里的增仓数据不正确, 性质数据对不上 thx @zzeric
