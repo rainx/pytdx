@@ -37,8 +37,8 @@ class GetSecurityQuotesCmd(BaseParser):
             market, code = stock
             if type(code) is six.text_type:
                 code = code.encode("utf-8")
-                one_stock_pkg = struct.pack("<B6s", market, code)
-                pkg.extend(one_stock_pkg)
+            one_stock_pkg = struct.pack("<B6s", market, code)
+            pkg.extend(one_stock_pkg)
 
         self.send_pkg = pkg
 
@@ -167,3 +167,10 @@ class GetSecurityQuotesCmd(BaseParser):
 
     def _cal_price(self, base_p, diff):
         return float(base_p + diff)/100
+
+
+if __name__ == '__main__':
+    from pytdx.hq import TdxHq_API
+    api = TdxHq_API()
+    with api.connect():
+        print(api.to_df(api.get_security_quotes([(0, '002673')])))
