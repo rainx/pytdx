@@ -1,3 +1,8 @@
+1.37
+------
+* 增加自动重连机制 auto_retry=True 时生效，并可以自定制重连策略
+* 增加连接和接口调用时的异常处理
+
 1.36
 ------
 * fix bugs that break on call get_security_quotes on py2.7
