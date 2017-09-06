@@ -90,7 +90,7 @@ class DefaultRetryStrategy(RetryStrategy):
     """
     默认的重试策略，您可以通过写自己的重试策略替代本策略, 改策略主要实现gen方法，该方法是一个生成器，
     返回下次重试的间隔时间, 单位为秒，我们会使用 time.sleep在这里同步等待之后进行重新connect,然后再重新发起
-    源请求，知道gen结束。
+    源请求，直到gen结束。
     """
     @classmethod
     def gen(cls):
