@@ -1,3 +1,28 @@
+1.37
+------
+* 增加自动重连机制 auto_retry=True 时生效，并可以自定制重连策略
+* 增加连接和接口调用时的异常处理
+
+1.36
+------
+* fix bugs that break on call get_security_quotes on py2.7
+* 修复 get_security_quotes 在没有行情的时候报错 https://github.com/rainx/pytdx/issues/44
+
+1.35
+------
+* 修复 exhqapi.get_transaction_data里的增仓数据不正确, 性质数据对不上 thx @zzeric
+see https://github.com/rainx/pytdx/issues/31
+
+1.34
+------
+* 增加了 https://github.com/rainx/pytdx/issues/38 IP寻优的简单办法 
+* xdxr https://github.com/rainx/pytdx/issues/37 修改了对 11, 12, 13, 14 类别的支持， 针对13，14，增加了 fenshu xingquanjia 字段
+
+
+1.33
+------
+* 修复 Python2.x 无法安装的问题 https://github.com/rainx/pytdx/issues/36
+
 1.32
 ------
 * merge pr https://github.com/rainx/pytdx/pull/34

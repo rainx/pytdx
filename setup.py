@@ -21,7 +21,7 @@ except (IOError, ImportError):
 
 setup(
     name='pytdx',
-    version='1.32',
+    version='1.37',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
     author='RainX<Jing Xu>',
@@ -41,6 +41,6 @@ setup(
 
           ]
       },
-    **cythonkw,
+    **cythonkw
     )
 

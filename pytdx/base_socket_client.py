@@ -14,6 +14,7 @@ if __name__ == '__main__':
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from pytdx.log import DEBUG, log
+from pytdx.errors import TdxConnectionError, TdxFunctionCallError
 
 import threading,datetime
 import time
@@ -50,22 +51,62 @@ def update_last_ack_time(func):
         try:
             ret = func(self, *args, **kw)
         except Exception as e:
+            log.debug("hit exception on req exception is " + str(e))
+            if self.auto_retry:
+                for time_interval in self.retry_strategy.gen():
+                    try:
+                        time.sleep(time_interval)
+                        self.disconnect()
+                        self.connect(self.ip, self.port)
+                        ret = func(self, *args, **kw)
+                        if ret:
+                            return ret
+                    except Exception as e:
+                        log.debug("hit exception on *retry* req exception is " + str(e))
+
+                log.debug("perform auto retry on req ")
+
             self.last_transaction_failed = True
             ret = None
-            raise e
-        finally:
-            return ret
+            if self.raise_exception:
+                to_raise = TdxFunctionCallError("calling function error")
+                to_raise.original_exception = e
+                raise to_raise
+        """
+        如果raise_exception=True 抛出异常
+        如果raise_exception=False 返回None
+        """
+        return ret
     return wrapper
 
 
+class RetryStrategy(object):
+    @classmethod
+    def gen(cls):
+        raise NotImplementedError("need to override")
+
+
+class DefaultRetryStrategy(RetryStrategy):
+    """
+    默认的重试策略，您可以通过写自己的重试策略替代本策略, 改策略主要实现gen方法，该方法是一个生成器，
+    返回下次重试的间隔时间, 单位为秒，我们会使用 time.sleep在这里同步等待之后进行重新connect,然后再重新发起
+    源请求，直到gen结束。
+    """
+    @classmethod
+    def gen(cls):
+        # 默认重试4次 ... 时间间隔如下
+        for time_interval in [0.1, 0.5, 1, 2]:
+            yield time_interval
+
 class BaseSocketClient(object):
 
-    def __init__(self, multithread=False, heartbeat=False):
+    def __init__(self, multithread=False, heartbeat=False, auto_retry=False, raise_exception=False):
         self.need_setup = True
         if multithread or heartbeat:
             self.lock = threading.Lock()
         else:
             self.lock = None
+
 
         self.client = None
         self.heartbeat = heartbeat
@@ -76,6 +117,14 @@ class BaseSocketClient(object):
         self.last_transaction_failed = False
         self.ip = None
         self.port = None
+
+        # 是否重试
+        self.auto_retry=auto_retry
+        # 可以覆盖这个属性，使用新的重试策略
+        self.retry_strategy = DefaultRetryStrategy()
+        # 是否在函数调用出错的时候抛出异常
+        self.raise_exception = raise_exception
+
 
     def connect(self, ip='101.227.73.20', port=7709):
         """
@@ -89,13 +138,20 @@ class BaseSocketClient(object):
         self.client.settimeout(CONNECT_TIMEOUT)
         log.debug("connecting to server : %s on port :%d" % (ip, port))
         try:
-            self.client.connect((ip, port))
             self.ip = ip
             self.port = port
+            self.client.connect((ip, port))
         except socket.timeout as e:
-            print(str(e))
+            # print(str(e))
             log.debug("connection expired")
+            if self.raise_exception:
+                raise TdxConnectionError("connection timeout error")
             return False
+        except Exception as e:
+            if self.raise_exception:
+                raise TdxConnectionError("other errors")
+            return False
+
         log.debug("connected!")
 
         if self.need_setup:
@@ -121,6 +177,8 @@ class BaseSocketClient(object):
                 self.client = None
             except Exception as e:
                 log.debug(str(e))
+                if self.raise_exception:
+                    raise TdxConnectionError("disconnect err")
             log.debug("disconnected")
 
     def close(self):
