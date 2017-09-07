@@ -11,6 +11,7 @@ from pytdx.reader import TdxMinBarReader
 from pytdx.reader import TdxLCMinBarReader
 from pytdx.reader import TdxExHqDailyBarReader
 from pytdx.reader import GbbqReader
+from pytdx.reader import BlockReader
 
 
 Help_Text = '''
@@ -20,6 +21,7 @@ Help_Text = '''
  - min 代表5分钟或者1分钟线
  - lc 代表lc1, lc5格式的分钟线
  - gbbq 股本变迁文件
+ - block 读取板块股票列表文件
 '''
 
 @click.command()
@@ -39,6 +41,8 @@ def main(input, output, datatype):
         reader = TdxLCMinBarReader()
     elif datatype == 'gbbq':
         reader = GbbqReader()
+    elif datatype == 'block':
+        reader = BlockReader()
     else:
         reader = TdxMinBarReader()
 
