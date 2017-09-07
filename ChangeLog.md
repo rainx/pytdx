@@ -1,3 +1,7 @@
+1.39
+------
+* 修复GetSecurityQuotesCmd里面一个保留位长度计算错误导致某些行情无法获取的问题。
+
 1.38
 ------
 * 修复抛出在auto_retry开启时TdxFunctionCallError异常时的一个小问题
