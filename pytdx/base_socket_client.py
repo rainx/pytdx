@@ -48,9 +48,11 @@ def update_last_ack_time(func):
     def wrapper(self, *args, **kw):
         self.last_ack_time = time.time()
         log.debug("last ack time update to " + str(self.last_ack_time))
+        current_exception = None
         try:
             ret = func(self, *args, **kw)
         except Exception as e:
+            current_exception = e
             log.debug("hit exception on req exception is " + str(e))
             if self.auto_retry:
                 for time_interval in self.retry_strategy.gen():
@@ -61,8 +63,9 @@ def update_last_ack_time(func):
                         ret = func(self, *args, **kw)
                         if ret:
                             return ret
-                    except Exception as e:
-                        log.debug("hit exception on *retry* req exception is " + str(e))
+                    except Exception as retry_e:
+                        current_exception = retry_e
+                        log.debug("hit exception on *retry* req exception is " + str(retry_e))
 
                 log.debug("perform auto retry on req ")
 
@@ -70,7 +73,7 @@ def update_last_ack_time(func):
             ret = None
             if self.raise_exception:
                 to_raise = TdxFunctionCallError("calling function error")
-                to_raise.original_exception = e
+                to_raise.original_exception = current_exception if current_exception else None
                 raise to_raise
         """
         如果raise_exception=True 抛出异常

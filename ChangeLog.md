@@ -1,3 +1,7 @@
+1.38
+------
+* 修复抛出在auto_retry开启时TdxFunctionCallError异常时的一个小问题
+
 1.37
 ------
 * 增加自动重连机制 auto_retry=True 时生效，并可以自定制重连策略
