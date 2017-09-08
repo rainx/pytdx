@@ -3,7 +3,7 @@ python:
     - "2.7"
     - "3.5"
     - "3.6"
-    - "nightly" # currently points to 3.7-dev
+    # - "nightly" # currently points to 3.7-dev
     - "pypy"
     - "pypy3"
 
