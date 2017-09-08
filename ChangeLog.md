@@ -1,6 +1,6 @@
 1.41
 ------
-* 增加GetBlockInfoMeta， 增加GetBlockInfo， get_and_parse_block_info 等支持直接下载并解析板块文件
+* 增加GetBlockInfoMeta， 增加GetBlockInfo， get_and_parse_block_info 等支持直接下载并解析板块文件， 感谢 @mi-fox帮助分析协议
 
 1.40
 ------
