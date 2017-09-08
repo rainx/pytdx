@@ -72,7 +72,11 @@ if __name__ == '__main__':
     with api.connect():
         # ret = api.get_block_info("block_zs.dat", 0, 100)
         # print(len(ret))
-        ret = api.get_and_parse_block_info("block_zs.dat")
+        # ret = api.get_and_parse_block_info("block_fg.dat")
+        # ret = api.get_and_parse_block_info("block_zs.dat")
+        # ret = api.get_and_parse_block_info("block_gn.dat")
+        # ret = api.get_and_parse_block_info("block.dat")
+        ret = api.get_and_parse_block_info("block.dat")
         print(api.to_df(ret))
 
 
