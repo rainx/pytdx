@@ -1,3 +1,7 @@
+1.41
+------
+* 增加GetBlockInfoMeta， 增加GetBlockInfo， get_and_parse_block_info 等支持直接下载并解析板块文件
+
 1.40
 ------
 * 增加BlockReader用于读取板块列表
