@@ -1,5 +1,7 @@
 # Pytdx - Python通达信数据接口
 
+[![Build Status](https://travis-ci.org/rainx/pytdx.svg?branch=master)](https://travis-ci.org/rainx/cn_stock_holidays)
+
 文档
 ---
 用户文档会逐步转移到gitbook上，您可以在
