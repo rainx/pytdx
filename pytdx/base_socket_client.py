@@ -101,6 +101,20 @@ class DefaultRetryStrategy(RetryStrategy):
         for time_interval in [0.1, 0.5, 1, 2]:
             yield time_interval
 
+
+class TrafficStatSocket(socket.socket):
+    """
+    实现支持流量统计的socket类
+    """
+    def __init__(self, sock, mode):
+        super(TrafficStatSocket, self).__init__(sock, mode)
+        # 流量统计相关
+        self.send_pkg_num = 0  # 发送次数
+        self.recv_pkg_num = 0  # 接收次数
+        self.send_pkg_bytes = 0  # 发送字节
+        self.recv_pkg_bytes = 0  # 接收字节数
+        self.first_pkg_send_time = None  # 第一个数据包发送时间
+
 class BaseSocketClient(object):
 
     def __init__(self, multithread=False, heartbeat=False, auto_retry=False, raise_exception=False):
@@ -137,7 +151,7 @@ class BaseSocketClient(object):
         :return: 是否连接成功 True/False
         """
 
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client = TrafficStatSocket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.settimeout(CONNECT_TIMEOUT)
         log.debug("connecting to server : %s on port :%d" % (ip, port))
         try:
@@ -190,6 +204,36 @@ class BaseSocketClient(object):
         :return:
         """
         self.disconnect()
+
+
+    def get_traffic_stats(self):
+        """
+        获取流量统计的信息
+        :return:
+        """
+        if self.client.first_pkg_send_time is not None:
+            total_seconds = (datetime.datetime.now() - self.client.first_pkg_send_time).total_seconds()
+            if total_seconds != 0:
+                send_bytes_per_second = self.client.send_pkg_bytes // total_seconds
+                recv_bytes_per_second = self.client.recv_pkg_bytes // total_seconds
+            else:
+                send_bytes_per_second = None
+                recv_bytes_per_second = None
+        else:
+            total_seconds = None
+            send_bytes_per_second = None
+            recv_bytes_per_second = None
+
+        return {
+            "send_pkg_num" : self.client.send_pkg_num,
+            "recv_pkg_num" : self.client.recv_pkg_num,
+            "send_pkg_bytes" : self.client.send_pkg_bytes,
+            "recv_pkg_bytes" : self.client.recv_pkg_bytes,
+            "first_pkg_send_time" : self.client.first_pkg_send_time,
+            "total_seconds" : total_seconds,
+            "send_bytes_per_second" : send_bytes_per_second,
+            "recv_bytes_per_second" : recv_bytes_per_second,
+        }
 
 
     def __enter__(self):

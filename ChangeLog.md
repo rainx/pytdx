@@ -1,3 +1,7 @@
+1.42
+------
+* 增加了api.get_traffic_stats 获取当前连接的流量统计情况
+
 1.41
 ------
 * 增加GetBlockInfoMeta， 增加GetBlockInfo， get_and_parse_block_info 等支持直接下载并解析板块文件， 感谢 @mi-fox帮助分析协议
