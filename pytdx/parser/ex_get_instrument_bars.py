@@ -46,7 +46,8 @@ class GetInstrumentBars(BaseParser):
 
         #count
         last_value = 0x00f00000
-        pkg.extend(struct.pack('<B9sHHIH', market, code, category, 0, start, count))
+        pkg.extend(struct.pack('<B9sHHIH', market, code, category, 1, start, count))
+                                                                # 这个1还不确定是什么作用，疑似和是否复权有关
         self.send_pkg = pkg
 
     def parseResponse(self, body_buf):
@@ -87,7 +88,10 @@ class GetInstrumentBars(BaseParser):
 
 if __name__ == '__main__':
     from pytdx.exhq import TdxExHq_API
+    from pytdx.params import TDXParams
     api = TdxExHq_API()
-    cmd = GetInstrumentBars(api)
-    cmd.setParams(4, 8, "10000843", 0, 10)
-    print(cmd.send_pkg)
+    # cmd = GetInstrumentBars(api)
+    # cmd.setParams(4, 7, "10000843", 0, 10)
+    # print(cmd.send_pkg)
+    with api.connect('61.152.107.141', 7727):
+        print(api.to_df(api.get_instrument_bars(TDXParams.KLINE_TYPE_EXHQ_1MIN, 74, 'BABA')).tail())

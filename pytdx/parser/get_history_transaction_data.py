@@ -56,3 +56,8 @@ class GetHistoryTransactionData(BaseParser):
         return ticks
 
 
+if __name__ == '__main__':
+    from pytdx.hq import TdxHq_API
+    api = TdxHq_API()
+    with api.connect():
+        print(api.to_df(api.get_history_transaction_data(0, '000001', 0, 10, 20170811)))

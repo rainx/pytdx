@@ -24,6 +24,7 @@ from pytdx.parser.ex_get_transaction_data import GetTransactionData
 from pytdx.parser.ex_get_history_transaction_data import GetHistoryTransactionData
 from pytdx.parser.ex_get_instrument_bars import GetInstrumentBars
 from pytdx.parser.ex_get_instrument_info import GetInstrumentInfo
+from pytdx.parser.ex_get_history_instrument_bars_range import GetHistoryInstrumentBarsRange
 
 
 from pytdx.params import TDXParams
@@ -105,6 +106,12 @@ class TdxExHq_API(BaseSocketClient):
         return cmd.call_api()
 
     @update_last_ack_time
+    def get_history_instrument_bars_range(self, market, code, start, end):
+        cmd = GetHistoryInstrumentBarsRange(self.client)
+        cmd.setParams(market, code, start, end)
+        return cmd.call_api()
+
+    @update_last_ack_time
     def get_instrument_info(self, start, count=100):
         cmd = GetInstrumentInfo(self.client)
         cmd.setParams(start, count)
@@ -134,8 +141,8 @@ if __name__ == '__main__':
         #pprint.pprint(api.get_minute_time_data(31, "00020"))
         log.info("查询历史分时行情")
         pprint.pprint(api.to_df(api.get_history_minute_time_data(31, "00020", 20170811)).tail())
-        # log.info("查询分时成交")
-        # pprint.pprint(api.to_df(api.get_transaction_data(31, "00020")).tail())
+        log.info("查询分时成交")
+        pprint.pprint(api.to_df(api.get_transaction_data(31, "00020")).tail())
 
         log.info("查询历史分时成交")
         pprint.pprint(api.to_df(api.get_history_transaction_data(31, "00020", 20170811)).tail())
