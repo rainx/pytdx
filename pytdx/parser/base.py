@@ -80,6 +80,7 @@ class BaseParser(object):
 
         self.client.send_pkg_num += 1
         self.client.send_pkg_bytes += nsended
+        self.client.last_api_send_bytes = nsended
 
         if self.client.first_pkg_send_time is None:
             self.client.first_pkg_send_time = datetime.datetime.now()
@@ -101,14 +102,19 @@ class BaseParser(object):
                     log.debug("zip size is: " + str(zipsize))
                 body_buf = bytearray()
 
+                last_api_recv_bytes = self.rsp_header_len
                 while True:
                     buf = self.client.recv(zipsize)
                     len_buf = len(buf)
                     self.client.recv_pkg_num += 1
                     self.client.recv_pkg_bytes += len_buf
+                    last_api_recv_bytes += len_buf
                     body_buf.extend(buf)
                     if not(buf) or len_buf == 0 or len(body_buf) == zipsize:
                         break
+
+                self.client.last_api_recv_bytes = last_api_recv_bytes
+
                 if len(buf) == 0:
                     log.debug("接收数据体失败服务器断开连接")
                     raise ResponseRecvFails("接收数据体失败服务器断开连接")

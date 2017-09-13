@@ -115,6 +115,9 @@ class TrafficStatSocket(socket.socket):
         self.recv_pkg_bytes = 0  # 接收字节数
         self.first_pkg_send_time = None  # 第一个数据包发送时间
 
+        self.last_api_send_bytes = 0  # 最近的一次api调用的发送字节数
+        self.last_api_recv_bytes = 0  # 最近一次api调用的接收字节数
+
 class BaseSocketClient(object):
 
     def __init__(self, multithread=False, heartbeat=False, auto_retry=False, raise_exception=False):
@@ -225,14 +228,16 @@ class BaseSocketClient(object):
             recv_bytes_per_second = None
 
         return {
-            "send_pkg_num" : self.client.send_pkg_num,
-            "recv_pkg_num" : self.client.recv_pkg_num,
-            "send_pkg_bytes" : self.client.send_pkg_bytes,
-            "recv_pkg_bytes" : self.client.recv_pkg_bytes,
-            "first_pkg_send_time" : self.client.first_pkg_send_time,
-            "total_seconds" : total_seconds,
-            "send_bytes_per_second" : send_bytes_per_second,
-            "recv_bytes_per_second" : recv_bytes_per_second,
+            "send_pkg_num": self.client.send_pkg_num,
+            "recv_pkg_num": self.client.recv_pkg_num,
+            "send_pkg_bytes": self.client.send_pkg_bytes,
+            "recv_pkg_bytes": self.client.recv_pkg_bytes,
+            "first_pkg_send_time": self.client.first_pkg_send_time,
+            "total_seconds": total_seconds,
+            "send_bytes_per_second": send_bytes_per_second,
+            "recv_bytes_per_second": recv_bytes_per_second,
+            "last_api_send_bytes": self.client.last_api_send_bytes,
+            "last_api_recv_bytes": self.client.last_api_recv_bytes,
         }
 
 
