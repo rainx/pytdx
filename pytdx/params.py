@@ -42,3 +42,10 @@ class TDXParams:
     MAX_TRANSACTION_COUNT = 2000
     # k先数据最多800条
     MAX_KLINE_COUNT = 800
+
+
+    # 板块相关参数
+    BLOCK_SZ = "block_zs.dat"
+    BLOCK_FG = "block_fg.dat"
+    BLOCK_GN = "block_gn.dat"
+    BLOCK_DEFAULT = "block.dat"

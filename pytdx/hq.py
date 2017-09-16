@@ -28,6 +28,7 @@ from pytdx.parser.get_company_info_category import GetCompanyInfoCategory
 from pytdx.parser.get_company_info_content import GetCompanyInfoContent
 from pytdx.parser.get_xdxr_info import GetXdXrInfo
 from pytdx.parser.get_finance_info import GetFinanceInfo
+from pytdx.parser.get_block_info import GetBlockInfo, GetBlockInfoMeta, get_and_parse_block_info
 from pytdx.util import get_real_trade_date, trade_date_sse
 from pytdx.params import TDXParams
 from pytdx.heartbeat import HqHeartBeatThread
@@ -127,6 +128,23 @@ class TdxHq_API(BaseSocketClient):
         cmd = GetFinanceInfo(self.client, lock=self.lock)
         cmd.setParams(market, code)
         return cmd.call_api()
+
+
+    @update_last_ack_time
+    def get_block_info_meta(self, blockfile):
+        cmd = GetBlockInfoMeta(self.client, lock=self.lock)
+        cmd.setParams(blockfile)
+        return cmd.call_api()
+
+    @update_last_ack_time
+    def get_block_info(self, blockfile, start, size):
+        cmd = GetBlockInfo(self.client, lock=self.lock)
+        cmd.setParams(blockfile, start, size)
+        return cmd.call_api()
+
+    def get_and_parse_block_info(self, blockfile):
+        return get_and_parse_block_info(self, blockfile)
+
 
     def do_heartbeat(self):
         self.get_security_count(random.randint(0, 1))

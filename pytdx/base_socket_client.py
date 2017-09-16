@@ -48,9 +48,11 @@ def update_last_ack_time(func):
     def wrapper(self, *args, **kw):
         self.last_ack_time = time.time()
         log.debug("last ack time update to " + str(self.last_ack_time))
+        current_exception = None
         try:
             ret = func(self, *args, **kw)
         except Exception as e:
+            current_exception = e
             log.debug("hit exception on req exception is " + str(e))
             if self.auto_retry:
                 for time_interval in self.retry_strategy.gen():
@@ -61,8 +63,9 @@ def update_last_ack_time(func):
                         ret = func(self, *args, **kw)
                         if ret:
                             return ret
-                    except Exception as e:
-                        log.debug("hit exception on *retry* req exception is " + str(e))
+                    except Exception as retry_e:
+                        current_exception = retry_e
+                        log.debug("hit exception on *retry* req exception is " + str(retry_e))
 
                 log.debug("perform auto retry on req ")
 
@@ -70,7 +73,7 @@ def update_last_ack_time(func):
             ret = None
             if self.raise_exception:
                 to_raise = TdxFunctionCallError("calling function error")
-                to_raise.original_exception = e
+                to_raise.original_exception = current_exception if current_exception else None
                 raise to_raise
         """
         如果raise_exception=True 抛出异常
@@ -97,6 +100,23 @@ class DefaultRetryStrategy(RetryStrategy):
         # 默认重试4次 ... 时间间隔如下
         for time_interval in [0.1, 0.5, 1, 2]:
             yield time_interval
+
+
+class TrafficStatSocket(socket.socket):
+    """
+    实现支持流量统计的socket类
+    """
+    def __init__(self, sock, mode):
+        super(TrafficStatSocket, self).__init__(sock, mode)
+        # 流量统计相关
+        self.send_pkg_num = 0  # 发送次数
+        self.recv_pkg_num = 0  # 接收次数
+        self.send_pkg_bytes = 0  # 发送字节
+        self.recv_pkg_bytes = 0  # 接收字节数
+        self.first_pkg_send_time = None  # 第一个数据包发送时间
+
+        self.last_api_send_bytes = 0  # 最近的一次api调用的发送字节数
+        self.last_api_recv_bytes = 0  # 最近一次api调用的接收字节数
 
 class BaseSocketClient(object):
 
@@ -134,7 +154,7 @@ class BaseSocketClient(object):
         :return: 是否连接成功 True/False
         """
 
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client = TrafficStatSocket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.settimeout(CONNECT_TIMEOUT)
         log.debug("connecting to server : %s on port :%d" % (ip, port))
         try:
@@ -187,6 +207,38 @@ class BaseSocketClient(object):
         :return:
         """
         self.disconnect()
+
+
+    def get_traffic_stats(self):
+        """
+        获取流量统计的信息
+        :return:
+        """
+        if self.client.first_pkg_send_time is not None:
+            total_seconds = (datetime.datetime.now() - self.client.first_pkg_send_time).total_seconds()
+            if total_seconds != 0:
+                send_bytes_per_second = self.client.send_pkg_bytes // total_seconds
+                recv_bytes_per_second = self.client.recv_pkg_bytes // total_seconds
+            else:
+                send_bytes_per_second = None
+                recv_bytes_per_second = None
+        else:
+            total_seconds = None
+            send_bytes_per_second = None
+            recv_bytes_per_second = None
+
+        return {
+            "send_pkg_num": self.client.send_pkg_num,
+            "recv_pkg_num": self.client.recv_pkg_num,
+            "send_pkg_bytes": self.client.send_pkg_bytes,
+            "recv_pkg_bytes": self.client.recv_pkg_bytes,
+            "first_pkg_send_time": self.client.first_pkg_send_time,
+            "total_seconds": total_seconds,
+            "send_bytes_per_second": send_bytes_per_second,
+            "recv_bytes_per_second": recv_bytes_per_second,
+            "last_api_send_bytes": self.client.last_api_send_bytes,
+            "last_api_recv_bytes": self.client.last_api_recv_bytes,
+        }
 
 
     def __enter__(self):

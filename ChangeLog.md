@@ -1,3 +1,23 @@
+1.42
+------
+* 增加了api.get_traffic_stats 获取当前连接的流量统计情况
+
+1.41
+------
+* 增加GetBlockInfoMeta， 增加GetBlockInfo， get_and_parse_block_info 等支持直接下载并解析板块文件， 感谢 @mi-fox帮助分析协议
+
+1.40
+------
+* 增加BlockReader用于读取板块列表
+
+1.39
+------
+* 修复GetSecurityQuotesCmd里面一个保留位长度计算错误导致某些行情无法获取的问题。
+
+1.38
+------
+* 修复抛出在auto_retry开启时TdxFunctionCallError异常时的一个小问题
+
 1.37
 ------
 * 增加自动重连机制 auto_retry=True 时生效，并可以自定制重连策略
