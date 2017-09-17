@@ -19,6 +19,10 @@ import pickle
 from functools import reduce
 
 
+# 让pandas 显示全部数据
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+
 mtstr = os.getenv("TDX_MT", "")
 mt = False
 if mtstr:

@@ -12,6 +12,11 @@ from pytdx.reader import TdxLCMinBarReader
 from pytdx.reader import TdxExHqDailyBarReader
 from pytdx.reader import GbbqReader
 from pytdx.reader import BlockReader
+import pandas as pd
+
+# 让pandas 显示全部数据
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
 
 Help_Text = '''
