@@ -1,3 +1,8 @@
+1.43
+------
+* 修复 get_k_data 方法 的问题 https://github.com/rainx/pytdx/pull/59
+* 给hqget和hqreader增加pandas display.max_columns display.max_rows参数, 使其可以显示全部内容
+
 1.42
 ------
 * 增加了api.get_traffic_stats 获取当前连接的流量统计情况
