@@ -37,8 +37,8 @@ class GetSecurityQuotesCmd(BaseParser):
             market, code = stock
             if type(code) is six.text_type:
                 code = code.encode("utf-8")
-                one_stock_pkg = struct.pack("<B6s", market, code)
-                pkg.extend(one_stock_pkg)
+            one_stock_pkg = struct.pack("<B6s", market, code)
+            pkg.extend(one_stock_pkg)
 
         self.send_pkg = pkg
 
@@ -60,8 +60,16 @@ class GetSecurityQuotesCmd(BaseParser):
             high_diff, pos = get_price(body_buf, pos)
             low_diff, pos = get_price(body_buf, pos)
             # 不确定这里应该是用 get_price 跳过还是直接跳过4个bytes
-            reversed_bytes0 = body_buf[pos: pos + 4]
-            pos += 4
+            # if price == 0 and last_close_diff == 0 and open_diff == 0 and high_diff == 0 and low_diff == 0:
+            #     # 这个股票当前应该无法获取信息, 这个时候，这个值一般是0 或者 100
+            #     #reversed_bytes0 = body_buf[pos: pos + 1]
+            #     #pos += 1
+            #     # 感觉这里应该都可以用 get_price ，但是由于一次性改动影响比较大，所以暂时只针对没有行情的股票做改动
+            #     reversed_bytes0, pos = get_price(body_buf, pos)
+            # else:
+            #     reversed_bytes0 = body_buf[pos: pos + 4]
+            #     pos += 4
+            reversed_bytes0, pos = get_price(body_buf, pos)
             # reversed_bytes0, pos = get_price(body_buf, pos)
             # 应该是 -price
             reversed_bytes1, pos = get_price(body_buf, pos)
@@ -167,3 +175,11 @@ class GetSecurityQuotesCmd(BaseParser):
 
     def _cal_price(self, base_p, diff):
         return float(base_p + diff)/100
+
+
+if __name__ == '__main__':
+    from pytdx.hq import TdxHq_API
+    api = TdxHq_API()
+    with api.connect():
+        #print(api.to_df(api.get_security_quotes([(0, '102672'), (0, '002672')])))
+        print(api.to_df(api.get_security_quotes([(0, '101612'), (0, '002672')])))

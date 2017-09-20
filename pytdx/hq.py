@@ -28,6 +28,7 @@ from pytdx.parser.get_company_info_category import GetCompanyInfoCategory
 from pytdx.parser.get_company_info_content import GetCompanyInfoContent
 from pytdx.parser.get_xdxr_info import GetXdXrInfo
 from pytdx.parser.get_finance_info import GetFinanceInfo
+from pytdx.parser.get_block_info import GetBlockInfo, GetBlockInfoMeta, get_and_parse_block_info
 from pytdx.util import get_real_trade_date, trade_date_sse
 from pytdx.params import TDXParams
 from pytdx.heartbeat import HqHeartBeatThread
@@ -49,6 +50,7 @@ class TdxHq_API(BaseSocketClient):
 
     # API List
 
+    # Notice：，如果一个股票当天停牌，那天的K线还是能取到，成交量为0
     @update_last_ack_time
     def get_security_bars(self, category, market, code, start, count):
         cmd = GetSecurityBarsCmd(self.client, lock=self.lock)
@@ -127,40 +129,48 @@ class TdxHq_API(BaseSocketClient):
         cmd.setParams(market, code)
         return cmd.call_api()
 
+
+    @update_last_ack_time
+    def get_block_info_meta(self, blockfile):
+        cmd = GetBlockInfoMeta(self.client, lock=self.lock)
+        cmd.setParams(blockfile)
+        return cmd.call_api()
+
+    @update_last_ack_time
+    def get_block_info(self, blockfile, start, size):
+        cmd = GetBlockInfo(self.client, lock=self.lock)
+        cmd.setParams(blockfile, start, size)
+        return cmd.call_api()
+
+    def get_and_parse_block_info(self, blockfile):
+        return get_and_parse_block_info(self, blockfile)
+
+
     def do_heartbeat(self):
         self.get_security_count(random.randint(0, 1))
 
     def get_k_data(self, code, start_date, end_date):
         # 具体详情参见 https://github.com/rainx/pytdx/issues/5
         # 具体详情参见 https://github.com/rainx/pytdx/issues/21
-
+        def __select_market_code(code):
+            code = str(code)
+            if code[0] in ['5', '6', '9'] or code[:3] in ["009", "126", "110", "201", "202", "203", "204"]:
+                return 1
+            return 0
         # 新版一劳永逸偷懒写法zzz
-        if str(code)[0] == '6':
-            # 0 - 深圳， 1 - 上海
-            market_code = 1
-        else:
-            market_code = 0
-        if str(code)[0] == '6':
-            # 0 - 深圳， 1 - 上海
-            market_code = 1
-        else:
-            market_code = 0
+        market_code = 1 if str(code)[0] == '6' else 0
+        #https://github.com/rainx/pytdx/issues/33
+        # 0 - 深圳， 1 - 上海
 
-        start_date = get_real_trade_date(start_date, 1)
-        end_date = get_real_trade_date(end_date, -1)
 
-        data = []
+        data = pd.concat([self.to_df(self.get_security_bars(9, __select_market_code(
+            code), code, (9 - i) * 800, 800)) for i in range(10)], axis=0)
 
-        for i in range(10):
-            data += self.get_security_bars(9, 0, code, (9 - i) * 800, 800)
-
-        data = self.to_df(data)
-        data['date'] = data['datetime'].apply(lambda x: x[0:10])
-        data['date'] = pd.to_datetime(data['date'])
-        data = data.set_index('date')
-        data = data.drop(['year', 'month', 'day', 'hour',
-                          'minute', 'datetime'], axis=1)
-        return data[start_date:end_date]
+        data = data.assign(date=data['datetime'].apply(lambda x: str(x[0:10]))).assign(code=str(code))\
+            .set_index('date', drop=False, inplace=False)\
+            .drop(['year', 'month', 'day', 'hour',
+                    'minute', 'datetime'], axis=1)[start_date:end_date]
+        return data.assign(date=data['date'].apply(lambda x: str(x)[0:10]))
 
 
 if __name__ == '__main__':

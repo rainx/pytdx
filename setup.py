@@ -21,7 +21,7 @@ except (IOError, ImportError):
 
 setup(
     name='pytdx',
-    version='1.29',
+    version='1.43',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
     author='RainX<Jing Xu>',
@@ -29,9 +29,10 @@ setup(
     url='https://github.com/rainx/pytdx',
     packages=find_packages(),
     install_requires=[
-          'click',
-          'pandas',
-          'six'
+            'click',
+            'pandas',
+            'six',
+            'cryptography'
     ],
     entry_points={
           'console_scripts': [
@@ -40,6 +41,6 @@ setup(
 
           ]
       },
-    **cythonkw,
+    **cythonkw
     )
 
