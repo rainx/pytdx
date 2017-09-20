@@ -60,7 +60,7 @@ def test_all_functions():
                 data = api.get_history_minute_time_data(params[0], params[1], 20170811)
                 assert data is not None
                 assert type(data) is list
-                assert len(data) > 0
+                assert len(data) >= 0
 
             log.info("查询分时成交")
             for params in symbol_params:
@@ -81,7 +81,7 @@ def test_all_functions():
                 data = api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, params[0], params[1])
                 assert data is not None
                 assert type(data) is list
-                assert len(data) > 0
+                assert len(data) >= 0
 
             log.info("查询代码列表")
             data = api.get_instrument_info(10000, 98)
