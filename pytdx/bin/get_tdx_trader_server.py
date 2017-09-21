@@ -110,7 +110,7 @@ def download_and_setup_tdx_trade_server(download_path, dll_path, real_trade_dll_
 
     config_file_name = "TdxTradeServer.ini"
     with open(os.path.join(dll_path, config_file_name), "w") as f:
-        f.write(config_file_name)
+        f.write(config_file_content)
     se("配置文件写入完成，文件名 TdxTradeServer.ini")
     while True:
         _dir = click.prompt("请选择程序放置的路径", "C:\\TdxTradeServer")
