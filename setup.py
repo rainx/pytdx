@@ -21,7 +21,7 @@ except (IOError, ImportError):
 
 setup(
     name='pytdx',
-    version='1.43',
+    version='1.44',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
     author='RainX<Jing Xu>',
@@ -32,13 +32,13 @@ setup(
             'click',
             'pandas',
             'six',
-            'cryptography'
+            'cryptography',
     ],
     entry_points={
           'console_scripts': [
               'hqget=pytdx.bin.hqget:main',
-              'hqreader=pytdx.bin.hqreader:main'
-
+              'hqreader=pytdx.bin.hqreader:main',
+              'get_tts=pytdx.bin.get_tdx_trader_server:main',
           ]
       },
     **cythonkw

@@ -1,3 +1,8 @@
+1.44
+------
+* 增加 get_tts 命令，用于下载并配置TdxTradeServer服务
+* 增加了一部分通达信服务器地址到hosts.py配置文件中 
+
 1.43
 ------
 * 修复 get_k_data 方法 的问题 https://github.com/rainx/pytdx/pull/59
