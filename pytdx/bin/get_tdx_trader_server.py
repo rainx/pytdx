@@ -195,8 +195,7 @@ transport_enc_iv={}
 
 def yes_to_continue():
     while True:
-        click.echo('是否继续，继续请输入y, 退出输入n? [yn] ')
-        c = click.getchar()
+        c = click.prompt('是否继续，继续请输入y, 退出输入n? ', default="y")
         if c.lower() == 'n':
             click.secho("您选择了退出")
             raise SystemExit("need to exit")
