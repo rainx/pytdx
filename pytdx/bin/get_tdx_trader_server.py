@@ -127,35 +127,35 @@ def download_and_setup_tdx_trade_server(download_path, dll_path, real_trade_dll_
     se("客户端您可以使用pytdx的trade模块进行连接，下面是一小段示例代码演示如何初始化对象")
 
     demo_code = """
-    import os
-    from pytdx.trade import TdxTradeApi
-    api = TdxTradeApi(endpoint="http://{}:{}/api", enc_key=b"{}", enc_iv=b"{}")
-    print("---Ping---")
-    result = api.ping()
-    print(result)
+import os
+from pytdx.trade import TdxTradeApi
+api = TdxTradeApi(endpoint="http://{}:{}/api", enc_key=b"{}", enc_iv=b"{}")
+print("---Ping---")
+result = api.ping()
+print(result)
 
-    print("---登入---")
-    acc = os.getenv("TDX_ACCOUNT", "") ###### 你的账号
-    password = os.getenv("TDX_PASS", "") ###### 你的密码
-    result = api.logon("<ip addr>", 7708,
-              "8.23", 32,
-              acc, acc, password, "")
+print("---登入---")
+acc = os.getenv("TDX_ACCOUNT", "") ###### 你的账号
+password = os.getenv("TDX_PASS", "") ###### 你的密码
+result = api.logon("<ip addr>", 7708,
+          "8.23", 32,
+          acc, acc, password, "")
 
-    print(result)
+print(result)
 
-    if result["success"]:
-        client_id = result["data"]["client_id"]
+if result["success"]:
+    client_id = result["data"]["client_id"]
 
-        for i in (0,1,2,3,4,5,6,7,8,12,13,14,15):
-            print("---查询信息 cate=%d--" % i)
-            print(api.data_to_df(api.query_data(client_id, i)))
+    for i in (0,1,2,3,4,5,6,7,8,12,13,14,15):
+        print("---查询信息 cate=%d--" % i)
+        print(api.data_to_df(api.query_data(client_id, i)))
 
 
-        print("---查询报价---")
-        print(api.data_to_df(api.get_quote(client_id, '600315')))
+    print("---查询报价---")
+    print(api.data_to_df(api.get_quote(client_id, '600315')))
 
-        print("---登出---")
-        print(api.logoff(client_id))
+    print("---登出---")
+    print(api.logoff(client_id))
     """.format(bind_ip, bind_port, enc_key, enc_iv)
 
     demo_sample = """
