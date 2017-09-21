@@ -184,10 +184,10 @@ def gen_config_file(real_trade_dll_name):
     bind_port = click.prompt('请输入绑定的端口号', default="19820")
     config_file_content = """bind={}
 port={}
-trade_dll_path=trade_rainx.dll
+trade_dll_path={}
 transport_enc_key={}
 transport_enc_iv={}
-""".format(bind_ip, bind_port, enc_key, enc_iv)
+""".format(bind_ip, bind_port, real_trade_dll_name, enc_key, enc_iv)
 
     return config_file_content, bind_ip, bind_port, enc_key, enc_iv
 
