@@ -80,13 +80,10 @@ class GetFinanceInfo(BaseParser):
             weifenlirun,
             baoliu1,
             baoliu2
-        ) = struct.unpack("<IHHIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII", body_buf[pos:])
+        ) = struct.unpack("<IHHfIIIIfffffffffffffffffffffffffff", body_buf[pos:])
 
         def _get_v(v):
-            if v == 0:
-                return 0
-            else:
-                return get_volume(v)
+            return v
 
         return OrderedDict(
             [

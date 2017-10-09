@@ -1,3 +1,7 @@
+1.45
+------
+* 修复get_finance_info总现金流不对 等问题， issue: https://github.com/rainx/pytdx/issues/73
+
 1.44
 ------
 * 增加 get_tts 命令，用于下载并配置TdxTradeServer服务
