@@ -7,23 +7,23 @@ import sys
 import datetime
 
 
-class SocketClientNotReady(BaseException):
+class SocketClientNotReady(Exception):
     pass
 
 
-class SendPkgNotReady(BaseException):
+class SendPkgNotReady(Exception):
     pass
 
 
-class SendRequestPkgFails(BaseException):
+class SendRequestPkgFails(Exception):
     pass
 
 
-class ResponseHeaderRecvFails(BaseException):
+class ResponseHeaderRecvFails(Exception):
     pass
 
 
-class ResponseRecvFails(BaseException):
+class ResponseRecvFails(Exception):
     pass
 
 RSP_HEADER_LEN = 0x10

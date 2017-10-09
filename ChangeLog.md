@@ -1,3 +1,7 @@
+1.46
+------
+* 将parser基类中的base.py里面的异常从继承BaseException改为集成Exception, 对应修复问题：https://github.com/rainx/pytdx/issues/68
+
 1.45
 ------
 * 修复get_finance_info总现金流不对 等问题， issue: https://github.com/rainx/pytdx/issues/73
