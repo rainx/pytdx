@@ -1,3 +1,7 @@
+1.47
+------
+* 修复 版本1.45 修改时引发的其它数据无法匹配问题
+
 1.46
 ------
 * 将parser基类中的base.py里面的异常从继承BaseException改为集成Exception, 对应修复问题：https://github.com/rainx/pytdx/issues/68

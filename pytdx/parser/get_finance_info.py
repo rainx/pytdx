@@ -80,7 +80,7 @@ class GetFinanceInfo(BaseParser):
             weifenlirun,
             baoliu1,
             baoliu2
-        ) = struct.unpack("<IHHfIIIIfffffffffffffffffffffffffff", body_buf[pos:])
+        ) = struct.unpack("<fHHIIffffffffffffffffffffffffffffff", body_buf[pos:])
 
         def _get_v(v):
             return v
@@ -126,3 +126,10 @@ class GetFinanceInfo(BaseParser):
                 ("baoliu2", _get_v(baoliu2))
             ]
         )
+
+if __name__ == '__main__':
+    import pprint
+    from pytdx.hq import TdxHq_API
+    api = TdxHq_API()
+    with api.connect():
+        pprint.pprint(api.get_finance_info(0, "000166"))
