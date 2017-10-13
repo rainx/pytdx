@@ -1,4 +1,4 @@
-# Pytdx - Python通达信数据接口
+# Pytdx - Python tdx数据接口
 
 [![Build Status](https://travis-ci.org/rainx/pytdx.svg?branch=master)](https://travis-ci.org/rainx/pytdx)
 
@@ -13,7 +13,7 @@ https://rainx.gitbooks.io/pytdx/content/
 概述
 ---
 
-Pytdx 是一款纯Python语言开发的类似TradeX的通达信行情数据接口的实现。
+Pytdx 是一款纯Python语言开发的类似TradeX的行情数据接口的实现。
 
 特点
 ---
@@ -34,14 +34,14 @@ pip install pytdx
 接口实现
 ---
 ### 标准行情 pytdx.hq
-用于读取通达信的标准行情信息
+用于读取标准行情信息
 
 ### 扩展行情 pytdx.exhq
 
 用于读取扩展行情（外盘，期权，期货等）
 
 ### 数据文件读取 pytdx.reader
-用于读取通达信导出的k线数据
+用于读取行情软件导出的k线数据
 
 ### pytdx.pool (试验性质)
 用于实现备用连接池以及failover支持的行情接口
@@ -60,7 +60,7 @@ pip install pytdx
 声明
 ---
 此代码用于个人对网络协议的研究和习作，不对外提供服务，任何人使用本代码遇到问题请自行解决，也可以在github提issue给我，但是我不保证能即时处理。
-由于我们连接的是既有的通达信兼容行情服务器，机构请不要使用此代码，对此造成的任何问题本人概不负责。
+由于我们连接的是既有的行情软件兼容行情服务器，机构请不要使用此代码，对此造成的任何问题本人概不负责。
 
 ## 其它
 

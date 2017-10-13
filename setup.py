@@ -21,7 +21,7 @@ except (IOError, ImportError):
 
 setup(
     name='pytdx',
-    version='1.44',
+    version='1.48',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
     author='RainX<Jing Xu>',
@@ -39,6 +39,7 @@ setup(
               'hqget=pytdx.bin.hqget:main',
               'hqreader=pytdx.bin.hqreader:main',
               'get_tts=pytdx.bin.get_tdx_trader_server:main',
+              'hqbenchmark=pytdx.bin.hqbenchmark:main',
           ]
       },
     **cythonkw
