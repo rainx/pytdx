@@ -119,12 +119,12 @@ class CustomerBlockReader(BaseReader):
                                 ("blockname",n1),
                                 ("block_type",n2),
                                 ('code_index',index),
-                                ('code',code)
+                                ('code',code[1:])
                             ])
                         )
 
             if result_type == BlockReader_TYPE_GROUP:
-                cc = [c for c in codes if c is not '']
+                cc = [c[1:] for c in codes if c is not '']
                 result.append(
                     OrderedDict([
                         ("blockname",n1),
