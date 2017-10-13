@@ -4,6 +4,7 @@ from pytdx.reader.lc_min_bar_reader import TdxLCMinBarReader
 from pytdx.reader.exhq_daily_bar_reader import TdxExHqDailyBarReader
 from pytdx.reader.gbbq_reader import GbbqReader
 from pytdx.reader.block_reader import BlockReader
+from pytdx.reader.block_reader import CustomerBlockReader
 
 __all__ = [
     'TdxDailyBarReader',
@@ -14,4 +15,5 @@ __all__ = [
     'TdxExHqDailyBarReader',
     'GbbqReader',
     'BlockReader',
+    'CustomerBlockReader',
 ]

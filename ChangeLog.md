@@ -1,3 +1,8 @@
+1.49
+------
+* 合并PR #79 , 读取通达信备份的自定义板块文件夹 by @JaysonAlbert
+* 增加 hqreader -d customblock 选项
+
 1.48
 ------
 * 增加hqbenchmark行情服务器测速工具
