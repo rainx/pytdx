@@ -104,7 +104,8 @@ class CustomerBlockReader(BaseReader):
             n1 = block_data[pos:pos + 50].decode('gbk', 'ignore').rstrip("\x00")
             n2 = block_data[pos + 50:pos + 120].decode('gbk', 'ignore').rstrip("\x00")
             pos = pos + 120
-
+            
+            n1 = n1.split('\x00')[0]
             n2 = n2.split('\x00')[0]
             bf = '/'.join([fname,n2 + '.blk'])
             if not os.path.exists(bf):
