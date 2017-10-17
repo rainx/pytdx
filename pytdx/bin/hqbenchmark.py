@@ -6,7 +6,7 @@ from pytdx.hq import TdxHq_API
 import datetime
 import time
 
-GET_QUOTES_PER_GROUPS=200
+GET_QUOTES_PER_GROUPS=80
 
 @click.command()
 @click.argument("ips", nargs=-1)

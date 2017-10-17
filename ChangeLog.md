@@ -1,3 +1,17 @@
+1.51
+------
+* （注意：可能有潜在代码变更）合并 PR #83 by @nickolaslu : 沪深股票，基金，指数，债券的四价和成交量的系数是不一样的，
+ie. 股票的VOLUME也要乘0.01, 基金，债券的四价是乘0.001 ... https://github.com/rainx/pytdx/pull/83
+
+1.50
+------
+* 合并PR #80 去掉自定义板块读取的代码中的市场代码部分 by @JaysonAlbert
+
+1.49
+------
+* 合并PR #79 , 读取通达信备份的自定义板块文件夹 by @JaysonAlbert
+* 增加 hqreader -d customblock 选项
+
 1.48
 ------
 * 增加hqbenchmark行情服务器测速工具
