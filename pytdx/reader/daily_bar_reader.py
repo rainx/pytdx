@@ -43,7 +43,14 @@ class TdxDailyBarReader(BaseReader):
             content = f.read()
             return self.unpack_records('<IIIIIfII', content)
         return []
+    
+    def get_df(self, code_or_file, exchange=None):
 
+        if exchange == None:
+            return self.get_df_by_file(code_or_file)
+        else:
+            return self.get_df_by_code(code_or_file, exchange)
+        
     def get_df_by_file(self, fname):
 
         if not os.path.isfile(fname):
