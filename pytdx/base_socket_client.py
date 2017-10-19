@@ -20,6 +20,7 @@ import threading,datetime
 import time
 from pytdx.heartbeat import HqHeartBeatThread
 import functools
+from pytdx.parser.raw_parser import RawParser
 
 
 CONNECT_TIMEOUT = 5.000
@@ -240,6 +241,11 @@ class BaseSocketClient(object):
             "last_api_recv_bytes": self.client.last_api_recv_bytes,
         }
 
+    # for debuging and testing protocol
+    def send_raw_pkg(self, pkg):
+        cmd = RawParser(self.client, lock=self.lock)
+        cmd.setParams(pkg)
+        return cmd.call_api()
 
     def __enter__(self):
         return self
