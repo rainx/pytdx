@@ -16,7 +16,7 @@ log = Log()
 # 测试任意组合的选项
 @pytest.mark.parametrize("multithread", [False])
 @pytest.mark.parametrize("heartbeat", [False, True])
-@pytest.mark.parametrize("auto_retry", [False, True])
+@pytest.mark.parametrize("auto_retry", [Falsegit co, True])
 @pytest.mark.parametrize("raise_exception", [False])
 def test_all_functions(multithread, heartbeat, auto_retry, raise_exception):
 
