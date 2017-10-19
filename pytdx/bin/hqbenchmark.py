@@ -34,7 +34,14 @@ def main(ips):
 
         try:
             api = TdxHq_API(multithread=True)
-            with api.connect(ip=ip):
+
+            port = 7709
+
+            if ":" in ip:
+                ip, port = ip.split(':')
+                port = int(port)
+
+            with api.connect(ip=ip, port=port):
                 _log("connected")
                 cur_time = time.time()
                 connecting_time = cur_time - last_time
