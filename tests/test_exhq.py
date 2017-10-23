@@ -12,6 +12,7 @@ class Log(object):
     def info(self, *args):
         pass
 
+
 log = Log()
 
 
@@ -35,7 +36,7 @@ def test_all_functions():
             assert len(data) > 0
 
             log.info("查询市场中商品数量")
-            data =api.get_instrument_count()
+            data = api.get_instrument_count()
             assert data is not None
             assert data > 0
 
@@ -47,7 +48,6 @@ def test_all_functions():
                 assert type(data) is list
                 assert len(data) > 0
 
-
             # log.info("查询分时行情")
             for params in symbol_params:
                 data = api.get_minute_time_data(*params)
@@ -57,7 +57,8 @@ def test_all_functions():
 
             log.info("查询历史分时行情")
             for params in symbol_params:
-                data = api.get_history_minute_time_data(params[0], params[1], 20170811)
+                data = api.get_history_minute_time_data(
+                    params[0], params[1], 20170811)
                 assert data is not None
                 assert type(data) is list
                 assert len(data) >= 0
@@ -71,14 +72,16 @@ def test_all_functions():
 
             log.info("查询历史分时成交")
             for params in symbol_params:
-                data = api.get_history_transaction_data(params[0], params[1], 20170811)
+                data = api.get_history_transaction_data(
+                    params[0], params[1], 20170811)
                 assert data is not None
                 assert type(data) is list
                 assert len(data) >= 0
 
             log.info("查询k线")
             for params in symbol_params:
-                data = api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, params[0], params[1])
+                data = api.get_instrument_bars(
+                    TDXParams.KLINE_TYPE_DAILY, params[0], params[1])
                 assert data is not None
                 assert type(data) is list
                 assert len(data) >= 0
@@ -97,7 +100,8 @@ def test_get_history_instrument_bars_range():
     api = TdxExHq_API(auto_retry=True)
     try:
         with api.connect('61.152.107.141', 7727):
-            data = api.get_history_instrument_bars_range(74, "BABA", 20170613,20170620)
+            data = api.get_history_instrument_bars_range(
+                74, "BABA", 20170613, 20170620)
             assert data is not None
             assert type(data) is list
             assert len(data) > 0

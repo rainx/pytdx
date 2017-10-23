@@ -11,8 +11,8 @@ def ping(ip):
     api = TdxHq_API()
     try:
         with api.connect(ip, 7709):
-            api.get_security_bars(9, 0, '000001', 0, 1)
-        return (datetime.datetime.now() - __time1).total_seconds()
+            if len(api.get_security_list(0, 1)) > 800:
+                return datetime.datetime.now() - __time1
     except:
         return datetime.timedelta(9, 9, 0)
 
