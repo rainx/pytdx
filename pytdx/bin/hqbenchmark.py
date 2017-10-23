@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pytdx.hq import TdxHq_API
 import datetime
 import time
+from pytdx.util.best_ip import select_best_ip
 
 GET_QUOTES_PER_GROUPS=80
 
@@ -13,9 +14,9 @@ GET_QUOTES_PER_GROUPS=80
 def main(ips):
 
     if len(ips) == 0:
-
-        print("Please Provide at least one ip address!!")
-        return -1
+        best_ip = select_best_ip()
+        ips = [best_ip]
+        print("Using default ip: {}".format(best_ip))
 
     def single_client_benchmark(ip):
 
