@@ -1,14 +1,17 @@
 #coding: utf-8
 
-import pytest
-from pytdx.hq import TdxHq_API, TDXParams
-from pytdx.errors import TdxFunctionCallError, TdxConnectionError
 from collections import OrderedDict
+
 import pandas as pd
+import pytest
+from pytdx.errors import TdxConnectionError, TdxFunctionCallError
+from pytdx.hq import TdxHq_API, TDXParams
+
 
 class Log(object):
     def info(self, *args):
         pass
+
 
 log = Log()
 
@@ -20,7 +23,8 @@ log = Log()
 @pytest.mark.parametrize("raise_exception", [False])
 def test_all_functions(multithread, heartbeat, auto_retry, raise_exception):
 
-    api = TdxHq_API(multithread=multithread, heartbeat=heartbeat, auto_retry=auto_retry, raise_exception=raise_exception)
+    api = TdxHq_API(multithread=multithread, heartbeat=heartbeat,
+                    auto_retry=auto_retry, raise_exception=raise_exception)
     with api.connect():
         log.info("获取股票行情")
         stocks = api.get_security_quotes([(0, "000001"), (1, "600300")])
@@ -81,7 +85,8 @@ def test_all_functions(multithread, heartbeat, auto_retry, raise_exception):
         start = data[0]['start']
         length = data[0]['length']
         log.info("读取公司信息-最新提示")
-        data = api.get_company_info_content(0, '000001', '000001.txt', start, length)
+        data = api.get_company_info_content(
+            0, '000001', '000001.txt', start, length)
         assert data is not None
         assert len(data) > 0
 
@@ -114,4 +119,3 @@ def test_raise_excepiton():
     with pytest.raises(TdxConnectionError):
         with api.connect('8.8.8.8'):
             pass
-
