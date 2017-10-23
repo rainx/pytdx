@@ -12,7 +12,7 @@ def ping(ip):
     try:
         with api.connect(ip, 7709):
             api.get_security_bars(9, 0, '000001', 0, 1)
-        return float(datetime.datetime.now() - __time1)
+        return (datetime.datetime.now() - __time1).total_seconds()
     except:
         return datetime.timedelta(9, 9, 0)
 
