@@ -1,3 +1,10 @@
+1.53
+------
+* Merge pull request #84 from JaysonAlbert/master  修复best_ip bug
+* 在Cython编译版本增加了部分文件
+* Merge pull request #86 from yutiansut/master 
+* 添加新的获取扩展行情列表的接口 get_instrument_quote_list , 可以批量扩展行情获取某个市场的行情数据
+
 1.52
 ------
 * base_socket_client 增加了 send_raw_pkg 方法，方便调试
