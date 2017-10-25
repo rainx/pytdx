@@ -8,7 +8,14 @@ PYTDX_CYTHON = os.getenv("PYTDX_CYTHON", None)
 if PYTDX_CYTHON:
     from Cython.Build import cythonize
     cythonkw = {
-        "ext_modules": cythonize("pytdx/reader/c_gbbq_reader.pyx")
+        "ext_modules": cythonize(
+            ["pytdx/reader/c_gbbq_reader.pyx",
+             'pytdx/parser/get_security_quotes.py',
+             'pytdx/parser/base.py',
+             'pytdx/helper.py',
+             'pytdx/hq.py',
+             'pytdx/base_socket_client.py',
+             ])
     }
 else:
     cythonkw = {}

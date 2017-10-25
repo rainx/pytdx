@@ -25,6 +25,7 @@ from pytdx.parser.ex_get_history_transaction_data import GetHistoryTransactionDa
 from pytdx.parser.ex_get_instrument_bars import GetInstrumentBars
 from pytdx.parser.ex_get_instrument_info import GetInstrumentInfo
 from pytdx.parser.ex_get_history_instrument_bars_range import GetHistoryInstrumentBarsRange
+from pytdx.parser.ex_get_instrument_quote_list import GetInstrumentQuoteList
 
 
 from pytdx.params import TDXParams
@@ -115,6 +116,12 @@ class TdxExHq_API(BaseSocketClient):
     def get_instrument_info(self, start, count=100):
         cmd = GetInstrumentInfo(self.client)
         cmd.setParams(start, count)
+        return cmd.call_api()
+
+    @update_last_ack_time
+    def get_instrument_quote_list(self, market, category, start=0, count=80):
+        cmd = GetInstrumentQuoteList(self.client)
+        cmd.setParams(market, category, start, count)
         return cmd.call_api()
 
     def do_heartbeat(self):
