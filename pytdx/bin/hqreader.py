@@ -12,6 +12,12 @@ from pytdx.reader import TdxLCMinBarReader
 from pytdx.reader import TdxExHqDailyBarReader
 from pytdx.reader import GbbqReader
 from pytdx.reader import BlockReader
+from pytdx.reader import CustomerBlockReader
+import pandas as pd
+
+# 让pandas 显示全部数据
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
 
 
 Help_Text = '''
@@ -22,6 +28,7 @@ Help_Text = '''
  - lc 代表lc1, lc5格式的分钟线
  - gbbq 股本变迁文件
  - block 读取板块股票列表文件
+ - customblock 读取自定义板块列表
 '''
 
 @click.command()
@@ -43,6 +50,8 @@ def main(input, output, datatype):
         reader = GbbqReader()
     elif datatype == 'block':
         reader = BlockReader()
+    elif datatype == 'customblock':
+        reader = CustomerBlockReader()
     else:
         reader = TdxMinBarReader()
 

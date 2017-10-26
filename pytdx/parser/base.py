@@ -6,24 +6,31 @@ import struct
 import sys
 import datetime
 
+try:
+    import cython
+    if cython.compiled:
+        def buffer(x):
+            return x
+except ImportError:
+    pass
 
-class SocketClientNotReady(BaseException):
+class SocketClientNotReady(Exception):
     pass
 
 
-class SendPkgNotReady(BaseException):
+class SendPkgNotReady(Exception):
     pass
 
 
-class SendRequestPkgFails(BaseException):
+class SendRequestPkgFails(Exception):
     pass
 
 
-class ResponseHeaderRecvFails(BaseException):
+class ResponseHeaderRecvFails(Exception):
     pass
 
 
-class ResponseRecvFails(BaseException):
+class ResponseRecvFails(Exception):
     pass
 
 RSP_HEADER_LEN = 0x10

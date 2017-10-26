@@ -8,7 +8,14 @@ PYTDX_CYTHON = os.getenv("PYTDX_CYTHON", None)
 if PYTDX_CYTHON:
     from Cython.Build import cythonize
     cythonkw = {
-        "ext_modules": cythonize("pytdx/reader/c_gbbq_reader.pyx")
+        "ext_modules": cythonize(
+            ["pytdx/reader/c_gbbq_reader.pyx",
+             'pytdx/parser/get_security_quotes.py',
+             'pytdx/parser/base.py',
+             'pytdx/helper.py',
+             'pytdx/hq.py',
+             'pytdx/base_socket_client.py',
+             ])
     }
 else:
     cythonkw = {}
@@ -21,7 +28,7 @@ except (IOError, ImportError):
 
 setup(
     name='pytdx',
-    version='1.42',
+    version='1.53',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
     author='RainX<Jing Xu>',
@@ -32,13 +39,14 @@ setup(
             'click',
             'pandas',
             'six',
-            'cryptography'
+            'cryptography',
     ],
     entry_points={
           'console_scripts': [
               'hqget=pytdx.bin.hqget:main',
-              'hqreader=pytdx.bin.hqreader:main'
-
+              'hqreader=pytdx.bin.hqreader:main',
+              'get_tts=pytdx.bin.get_tdx_trader_server:main',
+              'hqbenchmark=pytdx.bin.hqbenchmark:main',
           ]
       },
     **cythonkw

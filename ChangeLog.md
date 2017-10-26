@@ -1,3 +1,55 @@
+1.53
+------
+* Merge pull request #84 from JaysonAlbert/master  修复best_ip bug
+* 在Cython编译版本增加了部分文件
+* Merge pull request #86 from yutiansut/master 
+* 添加新的获取扩展行情列表的接口 get_instrument_quote_list , 可以批量扩展行情获取某个市场的行情数据
+
+1.52
+------
+* base_socket_client 增加了 send_raw_pkg 方法，方便调试
+* hqbenchmark命令支持端口（默认7709)
+
+1.51
+------
+* （注意：可能有潜在代码变更）合并 PR #83 by @nickolaslu : 沪深股票，基金，指数，债券的四价和成交量的系数是不一样的，
+ie. 股票的VOLUME也要乘0.01, 基金，债券的四价是乘0.001 ... https://github.com/rainx/pytdx/pull/83
+
+1.50
+------
+* 合并PR #80 去掉自定义板块读取的代码中的市场代码部分 by @JaysonAlbert
+
+1.49
+------
+* 合并PR #79 , 读取通达信备份的自定义板块文件夹 by @JaysonAlbert
+* 增加 hqreader -d customblock 选项
+
+1.48
+------
+* 增加hqbenchmark行情服务器测速工具
+
+1.47
+------
+* 修复 版本1.45 修改时引发的其它数据无法匹配问题
+
+1.46
+------
+* 将parser基类中的base.py里面的异常从继承BaseException改为集成Exception, 对应修复问题：https://github.com/rainx/pytdx/issues/68
+
+1.45
+------
+* 修复get_finance_info总现金流不对 等问题， issue: https://github.com/rainx/pytdx/issues/73
+
+1.44
+------
+* 增加 get_tts 命令，用于下载并配置TdxTradeServer服务
+* 增加了一部分通达信服务器地址到hosts.py配置文件中 
+
+1.43
+------
+* 修复 get_k_data 方法 的问题 https://github.com/rainx/pytdx/pull/59
+* 给hqget和hqreader增加pandas display.max_columns display.max_rows参数, 使其可以显示全部内容
+
 1.42
 ------
 * 增加了api.get_traffic_stats 获取当前连接的流量统计情况
