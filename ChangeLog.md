@@ -1,3 +1,7 @@
+1.54
+------
+* Merge pull request Feature/fix nature name #91 @wopalm 修正期货和港股的nature_name解析问题
+
 1.53
 ------
 * Merge pull request #84 from JaysonAlbert/master  修复best_ip bug
