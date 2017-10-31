@@ -1,3 +1,11 @@
+1.55
+------
+* 为 get_security_quotes 增加了几种重载调用的方式：```get_security_quotes(market, code )``` 
+```get_security_quotes((market, code))```
+```get_security_quotes([(market1, code1), (market2, code2)] )```
+* 修正了nature_name的拼写错误(natrue), 为了保持兼容性，原有的natrue_name还会保留一段时间
+
+
 1.54
 ------
 * Merge pull request Feature/fix nature name #91 @wopalm 修正期货和港股的nature_name解析问题
