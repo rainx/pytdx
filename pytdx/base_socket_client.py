@@ -123,7 +123,7 @@ class TrafficStatSocket(socket.socket):
         self.last_api_recv_bytes = 0  # 最近一次api调用的接收字节数
 
     def send(self, data, flags=None):
-        nsended = super(TrafficStatSocket, self).send(data, flags)
+        nsended = super(TrafficStatSocket, self).send(data)
         if self.first_pkg_send_time is None:
             self.first_pkg_send_time = datetime.datetime.now()
         self.send_pkg_num += 1
@@ -131,7 +131,7 @@ class TrafficStatSocket(socket.socket):
         return nsended
 
     def recv(self, buffersize, flags=None):
-        head_buf = super(TrafficStatSocket, self).recv(buffersize, flags)
+        head_buf = super(TrafficStatSocket, self).recv(buffersize)
         self.recv_pkg_num += 1
         self.recv_pkg_bytes += buffersize
         return head_buf
