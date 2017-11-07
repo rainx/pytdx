@@ -11,24 +11,24 @@ def async_security_bars(loop):
     client = AsyncClient(loop)
     yield from client.connect('101.227.73.20', 7709)
     cmd = GetSecurityBarsCmd(client)
-    cmd.setParams(9, 0, '000001', 4, 3)
-    data = yield from cmd.call_api()
-    return data
+    cmd.setParams(9, 0, '000001', 0, 80)
+    yield from cmd.call_api()
 
 
 def test_security_bars():
     api = TdxHq_API()
     with api.connect('101.227.73.20', 7709):
-        data = api.get_security_bars(9, 0, '000001', 4, 3)
-        return data
+        for i in range(30):
+            api.get_security_bars(9, 0, '000001', 0, 80)
 
 
 def test_async():
     loop = asyncio.get_event_loop()
-    return loop.run_until_complete(async_security_bars(loop))
+    tasks = [
+        async_security_bars(loop) for i in range(30)
+    ]
+    loop.run_until_complete(asyncio.wait(tasks))
 
 
-# print(test_async())
-# print(test_security_bars())
-# print(timeit.timeit(test_async, number=5))
-# print(timeit.timeit(test_security_bars, number=5))
+print(timeit.timeit(test_async, number=1))
+print(timeit.timeit(test_security_bars, number=1))
