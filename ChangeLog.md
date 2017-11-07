@@ -1,3 +1,22 @@
+1.55
+------
+* 为 get_security_quotes 增加了几种重载调用的方式：```get_security_quotes(market, code )``` 
+```get_security_quotes((market, code))```
+```get_security_quotes([(market1, code1), (market2, code2)] )```
+* 修正了nature_name的拼写错误(natrue), 为了保持兼容性，原有的natrue_name还会保留一段时间
+
+
+1.54
+------
+* Merge pull request Feature/fix nature name #91 @wopalm 修正期货和港股的nature_name解析问题
+
+1.53
+------
+* Merge pull request #84 from JaysonAlbert/master  修复best_ip bug
+* 在Cython编译版本增加了部分文件
+* Merge pull request #86 from yutiansut/master 
+* 添加新的获取扩展行情列表的接口 get_instrument_quote_list , 可以批量扩展行情获取某个市场的行情数据
+
 1.52
 ------
 * base_socket_client 增加了 send_raw_pkg 方法，方便调试

@@ -5,40 +5,40 @@
 #
 
 
+import datetime
 import os
+import random
 import socket
 import sys
+import threading
+
 import pandas as pd
+from pytdx.base_socket_client import BaseSocketClient, update_last_ack_time
+from pytdx.heartbeat import HqHeartBeatThread
+from pytdx.log import DEBUG, log
+from pytdx.params import TDXParams
+from pytdx.parser.get_block_info import (GetBlockInfo, GetBlockInfoMeta,
+                                         get_and_parse_block_info)
+from pytdx.parser.get_company_info_category import GetCompanyInfoCategory
+from pytdx.parser.get_company_info_content import GetCompanyInfoContent
+from pytdx.parser.get_finance_info import GetFinanceInfo
+from pytdx.parser.get_history_minute_time_data import GetHistoryMinuteTimeData
+from pytdx.parser.get_history_transaction_data import GetHistoryTransactionData
+from pytdx.parser.get_index_bars import GetIndexBarsCmd
+from pytdx.parser.get_minute_time_data import GetMinuteTimeData
+from pytdx.parser.get_security_bars import GetSecurityBarsCmd
+from pytdx.parser.get_security_count import GetSecurityCountCmd
+from pytdx.parser.get_security_list import GetSecurityList
+from pytdx.parser.get_security_quotes import GetSecurityQuotesCmd
+from pytdx.parser.get_transaction_data import GetTransactionData
+from pytdx.parser.get_xdxr_info import GetXdXrInfo
+from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
+from pytdx.util import get_real_trade_date, trade_date_sse
+from collections import Iterable
 
 if __name__ == '__main__':
     sys.path.append(os.path.dirname(
         os.path.dirname(os.path.realpath(__file__))))
-
-from pytdx.log import DEBUG, log
-from pytdx.parser.get_security_bars import GetSecurityBarsCmd
-from pytdx.parser.get_security_quotes import GetSecurityQuotesCmd
-from pytdx.parser.get_security_count import GetSecurityCountCmd
-from pytdx.parser.get_security_list import GetSecurityList
-from pytdx.parser.get_index_bars import GetIndexBarsCmd
-from pytdx.parser.get_minute_time_data import GetMinuteTimeData
-from pytdx.parser.get_history_minute_time_data import GetHistoryMinuteTimeData
-from pytdx.parser.get_transaction_data import GetTransactionData
-from pytdx.parser.get_history_transaction_data import GetHistoryTransactionData
-from pytdx.parser.get_company_info_category import GetCompanyInfoCategory
-from pytdx.parser.get_company_info_content import GetCompanyInfoContent
-from pytdx.parser.get_xdxr_info import GetXdXrInfo
-from pytdx.parser.get_finance_info import GetFinanceInfo
-from pytdx.parser.get_block_info import GetBlockInfo, GetBlockInfoMeta, get_and_parse_block_info
-from pytdx.util import get_real_trade_date, trade_date_sse
-from pytdx.params import TDXParams
-from pytdx.heartbeat import HqHeartBeatThread
-
-from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
-import threading
-import datetime
-import random
-
-from pytdx.base_socket_client import BaseSocketClient, update_last_ack_time
 
 
 class TdxHq_API(BaseSocketClient):
@@ -64,7 +64,23 @@ class TdxHq_API(BaseSocketClient):
         return cmd.call_api()
 
     @update_last_ack_time
-    def get_security_quotes(self, all_stock):
+    def get_security_quotes(self, all_stock, code=None):
+        """
+        支持三种形式的参数
+        get_security_quotes(market, code )
+        get_security_quotes((market, code))
+        get_security_quotes([(market1, code1), (market2, code2)] )
+        :param all_stock （market, code) 的数组
+        :param code{optional} code to query
+        :return:
+        """
+
+        if code is not None:
+            all_stock = [(all_stock, code)]
+        elif (isinstance(all_stock, list) or isinstance(all_stock, tuple))\
+                and len(all_stock) == 2 and type(all_stock[0]) is int:
+            all_stock = [all_stock]
+
         cmd = GetSecurityQuotesCmd(self.client, lock=self.lock)
         cmd.setParams(all_stock)
         return cmd.call_api()
@@ -129,7 +145,6 @@ class TdxHq_API(BaseSocketClient):
         cmd.setParams(market, code)
         return cmd.call_api()
 
-
     @update_last_ack_time
     def get_block_info_meta(self, blockfile):
         cmd = GetBlockInfoMeta(self.client, lock=self.lock)
@@ -145,7 +160,6 @@ class TdxHq_API(BaseSocketClient):
     def get_and_parse_block_info(self, blockfile):
         return get_and_parse_block_info(self, blockfile)
 
-
     def do_heartbeat(self):
         self.get_security_count(random.randint(0, 1))
 
@@ -159,17 +173,15 @@ class TdxHq_API(BaseSocketClient):
             return 0
         # 新版一劳永逸偷懒写法zzz
         market_code = 1 if str(code)[0] == '6' else 0
-        #https://github.com/rainx/pytdx/issues/33
+        # https://github.com/rainx/pytdx/issues/33
         # 0 - 深圳， 1 - 上海
-
 
         data = pd.concat([self.to_df(self.get_security_bars(9, __select_market_code(
             code), code, (9 - i) * 800, 800)) for i in range(10)], axis=0)
 
-        data = data.assign(date=data['datetime'].apply(lambda x: str(x[0:10]))).assign(code=str(code))\
+        data = data.assign(date=data['datetime'].apply(lambda x: str(x)[0:10])).assign(code=str(code))\
             .set_index('date', drop=False, inplace=False)\
-            .drop(['year', 'month', 'day', 'hour',
-                    'minute', 'datetime'], axis=1)[start_date:end_date]
+            .drop(['year', 'month', 'day', 'hour', 'minute', 'datetime'], axis=1)[start_date:end_date]
         return data.assign(date=data['date'].apply(lambda x: str(x)[0:10]))
 
 

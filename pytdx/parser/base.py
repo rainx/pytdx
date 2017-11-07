@@ -6,6 +6,13 @@ import struct
 import sys
 import datetime
 
+try:
+    import cython
+    if cython.compiled:
+        def buffer(x):
+            return x
+except ImportError:
+    pass
 
 class SocketClientNotReady(Exception):
     pass
