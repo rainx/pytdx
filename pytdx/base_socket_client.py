@@ -128,15 +128,19 @@ class TrafficStatSocket(socket.socket):
             self.first_pkg_send_time = datetime.datetime.now()
         self.send_pkg_num += 1
         self.send_pkg_bytes += nsended
-        self.last_api_send_bytes += nsended
         return nsended
 
     def recv(self, buffersize, flags=None):
         head_buf = super(TrafficStatSocket, self).recv(buffersize, flags)
         self.recv_pkg_num += 1
         self.recv_pkg_bytes += buffersize
-        self.last_api_recv_bytes += buffersize
         return head_buf
+
+    def set_last_api_sent(self,num):
+        self.last_api_recv_bytes = num
+
+    def set_last_api_received(self,num):
+        self.last_api_recv_bytes = num
 
 
 class BaseSocketClient(object):

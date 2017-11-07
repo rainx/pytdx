@@ -84,6 +84,7 @@ class BaseParser(object):
             raise SendPkgNotReady("send pkg not ready")
 
         nsended = self.client.send(self.send_pkg)
+        self.client.set_last_api_sent(nsended)
 
         if DEBUG:
             log.debug("send package:" + str(self.send_pkg))
@@ -109,7 +110,7 @@ class BaseParser(object):
                     if not(buf) or len_buf == 0 or len(body_buf) == zipsize:
                         break
 
-
+                self.client.set_last_api_received(last_api_recv_bytes)
                 if len(buf) == 0:
                     log.debug("接收数据体失败服务器断开连接")
                     raise ResponseRecvFails("接收数据体失败服务器断开连接")
