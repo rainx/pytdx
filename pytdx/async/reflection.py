@@ -10,9 +10,6 @@ from pytdx.parser.base import SendPkgNotReady, SendRequestPkgFails, ResponseRecv
 from pytdx.log import DEBUG, log
 import struct
 import zlib
-from pytdx.async.async_base_socket_client import AsyncTrafficStatSocket
-from pytdx.base_socket_client import BaseSocketClient
-
 
 def make_async_parser(parser: BaseParser):
     """
