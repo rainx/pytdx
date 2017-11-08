@@ -11,12 +11,14 @@ import sys
 import pandas as pd
 
 if __name__ == '__main__':
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    sys.path.insert(0, os.path.dirname(
+        os.path.dirname(os.path.realpath(__file__))))
 
 from pytdx.log import DEBUG, log
 from pytdx.errors import TdxConnectionError, TdxFunctionCallError
 
-import threading,datetime
+import threading
+import datetime
 import time
 from pytdx.heartbeat import HqHeartBeatThread
 import functools
@@ -44,6 +46,8 @@ Out[7]: 2
 In [8]: (len(body)-2)/126
 Out[8]: 64.0
 """
+
+
 def update_last_ack_time(func):
     @functools.wraps(func)
     def wrapper(self, *args, **kw):
@@ -66,7 +70,8 @@ def update_last_ack_time(func):
                             return ret
                     except Exception as retry_e:
                         current_exception = retry_e
-                        log.debug("hit exception on *retry* req exception is " + str(retry_e))
+                        log.debug(
+                            "hit exception on *retry* req exception is " + str(retry_e))
 
                 log.debug("perform auto retry on req ")
 
@@ -107,6 +112,7 @@ class TrafficStatSocket(socket.socket):
     """
     实现支持流量统计的socket类
     """
+
     def __init__(self, sock, mode):
         super(TrafficStatSocket, self).__init__(sock, mode)
         # 流量统计相关
@@ -119,6 +125,7 @@ class TrafficStatSocket(socket.socket):
         self.last_api_send_bytes = 0  # 最近的一次api调用的发送字节数
         self.last_api_recv_bytes = 0  # 最近一次api调用的接收字节数
 
+
 class BaseSocketClient(object):
 
     def __init__(self, multithread=False, heartbeat=False, auto_retry=False, raise_exception=False):
@@ -128,26 +135,24 @@ class BaseSocketClient(object):
         else:
             self.lock = None
 
-
         self.client = None
         self.heartbeat = heartbeat
         self.heartbeat_thread = None
         self.stop_event = None
-        self.heartbeat_interval = DEFAULT_HEARTBEAT_INTERVAL # 默认10秒一个心跳包
+        self.heartbeat_interval = DEFAULT_HEARTBEAT_INTERVAL  # 默认10秒一个心跳包
         self.last_ack_time = time.time()
         self.last_transaction_failed = False
         self.ip = None
         self.port = None
 
         # 是否重试
-        self.auto_retry=auto_retry
+        self.auto_retry = auto_retry
         # 可以覆盖这个属性，使用新的重试策略
         self.retry_strategy = DefaultRetryStrategy()
         # 是否在函数调用出错的时候抛出异常
         self.raise_exception = raise_exception
 
-
-    def connect(self, ip='101.227.73.20', port=7709):
+    def connect(self, ip='101.227.73.20', port=7709, time_out=CONNECT_TIMEOUT):
         """
 
         :param ip:  服务器ip 地址
@@ -156,7 +161,7 @@ class BaseSocketClient(object):
         """
 
         self.client = TrafficStatSocket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.settimeout(CONNECT_TIMEOUT)
+        self.client.settimeout(time_out)
         log.debug("connecting to server : %s on port :%d" % (ip, port))
         try:
             self.ip = ip
@@ -180,14 +185,15 @@ class BaseSocketClient(object):
 
         if self.heartbeat:
             self.stop_event = threading.Event()
-            self.heartbeat_thread = HqHeartBeatThread(self, self.stop_event, self.heartbeat_interval)
+            self.heartbeat_thread = HqHeartBeatThread(
+                self, self.stop_event, self.heartbeat_interval)
             self.heartbeat_thread.start()
         return self
 
     def disconnect(self):
 
         if self.heartbeat_thread and \
-            self.heartbeat_thread.is_alive():
+                self.heartbeat_thread.is_alive():
             self.stop_event.set()
 
         if self.client:
@@ -209,14 +215,14 @@ class BaseSocketClient(object):
         """
         self.disconnect()
 
-
     def get_traffic_stats(self):
         """
         获取流量统计的信息
         :return:
         """
         if self.client.first_pkg_send_time is not None:
-            total_seconds = (datetime.datetime.now() - self.client.first_pkg_send_time).total_seconds()
+            total_seconds = (datetime.datetime.now() -
+                             self.client.first_pkg_send_time).total_seconds()
             if total_seconds != 0:
                 send_bytes_per_second = self.client.send_pkg_bytes // total_seconds
                 recv_bytes_per_second = self.client.recv_pkg_bytes // total_seconds
@@ -257,6 +263,6 @@ class BaseSocketClient(object):
         if isinstance(v, list):
             return pd.DataFrame(data=v)
         elif isinstance(v, dict):
-            return pd.DataFrame(data=[v,])
+            return pd.DataFrame(data=[v, ])
         else:
             return pd.DataFrame(data=[{'value': v}])
