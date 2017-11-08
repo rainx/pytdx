@@ -10,6 +10,8 @@ from pytdx.parser.base import SendPkgNotReady, SendRequestPkgFails, ResponseRecv
 from pytdx.log import DEBUG, log
 import struct
 import zlib
+from pytdx.async.async_base_socket_client import AsyncTrafficStatSocket
+from pytdx.base_socket_client import BaseSocketClient
 
 
 def make_async_parser(parser: BaseParser):
@@ -68,4 +70,14 @@ def make_async_parser(parser: BaseParser):
 
     return parser
 
+
+if __name__ == '__main__':
+
+    from pytdx.parser.get_security_quotes import GetSecurityQuotesCmd
+    import pprint
+    cmd = GetSecurityQuotesCmd(client=None, lock=None)
+
+    async_cmd = make_async_parser(cmd)
+
+    pprint.pprint(async_cmd)
 
