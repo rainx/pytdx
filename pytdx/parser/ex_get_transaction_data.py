@@ -38,10 +38,14 @@ class GetTransactionData(BaseParser):
             date = datetime.datetime.combine(datetime.date.today(), datetime.time(hour,minute,second))
 
             value = direction // 10000
+
             if value == 0:
                 direction = 1
                 if zengcang > 0:
-                    nature_name = "多开"
+                    if volume > zengcang:
+                        nature_name = "多开"
+                    elif volume == zengcang:
+                        nature_name = "双开"
                 elif zengcang == 0:
                     nature_name = "多换"
                 else:
@@ -52,7 +56,10 @@ class GetTransactionData(BaseParser):
             elif value == 1:
                 direction = -1
                 if zengcang > 0:
-                    nature_name = "空开"
+                    if volume > zengcang:
+                        nature_name = "空开"
+                    elif volume == zengcang:
+                        nature_name = "双开"
                 elif zengcang == 0:
                     nature_name = "空换"
                 else:
@@ -74,6 +81,17 @@ class GetTransactionData(BaseParser):
                         nature_name = "双平"
                 else:
                     nature_name = "换手"
+
+            if market in [31,48]:
+                if nature == 0:
+                    direction = 1
+                    nature_name = 'B'
+                elif nature == 256:
+                    direction = -1
+                    nature_name = 'S'
+                else: #512
+                    direction = 0
+                    nature_name = ''
 
 
             result.append(OrderedDict([
@@ -99,5 +117,5 @@ if __name__ == "__main__":
 
     api = TdxExHq_API()
     with api.connect('121.14.110.210', 7727):
-        print(api.to_df(api.get_transaction_data(47, 'IF1709')))
-        print(api.to_df(api.get_transaction_data(31, "00020")))
+        print(api.to_df(api.get_transaction_data(47, 'IFL9')))
+        # print(api.to_df(api.get_transaction_data(31, "00020")))

@@ -34,6 +34,7 @@ from pytdx.parser.get_transaction_data import GetTransactionData
 from pytdx.parser.get_xdxr_info import GetXdXrInfo
 from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
 from pytdx.util import get_real_trade_date, trade_date_sse
+from collections import Iterable
 
 if __name__ == '__main__':
     sys.path.append(os.path.dirname(
@@ -63,7 +64,23 @@ class TdxHq_API(BaseSocketClient):
         return cmd.call_api()
 
     @update_last_ack_time
-    def get_security_quotes(self, all_stock):
+    def get_security_quotes(self, all_stock, code=None):
+        """
+        支持三种形式的参数
+        get_security_quotes(market, code )
+        get_security_quotes((market, code))
+        get_security_quotes([(market1, code1), (market2, code2)] )
+        :param all_stock （market, code) 的数组
+        :param code{optional} code to query
+        :return:
+        """
+
+        if code is not None:
+            all_stock = [(all_stock, code)]
+        elif (isinstance(all_stock, list) or isinstance(all_stock, tuple))\
+                and len(all_stock) == 2 and type(all_stock[0]) is int:
+            all_stock = [all_stock]
+
         cmd = GetSecurityQuotesCmd(self.client, lock=self.lock)
         cmd.setParams(all_stock)
         return cmd.call_api()

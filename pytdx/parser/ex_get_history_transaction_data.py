@@ -48,39 +48,56 @@ class GetHistoryTransactionData(BaseParser):
             if value == 0:
                 direction = 1
                 if zengcang > 0:
-                    natrue_name = "多开"
+                    if volume > zengcang:
+                        nature_name = "多开"
+                    elif volume == zengcang:
+                        nature_name = "双开"
                 elif zengcang == 0:
-                    natrue_name = "多换"
+                    nature_name = "多换"
                 else:
                     if volume == -zengcang:
-                        natrue_name = "双平"
+                        nature_name = "双平"
                     else:
-                        natrue_name = "空平"
+                        nature_name = "空平"
             elif value == 1:
                 direction = -1
                 if zengcang > 0:
-                    natrue_name = "空开"
+                    if volume > zengcang:
+                        nature_name = "空开"
+                    elif volume == zengcang:
+                        nature_name = "双开"
                 elif zengcang == 0:
-                    natrue_name = "空换"
+                    nature_name = "空换"
                 else:
                     if volume == -zengcang:
-                        natrue_name = "双平"
+                        nature_name = "双平"
                     else:
-                        natrue_name = "多平"
+                        nature_name = "多平"
             else:
                 direction = 0
                 if zengcang > 0:
                     if volume > zengcang:
-                        natrue_name = "开仓"
+                        nature_name = "开仓"
                     elif volume == zengcang:
-                        natrue_name = "双开"
+                        nature_name = "双开"
                 elif zengcang < 0:
                     if volume > -zengcang:
-                        natrue_name = "平仓"
+                        nature_name = "平仓"
                     elif volume == -zengcang:
-                        natrue_name = "双平"
+                        nature_name = "双平"
                 else:
-                    natrue_name = "换手"
+                    nature_name = "换手"
+
+            if market in [31,48]:
+                if nature == 0:
+                    direction = 1
+                    nature_name = 'B'
+                elif nature == 256:
+                    direction = -1
+                    nature_name = 'S'
+                else: #512
+                    direction = 0
+                    nature_name = ''
 
             result.append(OrderedDict([
                 ("date", date),
@@ -89,7 +106,8 @@ class GetHistoryTransactionData(BaseParser):
                 ("price", price),
                 ("volume", volume),
                 ("zengcang", zengcang),
-                ("natrue_name", natrue_name),
+                ("natrue_name", nature_name),
+                ("nature_name", nature_name), #修正了nature_name的拼写错误(natrue), 为了保持兼容性，原有的natrue_name还会保留一段时间
                 ("direction", direction),
                 ("nature", nature),
 
@@ -104,5 +122,8 @@ if __name__ == '__main__':
 
     api = TdxExHq_API()
     with api.connect('121.14.110.210', 7727):
+        # print(api.to_df(api.get_history_transaction_data(4, 'SR61099D', 20171025))[["date","price","volume",'zengcang','nature','t1','t2']])
+
         print(api.to_df(api.get_history_transaction_data(47, 'IFL0', 20170811)))
-        print(api.to_df(api.get_history_transaction_data(31, "00020", 20170811)))
+        #print(api.to_df(api.get_history_transaction_data(31,  "01918", 20171026))[["date","price","volume",'zengcang','nature']])
+        #api.to_df(api.get_history_transaction_data(47, 'IFL0', 20170810)).to_excel('//Users//wy//data//iflo.xlsx')

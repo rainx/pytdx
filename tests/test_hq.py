@@ -31,6 +31,16 @@ def test_all_functions(multithread, heartbeat, auto_retry, raise_exception):
         assert stocks is not None
         assert type(stocks) is list
 
+        # 方法2
+        stocks = api.get_security_quotes(0, "000001")
+        assert stocks is not None
+        assert type(stocks) is list
+
+        # 方法3
+        stocks = api.get_security_quotes((0, "000001"))
+        assert stocks is not None
+        assert type(stocks) is list
+
         log.info("获取k线")
         data = api.get_security_bars(9, 0, '000001', 4, 3)
         assert data is not None
