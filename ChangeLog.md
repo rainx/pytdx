@@ -1,3 +1,7 @@
+1.56
+------
+* connect增加了time_out 参数 Merge pull request #99 from yutiansut/master 
+
 1.55
 ------
 * 为 get_security_quotes 增加了几种重载调用的方式：```get_security_quotes(market, code )``` 
