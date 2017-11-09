@@ -1,3 +1,7 @@
+1.57
+-----
+* GetSecurityList name.rstrip("\x00")  Merge pull request #100 from JaysonAlbert/hotfix 
+
 1.56
 ------
 * connect增加了time_out 参数 Merge pull request #99 from yutiansut/master 
