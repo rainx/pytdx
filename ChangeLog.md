@@ -1,6 +1,7 @@
 1.57
 -----
 * GetSecurityList name.rstrip("\x00")  Merge pull request #100 from JaysonAlbert/hotfix 
+* 修改财务信息 将(万元)的列 *10000 pr #102 from yutiansut:master
 
 1.56
 ------
