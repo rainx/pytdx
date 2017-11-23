@@ -33,7 +33,8 @@ class GetHistoryTransactionData(BaseParser):
             ### ?? get_time
             # \x80\x03 = 14:56
 
-            hour, minute, pos = get_time(body_buf,
+            hour, minute, pos = get_time(body_buf, pos)
+
             price_raw, pos = get_price(body_buf, pos)
             vol, pos = get_price(body_buf, pos)
             buyorsell, pos = get_price(body_buf, pos)
