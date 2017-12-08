@@ -1,3 +1,7 @@
+1.58
+----
+* merge pr #110 - fix typo cacnel_order to  cancel _order  
+
 1.57
 -----
 * GetSecurityList name.rstrip("\x00")  Merge pull request #100 from JaysonAlbert/hotfix 
