@@ -25,7 +25,7 @@ class TdxExHqDailyBarReader(BaseReader):
 
         with open(fname, 'rb') as f:
             content = f.read()
-            return self.unpack_records('<IffffIIf', content)
+            return self.unpack_records('<IfffffIf', content)
 
         return []
 
@@ -35,9 +35,9 @@ class TdxExHqDailyBarReader(BaseReader):
         # 只传入了一个参数
         data = [self._df_convert(row) for row in self.parse_data_by_file(code_or_file)]
 
-        df =  pd.DataFrame(data=data, columns=('date', 'open', 'high', 'low', 'close', 'amount', 'volume','jiesuan'))
+        df =  pd.DataFrame(data=data, columns=('date', 'open', 'high', 'low', 'close', 'amount', 'volume', 'jiesuan'))
         df.index = pd.to_datetime(df.date)
-        return df[['open', 'high', 'low', 'close', 'amount', 'volume','jiesuan']]
+        return df[['open', 'high', 'low', 'close', 'amount', 'volume', 'jiesuan']]
 
     def _df_convert(self, row):
         t_date = str(row[0])
