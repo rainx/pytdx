@@ -64,6 +64,8 @@ class GetInstrumentBars(BaseParser):
         for i in range(ret_count):
             year, month, day, hour, minute, pos = get_datetime(self.category, body_buf, pos)
             (open_price, high, low, close, position, trade, price) = struct.unpack("<ffffIIf", body_buf[pos: pos+28])
+            (amount, ) = struct.unpack("f", body_buf[pos+16: pos+16+4])
+
             pos += 28
             kline = OrderedDict([
                 ("open", open_price),
@@ -78,8 +80,10 @@ class GetInstrumentBars(BaseParser):
                 ("day", day),
                 ("hour", hour),
                 ("minute", minute),
-                ("datetime", "%d-%02d-%02d %02d:%02d" % (year, month, day, hour, minute))
+                ("datetime", "%d-%02d-%02d %02d:%02d" % (year, month, day, hour, minute)),
+                ("amount", amount),
             ])
+
             klines.append(kline)
 
         return klines
@@ -95,3 +99,4 @@ if __name__ == '__main__':
     # print(cmd.send_pkg)
     with api.connect('61.152.107.141', 7727):
         print(api.to_df(api.get_instrument_bars(TDXParams.KLINE_TYPE_EXHQ_1MIN, 74, 'BABA')).tail())
+        print(api.to_df(api.get_instrument_bars(TDXParams.KLINE_TYPE_DAILY, 31, '00001')).tail())
