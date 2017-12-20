@@ -1,3 +1,8 @@
+1.59
+----
+* hk stock amount fix form pr https://github.com/rainx/pytdx/pull/115
+* upgrade TdxTradeServer to 1.5 version for support multi account trade
+
 1.58
 ----
 * merge pr #110 - fix typo cacnel_order to  cancel _order  
