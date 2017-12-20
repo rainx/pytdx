@@ -19,7 +19,7 @@ else:
 
 
 TRADE_DLL_KEY = "http://rainx1982.coding.me/tts/Trade.dll"
-TDX_TRADE_SEVER_KEY = "http://rainx1982.coding.me/tts/TdxTradeServer-0.1_20170823174759.zip"
+TDX_TRADE_SEVER_KEY = "http://rainx1982.coding.me/tts/TdxTradeServer-Release-1.5_20171218142839.zip"
 
 
 
@@ -171,6 +171,7 @@ api = TdxTradeApi(endpoint="http://{}:{}/api", enc_key=b"{}", enc_iv=b"{}")
     with open(demo_path, "w") as f:
         f.write(demo_code)
     se("pytdx demo 演示代码在 {}".format(demo_path),fg="blue")
+    se("注意 v1.5版本之后已经支持多账号版本，关于如何配置使用多账号版本，请参考 https://github.com/rainx/TdxTradeServer", fg="red")
     se("Happy Trading!", fg="green")
 
 
