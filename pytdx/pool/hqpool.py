@@ -78,7 +78,7 @@ class TdxHqPool_API(object):
             new_api_ip = None
             if self.hot_failover_api:
                 new_api_ip = self.hot_failover_api.ip
-                log.info("api call from init client (ip=%s) err, perform rotate to (ip =%s)..." + old_api_ip, new_api_ip)
+                log.info("api call from init client (ip=%s) err, perform rotate to (ip =%s)..." %(old_api_ip, new_api_ip))
                 self.api.disconnect()
                 self.api = self.hot_failover_api
             log.info("retry times is " + str(self.api_call_max_retry_times))
