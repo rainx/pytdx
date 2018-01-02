@@ -27,17 +27,17 @@ from functools import wraps
 
 def exec_command(func):
     @wraps(func)
-    def wrapper(self, *args, **kwargs):
+    async def wrapper(self, *args, **kwargs):
         connection = self.pool.get_connection()
 
         if not connection.connected:
-            yield from make_async_parser(SetupCmd1, connection).call_api()
+            await make_async_parser(SetupCmd1, connection).call_api()
 
-            yield from make_async_parser(SetupCmd2, connection).call_api()
+            await make_async_parser(SetupCmd2, connection).call_api()
 
-            yield from make_async_parser(SetupCmd3, connection).call_api()
+            await make_async_parser(SetupCmd3, connection).call_api()
 
-        data = yield from func(self, *args, **kwargs, connection=connection)
+        data = await func(self, *args, **kwargs, connection=connection)
         self.pool.release(connection)
         return data
 

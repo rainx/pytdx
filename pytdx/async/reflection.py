@@ -27,29 +27,27 @@ def make_async_parser(parser, connection):
     :return:
     """
 
-    @asyncio.coroutine
-    def call_api(self):
+    async def call_api(self):
         if self.lock:
             with self.lock:
                 log.debug("sending thread lock api call")
-                result = yield from self._call_api()
+                result = await self._call_api()
         else:
-            result = yield from self._call_api()
+            result = await self._call_api()
         return result
 
-    @asyncio.coroutine
-    def _call_api(self):
+    async def _call_api(self):
         if not self.send_pkg:
             SendPkgNotReady("send pkg not ready")
 
-        yield from connection.send(self.send_pkg)
-        head_buf = yield from connection.recv(self.rsp_header_len)
+        await connection.send(self.send_pkg)
+        head_buf = await connection.recv(self.rsp_header_len)
         if len(head_buf) == self.rsp_header_len:
             _, _, _, zipsize, unzipsize = struct.unpack("<IIIHH", head_buf)
             body_buf = bytearray()
 
             while True:
-                buf = yield from connection.recv(zipsize)
+                buf = await connection.recv(zipsize)
                 len_buf = len(buf)
                 body_buf.extend(buf)
                 if not (buf) or len_buf == 0 or len(body_buf) == zipsize:
@@ -86,23 +84,23 @@ if __name__ == '__main__':
 
         pool = ConnectionPool(ip='101.227.73.20', port=7709)
 
-        def exec_command(pool,cmd):
+        async def exec_command(pool,cmd):
 
             connection = pool.get_connection()
 
             if not connection.connected:
-                yield from make_async_parser(SetupCmd1, connection).call_api()
+                await make_async_parser(SetupCmd1, connection).call_api()
 
-                yield from  make_async_parser(SetupCmd2, connection).call_api()
+                await  make_async_parser(SetupCmd2, connection).call_api()
 
-                yield from make_async_parser(SetupCmd3, connection).call_api()
+                await make_async_parser(SetupCmd3, connection).call_api()
 
 
             async_cmd = make_async_parser(cmd, connection)
 
             async_cmd.setParams(8, 0, '000001', 0, 80)
 
-            data = yield from async_cmd.call_api()
+            data = await async_cmd.call_api()
             pool.release(connection)
 
             return data
