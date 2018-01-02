@@ -9,7 +9,7 @@ class AsyncTrafficStatSocket(object):
     实现支持流量统计的socket类
     """
 
-    def __init__(self, reader, writer, loop):
+    def __init__(self, ip, port, loop):
         super(AsyncTrafficStatSocket, self).__init__()
         # 流量统计相关
         self.send_pkg_num = 0  # 发送次数
@@ -20,15 +20,29 @@ class AsyncTrafficStatSocket(object):
 
         self.last_api_send_bytes = 0  # 最近的一次api调用的发送字节数
         self.last_api_recv_bytes = 0  # 最近一次api调用的接收字节数
-        self.reader = reader
-        self.writer = writer
+        self.reader = None
+        self.writer = None
+        self.ip = ip
+        self.port = port
         self.loop = loop
+
+        self.connected = False
+
+    async def connect(self):
+        self.reader, self.writer = await asyncio.open_connection(self.ip, self.port, loop=self.loop)
+        self.connected = True
+        return self
+
+    def disconnect(self):
+        self.writer.close()
 
     @asyncio.coroutine
     def send(self, data, flags=None):
+        if not (self.reader and self.writer):
+            yield from self.connect()
         nsended = len(data)
         self.writer.write(data)
-        yield self.writer.drain()
+        # yield from self.writer.drain()
         if self.first_pkg_send_time is None:
             self.first_pkg_send_time = datetime.datetime.now()
         self.send_pkg_num += 1
@@ -37,6 +51,8 @@ class AsyncTrafficStatSocket(object):
 
     @asyncio.coroutine
     def recv(self, buffersize, flags=None):
+        if not (self.reader and self.writer):
+            yield from self.connect()
         head_buf = yield from self.reader.read(buffersize)
         self.recv_pkg_num += 1
         self.recv_pkg_bytes += buffersize
