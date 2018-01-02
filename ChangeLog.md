@@ -1,3 +1,8 @@
+1.60
+----
+* Merge pull request #122 from zsluedem/master : fix log bug on hqpool
+* 增加指定绑定本地端口和ip地址功能 issue #119 https://github.com/rainx/pytdx/issues/119
+
 1.59
 ----
 * hk stock amount fix form pr https://github.com/rainx/pytdx/pull/115
