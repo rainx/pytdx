@@ -40,7 +40,7 @@ class BaseParser(object):
     def __init__(self, client, lock=None):
         self.client = client
         self.data = None
-        self.send_pkg = None
+        # self.send_pkg = None
 
         self.rsp_header = None
         self.rsp_body = None
