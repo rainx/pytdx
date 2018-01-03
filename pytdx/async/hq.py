@@ -28,7 +28,7 @@ from functools import wraps
 def exec_command(func):
     @wraps(func)
     async def wrapper(self, *args, **kwargs):
-        connection = self.pool.get_connection()
+        connection = await self.pool.get_connection()
 
         if not connection.connected:
             await make_async_parser(SetupCmd1, connection).call_api()

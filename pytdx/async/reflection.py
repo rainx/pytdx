@@ -80,12 +80,12 @@ if __name__ == '__main__':
     from pytdx.hq import TdxHq_API
     import pprint
 
+
     def time_async():
 
         pool = ConnectionPool(ip='101.227.73.20', port=7709)
 
-        async def exec_command(pool,cmd):
-
+        async def exec_command(pool, cmd):
             connection = pool.get_connection()
 
             if not connection.connected:
@@ -94,7 +94,6 @@ if __name__ == '__main__':
                 await  make_async_parser(SetupCmd2, connection).call_api()
 
                 await make_async_parser(SetupCmd3, connection).call_api()
-
 
             async_cmd = make_async_parser(cmd, connection)
 
@@ -105,8 +104,9 @@ if __name__ == '__main__':
 
             return data
 
-        res = [exec_command(pool,GetSecurityBarsCmd) for i in range(100)]
+        res = [exec_command(pool, GetSecurityBarsCmd) for i in range(100)]
         pool.run_until_complete(asyncio.wait(res))
+
 
     def time_orig():
         api = TdxHq_API()
@@ -114,6 +114,7 @@ if __name__ == '__main__':
 
         for i in range(100):
             api.get_security_bars(8, 0, '000001', 0, 80)
+
 
     # print(timeit.timeit(time_async, number=1))
     print(timeit.timeit(time_orig, number=1))
