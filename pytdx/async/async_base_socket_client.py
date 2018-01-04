@@ -36,10 +36,9 @@ class AsyncTrafficStatSocket(object):
     def disconnect(self):
         self.writer.close()
 
-    @asyncio.coroutine
-    def send(self, data, flags=None):
+    async def send(self, data, flags=None):
         if not (self.reader and self.writer):
-            yield from self.connect()
+            await self.connect()
         nsended = len(data)
         self.writer.write(data)
         # yield from self.writer.drain()
@@ -49,11 +48,10 @@ class AsyncTrafficStatSocket(object):
         self.send_pkg_bytes += nsended
         return nsended
 
-    @asyncio.coroutine
-    def recv(self, buffersize, flags=None):
+    async def recv(self, buffersize, flags=None):
         if not (self.reader and self.writer):
-            yield from self.connect()
-        head_buf = yield from self.reader.read(buffersize)
+            await self.connect()
+        head_buf = await self.reader.read(buffersize)
         self.recv_pkg_num += 1
         self.recv_pkg_bytes += buffersize
         return head_buf
