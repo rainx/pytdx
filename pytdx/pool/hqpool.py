@@ -99,7 +99,7 @@ class TdxHqPool_API(object):
                 self.hot_failover_api = None
             # 阻塞0.2秒，然后递归调用自己
             time.sleep(self.api_retry_interval)
-            self.do_hq_api_call(method_name, *args, **kwargs)
+            result = self.do_hq_api_call(method_name, *args, **kwargs)
             self.api_call_retry_times += 1
 
         else:
