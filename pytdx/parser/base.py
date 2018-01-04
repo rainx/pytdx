@@ -73,6 +73,7 @@ class BaseParser(object):
         else:
             result = self._call_api()
         return result
+
     def _call_api(self):
 
         self.setup()
