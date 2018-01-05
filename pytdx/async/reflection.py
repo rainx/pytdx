@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import six
+from functools import partial
 
 if six.PY2:
     raise NotImplementedError("I am only working for Python3")
@@ -69,10 +70,12 @@ def make_async_parser(parser, connection):
 
             return self.parseResponse(body_buf)
 
-    setattr(parser, "call_api", call_api)
-    setattr(parser, "_call_api", _call_api)
+    cmd = parser(None, None)
 
-    return parser(None, None)
+    setattr(cmd, "call_api", partial(call_api,cmd))
+    setattr(cmd, "_call_api", partial(_call_api, cmd))
+
+    return cmd
 
 
 if __name__ == '__main__':
