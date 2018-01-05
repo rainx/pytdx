@@ -13,7 +13,7 @@ class ConnectionPool(object):
         self.pid = os.getpid()
         self.max_connections = max_connections
 
-        self.loop = loop or asyncio.get_event_loop()
+        self.loop = loop or asyncio.new_event_loop()
         self.ip = ip
         self.port = port
         self._available_connections = []
