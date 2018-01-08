@@ -19,6 +19,11 @@ import struct
 import zlib
 from pytdx.async.pool import ConnectionPool
 import timeit
+import asyncio
+
+from concurrent.futures import ThreadPoolExecutor
+
+executor = ThreadPoolExecutor(8)
 
 
 def make_async_parser(parser, connection):
@@ -54,6 +59,8 @@ def make_async_parser(parser, connection):
                 if not (buf) or len_buf == 0 or len(body_buf) == zipsize:
                     break
 
+            connection.pool.release(connection)
+
             if len(buf) == 0:
                 log.debug("接收数据体失败服务器断开连接")
                 raise ResponseRecvFails("接收数据体失败服务器断开连接")
@@ -68,7 +75,8 @@ def make_async_parser(parser, connection):
                 log.debug("recv body: ")
                 log.debug(body_buf)
 
-            return self.parseResponse(body_buf)
+            # return self.parseResponse(body_buf)
+            return await asyncio.get_event_loop().run_in_executor(executor, self.parseResponse, body_buf)
 
     cmd = parser(None, None)
 
@@ -76,48 +84,3 @@ def make_async_parser(parser, connection):
     setattr(cmd, "_call_api", partial(_call_api, cmd))
 
     return cmd
-
-
-if __name__ == '__main__':
-    from pytdx.parser.get_security_bars import GetSecurityBarsCmd
-    from pytdx.hq import TdxHq_API
-    import pprint
-
-
-    def time_async():
-
-        pool = ConnectionPool(ip='101.227.73.20', port=7709)
-
-        async def exec_command(pool, cmd):
-            connection = pool.get_connection()
-
-            if not connection.connected:
-                await make_async_parser(SetupCmd1, connection).call_api()
-
-                await  make_async_parser(SetupCmd2, connection).call_api()
-
-                await make_async_parser(SetupCmd3, connection).call_api()
-
-            async_cmd = make_async_parser(cmd, connection)
-
-            async_cmd.setParams(8, 0, '000001', 0, 80)
-
-            data = await async_cmd.call_api()
-            pool.release(connection)
-
-            return data
-
-        res = [exec_command(pool, GetSecurityBarsCmd) for i in range(100)]
-        pool.run_until_complete(asyncio.wait(res))
-
-
-    def time_orig():
-        api = TdxHq_API()
-        api.connect(ip='218.108.98.244', port=7709)
-
-        for i in range(100):
-            api.get_security_bars(8, 0, '000001', 0, 80)
-
-
-    # print(timeit.timeit(time_async, number=1))
-    print(timeit.timeit(time_orig, number=1))

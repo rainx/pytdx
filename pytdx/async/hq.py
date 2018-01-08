@@ -38,7 +38,6 @@ def exec_command(func):
             await make_async_parser(SetupCmd3, connection).call_api()
 
         data = await func(self, *args, **kwargs, connection=connection)
-        self.pool.release(connection)
         return data
 
     return wrapper

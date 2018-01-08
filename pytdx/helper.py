@@ -121,12 +121,13 @@ def get_time(buffer, pos):
 
     return hour, minute, pos
 
-def indexbytes(data, pos):
 
-    if six.PY2:
+if six.PY2:
+    def indexbytes(data, pos):
         if type(data) is bytearray:
             return data[pos]
         else:
             return six.indexbytes(data, pos)
-    else:
+else:
+    def indexbytes(data, pos):
         return data[pos]

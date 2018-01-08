@@ -9,7 +9,7 @@ class AsyncTrafficStatSocket(object):
     实现支持流量统计的socket类
     """
 
-    def __init__(self, ip, port, loop):
+    def __init__(self, ip, port, loop, pool):
         super(AsyncTrafficStatSocket, self).__init__()
         # 流量统计相关
         self.send_pkg_num = 0  # 发送次数
@@ -25,6 +25,8 @@ class AsyncTrafficStatSocket(object):
         self.ip = ip
         self.port = port
         self.loop = loop
+
+        self.pool = pool
 
         self.connected = False
 
