@@ -14,6 +14,7 @@ class ConnectionPool(object):
         self.max_connections = max_connections
 
         self.loop = loop or asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
         self.ip = ip
         self.port = port
         self._available_connections = []
@@ -35,7 +36,7 @@ class ConnectionPool(object):
 
     def make_connection(self):
         self.created_connect += 1
-        return AsyncTrafficStatSocket(self.ip, self.port, self.loop)
+        return AsyncTrafficStatSocket(self.ip, self.port, self.loop, self)
 
     def release(self, connection):
         self._in_use_connections.remove(connection)
