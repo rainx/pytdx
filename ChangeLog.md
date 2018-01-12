@@ -1,3 +1,17 @@
+1.60
+----
+* Merge pull request #122, #125 from zsluedem/master : fix bugs on hqpool
+* 增加指定绑定本地端口和ip地址功能 issue #119 https://github.com/rainx/pytdx/issues/119
+
+1.59
+----
+* hk stock amount fix form pr https://github.com/rainx/pytdx/pull/115
+* upgrade TdxTradeServer to 1.5 version for support multi account trade
+
+1.58
+----
+* merge pr #110 - fix typo cacnel_order to  cancel _order  
+
 1.57
 -----
 * GetSecurityList name.rstrip("\x00")  Merge pull request #100 from JaysonAlbert/hotfix 

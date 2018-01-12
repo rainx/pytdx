@@ -152,11 +152,14 @@ class BaseSocketClient(object):
         # 是否在函数调用出错的时候抛出异常
         self.raise_exception = raise_exception
 
-    def connect(self, ip='101.227.73.20', port=7709, time_out=CONNECT_TIMEOUT):
+    def connect(self, ip='101.227.73.20', port=7709, time_out=CONNECT_TIMEOUT, bindport=None, bindip='0.0.0.0'):
         """
 
         :param ip:  服务器ip 地址
         :param port:  服务器端口
+        :param time_out: 连接超时时间
+        :param bindport: 绑定的本地端口
+        :param bindip: 绑定的本地ip
         :return: 是否连接成功 True/False
         """
 
@@ -166,6 +169,8 @@ class BaseSocketClient(object):
         try:
             self.ip = ip
             self.port = port
+            if bindport is not None:
+                self.client.bind((bindip, bindport))
             self.client.connect((ip, port))
         except socket.timeout as e:
             # print(str(e))
