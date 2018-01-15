@@ -1,3 +1,7 @@
+1.61
+----
+*  Merge pull request #136 from yutiansut/master 更新2018年交易日历
+
 1.60
 ----
 * Merge pull request #122, #125 from zsluedem/master : fix bugs on hqpool
