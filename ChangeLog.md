@@ -1,6 +1,9 @@
+1.62
+----
+* Merge PR: fix bug for eol update to 1.62 #138
 1.61
 ----
-*  Merge pull request #136 from yutiansut/master 更新2018年交易日历
+* Merge pull request #136 from yutiansut/master 更新2018年交易日历
 
 1.60
 ----
