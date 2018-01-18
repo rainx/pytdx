@@ -23,7 +23,7 @@ import asyncio
 
 from concurrent.futures import ThreadPoolExecutor
 
-executor = ThreadPoolExecutor(8)
+executor = ThreadPoolExecutor(1)
 
 
 def make_async_parser(parser, connection):
@@ -68,7 +68,7 @@ def make_async_parser(parser, connection):
                 log.debug("不需要解压")
             else:
                 log.debug("需要解压")
-                unziped_data = zlib.decompress(body_buf)
+                unziped_data = await asyncio.get_event_loop().run_in_executor(executor, zlib.decompress, body_buf)
                 body_buf = unziped_data
                 ## 解压
             if DEBUG:
