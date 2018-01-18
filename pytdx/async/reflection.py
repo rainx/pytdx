@@ -75,7 +75,6 @@ def make_async_parser(parser, connection):
                 log.debug("recv body: ")
                 log.debug(body_buf)
 
-            # return self.parseResponse(body_buf)
             return await asyncio.get_event_loop().run_in_executor(executor, self.parseResponse, body_buf)
 
     cmd = parser(None, None)
