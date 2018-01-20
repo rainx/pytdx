@@ -86,7 +86,7 @@ class AvailableIPPool(BaseIPPool):
         if not self.sorted_ips:
             return self.ips
         else:
-            return list(self.sorted_ips.items())
+            return list(self.sorted_ips.values())
 
     def teardown(self):
         self.stop_event.set()
