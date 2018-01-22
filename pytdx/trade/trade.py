@@ -168,8 +168,8 @@ class TdxTradeApi(object):
             'quantity': quantity
         })
 
-    def cacnel_order(self, client_id, exchange_id, hth):
-        return self.call("cacnel_order", {
+    def cancel_order(self, client_id, exchange_id, hth):
+        return self.call("cancel_order", {
             'client_id': client_id,
             'exchange_id': exchange_id,
             'hth': hth

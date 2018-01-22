@@ -8,7 +8,7 @@ import os
 
 class ConnectionPool(object):
 
-    def __init__(self, ip, port, max_connections=300, loop=None):
+    def __init__(self, ip, port, max_connections=100, loop=None):
 
         self.pid = os.getpid()
         self.max_connections = max_connections

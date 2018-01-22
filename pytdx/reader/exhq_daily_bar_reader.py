@@ -1,4 +1,4 @@
-#coding=utf-8
+    #coding=utf-8
 from __future__ import unicode_literals, division
 
 import pandas as pd
@@ -27,6 +27,7 @@ class TdxExHqDailyBarReader(BaseReader):
             content = f.read()
             return self.unpack_records('<IffffIIf', content)
 
+
         return []
 
 
@@ -35,14 +36,15 @@ class TdxExHqDailyBarReader(BaseReader):
         # 只传入了一个参数
         data = [self._df_convert(row) for row in self.parse_data_by_file(code_or_file)]
 
-        df =  pd.DataFrame(data=data, columns=('date', 'open', 'high', 'low', 'close', 'amount', 'volume','jiesuan'))
+        df = pd.DataFrame(data=data, columns=('date', 'open', 'high', 'low', 'close', 'amount', 'volume','jiesuan', 'hk_stock_amount'))
         df.index = pd.to_datetime(df.date)
-        return df[['open', 'high', 'low', 'close', 'amount', 'volume','jiesuan']]
+        return df[['open', 'high', 'low', 'close', 'amount', 'volume','jiesuan', 'hk_stock_amount']]
 
     def _df_convert(self, row):
         t_date = str(row[0])
         datestr = t_date[:4] + "-" + t_date[4:6] + "-" + t_date[6:]
 
+        (hk_stock_amount, ) = struct.unpack('<f', struct.pack('<I', row[5]))
         new_row = (
             datestr,
             row[1],
@@ -51,7 +53,8 @@ class TdxExHqDailyBarReader(BaseReader):
             row[4],
             row[5],
             row[6],
-            row[7]
+            row[7],
+            hk_stock_amount
         )
 
         return new_row

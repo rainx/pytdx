@@ -20,9 +20,21 @@ from pytdx.parser.get_security_list import GetSecurityList
 from pytdx.parser.get_security_quotes import GetSecurityQuotesCmd
 from pytdx.parser.get_transaction_data import GetTransactionData
 from pytdx.parser.get_xdxr_info import GetXdXrInfo
-from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
 
 from functools import wraps
+import struct
+
+async def receive_all(send_pkg, connection):
+    await connection.send(send_pkg)
+    head_buf = await connection.recv(0x10)
+    if len(head_buf) == 0x10:
+        _, _, _, zipsize, unzipsize = struct.unpack("<IIIHH", head_buf)
+        body_buf = bytearray()
+        while True:
+            buf = await connection.recv(zipsize)
+            body_buf.extend(buf)
+            if not (buf) or len(buf) == 0 or len(body_buf) == zipsize:
+                break
 
 
 def exec_command(func):
@@ -31,11 +43,12 @@ def exec_command(func):
         connection = await self.pool.get_connection()
 
         if not connection.connected:
-            await make_async_parser(SetupCmd1, connection).call_api()
-
-            await make_async_parser(SetupCmd2, connection).call_api()
-
-            await make_async_parser(SetupCmd3, connection).call_api()
+            await receive_all(bytearray.fromhex(u'0c 02 18 93 00 01 03 00 03 00 0d 00 01'), connection)
+            await receive_all(bytearray.fromhex(u'0c 02 18 94 00 01 03 00 03 00 0d 00 02'), connection)
+            await receive_all(bytearray.fromhex(u'0c 03 18 99 00 01 20 00 20 00 db 0f d5'
+                                      u'd0 c9 cc d6 a4 a8 af 00 00 00 8f c2 25'
+                                      u'40 13 00 00 d5 00 c9 cc bd f0 d7 ea 00'
+                                      u'00 00 02'), connection)
 
         data = await func(self, *args, **kwargs, connection=connection)
         return data

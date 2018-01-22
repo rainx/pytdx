@@ -24,6 +24,8 @@ Pytdx 是一款纯Python语言开发的类似TradeX的行情数据接口的实�
 * (试验）支持多连接构成的连接池机制，和failover处理机制，保证稳定性。
 * 可以自定义的自动重连策略
 
+> pytdx将重点放在底层包的解析，对于更高层的封装，建议参考或者直接使用[`Quantaxis`](https://github.com/yutiansut/QUANTAXIS/blob/master/QUANTAXIS/QAFetch/QATdx.py)的实现.. 
+
 安装
 ---
 

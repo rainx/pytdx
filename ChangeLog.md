@@ -1,3 +1,33 @@
+1.62
+----
+* Merge PR: fix bug for eol update to 1.62 #138
+1.61
+----
+* Merge pull request #136 from yutiansut/master 更新2018年交易日历
+
+1.60
+----
+* Merge pull request #122, #125 from zsluedem/master : fix bugs on hqpool
+* 增加指定绑定本地端口和ip地址功能 issue #119 https://github.com/rainx/pytdx/issues/119
+
+1.59
+----
+* hk stock amount fix form pr https://github.com/rainx/pytdx/pull/115
+* upgrade TdxTradeServer to 1.5 version for support multi account trade
+
+1.58
+----
+* merge pr #110 - fix typo cacnel_order to  cancel _order  
+
+1.57
+-----
+* GetSecurityList name.rstrip("\x00")  Merge pull request #100 from JaysonAlbert/hotfix 
+* 修改财务信息 将(万元)的列 *10000 pr #102 from yutiansut:master
+
+1.56
+------
+* connect增加了time_out 参数 Merge pull request #99 from yutiansut/master 
+
 1.55
 ------
 * 为 get_security_quotes 增加了几种重载调用的方式：```get_security_quotes(market, code )``` 

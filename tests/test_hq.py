@@ -25,7 +25,7 @@ def test_all_functions(multithread, heartbeat, auto_retry, raise_exception):
 
     api = TdxHq_API(multithread=multithread, heartbeat=heartbeat,
                     auto_retry=auto_retry, raise_exception=raise_exception)
-    with api.connect():
+    with api.connect(time_out=30):
         log.info("获取股票行情")
         stocks = api.get_security_quotes([(0, "000001"), (1, "600300")])
         assert stocks is not None
