@@ -23,11 +23,36 @@ try:
     import pypandoc
     long_description = pypandoc.convert('README.md', 'rst')
 except (IOError, ImportError):
+    print(30 * "*")
+    print("Notice, NEED TO INSTALL *pypandoc* TO get full description of package")
+    print(30 * "*")
     long_description = ''
 
+# try get current branch
+cur_branch = 'master'
+try:
+    from git import Repo
+    cur_path = os.path.abspath(os.path.dirname(__file__))
+    repo = Repo(cur_path)
+    cur_branch = repo.active_branch.name
+
+except Exception as e:
+    print(30 * "*")
+    print("Notice, NEED TO INSTALL *GitPython* TO setup package with branch name")
+    print(30 * "*")
+
+
+pkg_name = 'pytdx'
+
+if cur_branch != 'master':
+    pkg_name = 'pytdx-' + cur_branch
+
+print(30 * '-')
+print("Current Branch is {}, so package name is {}".format(cur_branch, pkg_name))
+print(30 * '-')
 
 setup(
-    name='pytdx',
+    name=pkg_name,
     version='1.62',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
