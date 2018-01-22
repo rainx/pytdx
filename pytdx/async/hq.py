@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from pytdx.async.pool import ConnectionPool
 from pytdx.async.reflection import make_async_parser
 import timeit
