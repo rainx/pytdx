@@ -1,3 +1,7 @@
+1.63
+---
+* fix issue #146, 股票涨速字段解析有错 @a19284
+
 1.62
 ----
 * Merge PR: fix bug for eol update to 1.62 #138

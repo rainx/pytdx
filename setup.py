@@ -53,7 +53,7 @@ print(30 * '-')
 
 setup(
     name=pkg_name,
-    version='1.62',
+    version='1.63',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
     author='RainX<Jing Xu>',
