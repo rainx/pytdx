@@ -121,7 +121,7 @@ class GetSecurityQuotesCmd(BaseParser):
             reversed_bytes6, pos = get_price(body_buf, pos)
             reversed_bytes7, pos = get_price(body_buf, pos)
             reversed_bytes8, pos = get_price(body_buf, pos)
-            (reversed_bytes9, active2) = struct.unpack("<HH", body_buf[pos: pos + 4])
+            (reversed_bytes9, active2) = struct.unpack("<hH", body_buf[pos: pos + 4])
             pos += 4
 
             one_stock = OrderedDict([
@@ -167,7 +167,7 @@ class GetSecurityQuotesCmd(BaseParser):
                 ("reversed_bytes6", reversed_bytes6),
                 ("reversed_bytes7", reversed_bytes7),
                 ("reversed_bytes8", reversed_bytes8),
-                ("reversed_bytes9", reversed_bytes9),
+                ("reversed_bytes9", reversed_bytes9/100.0),  # 涨速
                 ("active2", active2)
             ])
             stocks.append(one_stock)
