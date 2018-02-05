@@ -19,7 +19,7 @@ else:
 
 
 TRADE_DLL_KEY = "http://rainx1982.coding.me/tts/Trade.dll"
-TDX_TRADE_SEVER_KEY = "http://rainx1982.coding.me/tts/TdxTradeServer-Release-1.5_20171218142839.zip"
+TDX_TRADE_SEVER_KEY = "http://rainx1982.coding.me/tts/TdxTradeServer-Release-1.6_20180205171449.zip"
 
 
 

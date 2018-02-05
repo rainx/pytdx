@@ -1,3 +1,7 @@
+1.64
+---
+* 增加query_history_data接口 2018-02-05 see: https://github.com/rainx/TdxTradeServer/releases/tag/v1.6.0.0
+
 1.63
 ---
 * fix issue #146, 股票涨速字段解析有错 @a19284

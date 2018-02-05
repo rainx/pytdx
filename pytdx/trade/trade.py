@@ -187,6 +187,14 @@ class TdxTradeApi(object):
             'amount': amount
         })
 
+    def query_history_data(self, client_id, category, begin_date, end_date):
+        return self.call('query_history_data', {
+            'client_id': client_id,
+            'category': category,
+            'begin_date': begin_date,
+            'end_date': end_date
+        })
+
 if __name__ == "__main__":
     import os
     api = TdxTradeApi(endpoint="http://10.11.5.175:10092/api", enc_key=b"4f1cf3fec4c84c84", enc_iv=b"0c78abc083b011e7")
