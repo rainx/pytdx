@@ -1,6 +1,17 @@
+1.64
+---
+* 增加query_history_data接口 2018-02-05 see: https://github.com/rainx/TdxTradeServer/releases/tag/v1.6.0.0
+
+1.63
+---
+* fix issue #146, 股票涨速字段解析有错 @a19284
+
+1.62
+----
+* Merge PR: fix bug for eol update to 1.62 #138
 1.61
 ----
-*  Merge pull request #136 from yutiansut/master 更新2018年交易日历
+* Merge pull request #136 from yutiansut/master 更新2018年交易日历
 
 1.60
 ----
