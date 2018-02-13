@@ -52,30 +52,31 @@ class HistoryFinancialCrawler(BaseCralwer):
 
         header_pack_format = '<1hI1H3L'
 
-        tmpdir_root = tempfile.gettempdir()
-        subdir_name = "pytdx_" + str(random.randint(0, 1000000))
-        tmpdir = os.path.join(tmpdir_root, subdir_name)
-        shutil.rmtree(tmpdir, ignore_errors=True)
-        os.makedirs(tmpdir)
-        if six.PY2:
-            with zipfile.ZipFile(download_file.name, 'r') as zf:
-                zf.extractall(tmpdir)
+        if download_file.name.endswith('.zip'):
+            tmpdir_root = tempfile.gettempdir()
+            subdir_name = "pytdx_" + str(random.randint(0, 1000000))
+            tmpdir = os.path.join(tmpdir_root, subdir_name)
+            shutil.rmtree(tmpdir, ignore_errors=True)
+            os.makedirs(tmpdir)
+            if six.PY2:
+                with zipfile.ZipFile(download_file.name, 'r') as zf:
+                    zf.extractall(tmpdir)
+            else:
+                shutil.unpack_archive(download_file.name, extract_dir=tmpdir)
+            # only one file endswith .dat should be in zip archives
+            datfile = None
+            for _file in os.listdir(tmpdir):
+                if _file.endswith(".dat"):
+                    datfile = open(os.path.join(tmpdir, _file), "rb")
+
+            if datfile is None:
+                raise Exception("no dat file found in zip archive")
         else:
-            shutil.unpack_archive(download_file.name, extract_dir=tmpdir)
-        # only one file endswith .dat should be in zip archives
-        datfile = None
-        for _file in os.listdir(tmpdir):
-            if _file.endswith(".dat"):
-                datfile = open(os.path.join(tmpdir, _file), "rb")
-
-        if datfile is None:
-            raise Exception("no dat file found in zip archive")
-
+            datfile = download_file
         header_size = calcsize(header_pack_format)
         stock_item_size = calcsize("<6s1c1L")
         data_header = datfile.read(header_size)
         stock_header = unpack(header_pack_format, data_header)
-        print(stock_header)
         max_count = stock_header[2]
         report_date = stock_header[1]
         report_size = stock_header[4]
@@ -96,8 +97,9 @@ class HistoryFinancialCrawler(BaseCralwer):
             one_record = (code, report_date) + cw_info
             results.append(one_record)
 
-        datfile.close()
-        shutil.rmtree(tmpdir, ignore_errors=True)
+        if download_file.name.endswith('.zip'):
+            datfile.close()
+            shutil.rmtree(tmpdir, ignore_errors=True)
         return results
 
     def to_df(self, data):
