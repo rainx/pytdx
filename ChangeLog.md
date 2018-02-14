@@ -1,3 +1,8 @@
+1.65
+---
+* 增加历史财务数据相关下载和解析方法 ，参考文档 https://rainx.gitbooks.io/pytdx/content/pytdx_crawler.html 
+    感谢 @datochan issue #133
+
 1.64
 ---
 * 增加query_history_data接口 2018-02-05 see: https://github.com/rainx/TdxTradeServer/releases/tag/v1.6.0.0
