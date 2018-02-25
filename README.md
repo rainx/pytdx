@@ -46,6 +46,10 @@ pip install pytdx
 ### 数据文件读取 pytdx.reader
 用于读取行情软件导出的k线数据
 
+### 历史专业财务数据的爬取和解析
+
+感谢 @datochan 根据 <https://github.com/rainx/pytdx/issues/133> 方法实现
+
 ### pytdx.pool (试验性质)
 用于实现备用连接池以及failover支持的行情接口
 
