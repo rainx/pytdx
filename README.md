@@ -50,6 +50,10 @@ pip install pytdx
 
 感谢 @datochan 根据 <https://github.com/rainx/pytdx/issues/133> 方法实现
 
+### 交易相关 (使用TdxTradeServer(wrapper of trade.dll))
+
+https://rainx.gitbooks.io/pytdx/content/pytdx_trade.html
+
 ### pytdx.pool (试验性质)
 用于实现备用连接池以及failover支持的行情接口
 
