@@ -195,6 +195,9 @@ class TdxTradeApi(object):
             'end_date': end_date
         })
 
+    def get_active_clients(self):
+        return self.call(func="get_active_clients")
+
 if __name__ == "__main__":
     import os
     api = TdxTradeApi(endpoint="http://10.11.5.175:10092/api", enc_key=b"4f1cf3fec4c84c84", enc_iv=b"0c78abc083b011e7")
