@@ -1,3 +1,13 @@
+1.67
+---
+* 增加`TdxTradeServer1.8.0.0`支持
+* trade模块增加 `send_orders`, `cancel_orders`, `get_quotes`, `query_datas` 支持
+
+1.66
+---
+* 对`get_tts`支持`TdxTradeServer1.7.0.0`版本
+* trade模块增加 `get_active_clients` 功能
+
 1.65
 ---
 * 增加历史财务数据相关下载和解析方法 ，参考文档 https://rainx.gitbooks.io/pytdx/content/pytdx_crawler.html 

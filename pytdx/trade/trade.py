@@ -195,10 +195,81 @@ class TdxTradeApi(object):
             'end_date': end_date
         })
 
+    def query_datas(self, client_id, categories):
+        return self.call('query_datas', {
+            'client_id': client_id,
+            'categories': categories
+        })
+
+    def get_quotes(self, client_id, codes):
+        return self.call("get_quotes", {
+            'client_id': client_id,
+            'zqdms': codes
+        })
+
+    def send_orders(self, client_id, orders):
+        """
+        发送订单
+        :param client_id:
+        :param orders:
+        格式
+        [
+            {
+                "category": xx,
+                "price_type" :xx,
+                "price": xx,
+                "gddm": xx,
+                "zqdm": xx,
+                "quantity": xx,
+            },
+            {
+            ....
+            },
+            {
+            ....
+            }
+        ]
+
+        :return:
+        """
+        return self.call("send_orders", {
+            'client_id': client_id,
+            "orders": orders
+        })
+
+    def cancel_orders(self, client_id, orders):
+        """
+        撤销订单
+        :param client_id:
+        :param orders:
+        格式
+        [
+            {
+                "exchange_id": xx,
+                "hth": xx
+            },
+            {
+            ....
+            },
+            {
+            ....
+            }
+        ]
+
+        :return:
+        """
+        return self.call("cancel_orders", {
+            'client_id': client_id,
+            "orders": orders
+        })
+
+    def get_active_clients(self):
+        return self.call(func="get_active_clients")
+
 if __name__ == "__main__":
     import os
-    api = TdxTradeApi(endpoint="http://10.11.5.175:10092/api", enc_key=b"4f1cf3fec4c84c84", enc_iv=b"0c78abc083b011e7")
-    #api = TdxTradeApi(endpoint="http://10.11.5.175:10092/api")
+    #api = TdxTradeApi(endpoint="http://10.11.5.215:10092/api", enc_key=b"4f1cf3fec4c84c84", enc_iv=b"0c78abc083b011e7")
+    api = TdxTradeApi(endpoint="http://10.11.5.215:10092/api")
     print("---Ping---")
     result = api.ping()
     print(result)
@@ -222,6 +293,12 @@ if __name__ == "__main__":
 
         print("---查询报价---")
         print(api.data_to_df(api.get_quote(client_id, '600315')))
+
+        print("---批量查询报价---")
+        print(api.data_to_df(api.get_quotes(client_id, ['600315', '000001'])))
+
+        print("---批量查询信息")
+        print(api.data_to_df(api.query_datas(client_id, [0,1,2])))
 
         print("---登出---")
         print(api.logoff(client_id))
