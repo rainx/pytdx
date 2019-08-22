@@ -127,6 +127,6 @@ def test_all_functions(multithread, heartbeat, auto_retry, raise_exception):
 
 def test_raise_excepiton():
     api = TdxHq_API(raise_exception=True)
-    with pytest.raises(socket.timeout):
+    with pytest.raises((socket.timeout, TdxConnectionError)):
         with api.connect('114.114.114.114'):
             pass
