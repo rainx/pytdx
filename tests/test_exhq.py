@@ -28,7 +28,7 @@ def test_all_functions():
 
     api = TdxExHq_API(auto_retry=True)
     try:
-        with api.connect('121.14.110.210', 7727, time_out=30):
+        with api.connect('112.74.214.43', 7727, time_out=30):
             log.info("获取市场代码")
             data = api.get_markets()
             assert data is not None
