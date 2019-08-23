@@ -22,7 +22,7 @@ https://github.com/rainx/pytdx/issues/133
 class HistoryFinancialListCrawler(BaseCralwer):
 
     def get_url(self, *args, **kwargs):
-        return "http://down.tdx.com.cn:8001/fin/gpcw.txt"
+        return "https://gitee.com/yutiansut/QADATA/raw/master/financial/content.txt"
 
     def parse(self, download_file, *args, **kwargs):
         content = download_file.read()
@@ -46,7 +46,7 @@ class HistoryFinancialCrawler(BaseCralwer):
         else:
             raise Exception("Param filename is not set")
 
-        return "http://down.tdx.com.cn:8001/fin/{}".format(filename)
+        return "http://data.yutiansut.com/{}".format(filename)
 
     def parse(self, download_file, *args, **kwargs):
 
