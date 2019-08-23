@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 from pytdx.errors import TdxConnectionError, TdxFunctionCallError
 from pytdx.hq import TdxHq_API, TDXParams
+import socket
 
 
 class Log(object):
@@ -25,7 +26,7 @@ def test_all_functions(multithread, heartbeat, auto_retry, raise_exception):
 
     api = TdxHq_API(multithread=multithread, heartbeat=heartbeat,
                     auto_retry=auto_retry, raise_exception=raise_exception)
-    with api.connect(time_out=30):
+    with api.connect(ip="119.147.212.81", time_out=60):
         log.info("获取股票行情")
         stocks = api.get_security_quotes([(0, "000001"), (1, "600300")])
         assert stocks is not None
@@ -126,6 +127,6 @@ def test_all_functions(multithread, heartbeat, auto_retry, raise_exception):
 
 def test_raise_excepiton():
     api = TdxHq_API(raise_exception=True)
-    with pytest.raises(TdxConnectionError):
-        with api.connect('8.8.8.8'):
+    with pytest.raises((socket.timeout, TdxConnectionError)):
+        with api.connect('114.114.114.114'):
             pass
