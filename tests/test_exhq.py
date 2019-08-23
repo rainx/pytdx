@@ -16,6 +16,9 @@ class Log(object):
 log = Log()
 
 
+test_server_ip = "112.74.214.43"
+
+
 def test_all_functions():
 
     symbol_params = [
@@ -28,7 +31,7 @@ def test_all_functions():
 
     api = TdxExHq_API(auto_retry=True)
     try:
-        with api.connect('112.74.214.43', 7727, time_out=30):
+        with api.connect(test_server_ip, 7727, time_out=30):
             log.info("获取市场代码")
             data = api.get_markets()
             assert data is not None
@@ -99,7 +102,7 @@ def test_get_history_instrument_bars_range():
     log.info("查询代码列表")
     api = TdxExHq_API(auto_retry=True)
     try:
-        with api.connect('61.152.107.141', 7727):
+        with api.connect(test_server_ip, 7727):
             data = api.get_history_instrument_bars_range(
                 74, "BABA", 20170613, 20170620)
             assert data is not None
