@@ -172,7 +172,7 @@ class TdxHq_API(BaseSocketClient):
         cmd.setParams(filename, offset)
         return cmd.call_api()
 
-    def get_report_file_by_size(self, filename, filesize=0):
+    def get_report_file_by_size(self, filename, filesize=0, reporthook=None):
         """
         Download file from proxy server
 
@@ -188,6 +188,8 @@ class TdxHq_API(BaseSocketClient):
                 current_downloaded_size = current_downloaded_size + \
                     response["chunksize"]
                 filecontent.extend(response["chunkdata"])
+                if reporthook is not None:
+                    reporthook(current_downloaded_size,filesize)
             else:
                 get_zero_length_package_times = get_zero_length_package_times + 1
                 if filesize == 0:
