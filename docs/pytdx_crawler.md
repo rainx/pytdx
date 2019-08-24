@@ -8,7 +8,7 @@
 
 ## pytdx.crawler
 
-`crawler` 其实本来想叫做`downloader`或者`fetcher`, 专门来处理http 协议的数据的下载和解析，分为两个阶段，下载阶段我们会使用urllib来下载数据，数据可以下载到临时文件（不传入`path_to_download`参数）或者下载到指定的位置（提供`path_to_download`参数），也支持指定chunk的分段下载进度的提示（使用`reporthook`传入处理函数）， 下面是一个reporthook函数的例子
+`crawler` 其实本来想叫做`downloader`或者`fetcher`, 专门来处理http 协议(现在也支持tcp的方式获取）的数据的下载和解析，分为两个阶段，下载阶段我们会使用urllib来下载数据，数据可以下载到临时文件（不传入`path_to_download`参数）或者下载到指定的位置（提供`path_to_download`参数），也支持指定chunk的分段下载进度的提示（使用`reporthook`传入处理函数）， 下面是一个reporthook函数的例子
 
 ```
 
@@ -24,6 +24,8 @@ def demo_reporthook(downloaded, total_size):
 ```
 from pytdx.crawler.history_financial_crawler import HistoryFinancialListCrawler
 crawler = HistoryFinancialListCrawler()
+
+### 这里默认已经切换成使用通达信proxy server，如果想切回http方式，需要设置 crawler.mode = "http"
 list_data = crawler.fetch_and_parse()
 print(pd.DataFrame(data=list_data))
 
@@ -65,6 +67,9 @@ from pytdx.crawler.history_financial_crawler import HistoryFinancialCrawler
 
 datacrawler = HistoryFinancialCrawler()
 pd.set_option(&amp;apos;display.max_columns&amp;apos;, None)
+### 这里默认已经切换成使用通达信proxy server，如果想切回http方式，需要设置 crawler.mode = "http"
+
+### 如果使用默认的方式，下面的方法需要传入 filesize=实际文件大小，可以通过前面的接口获取到
 result = datacrawler.fetch_and_parse(reporthook=demo_reporthook, filename=&amp;apos;gpcw19971231.zip&amp;apos;, path_to_download="/tmp/tmpfile.zip")
 print(datacrawler.to_df(data=result))
 
