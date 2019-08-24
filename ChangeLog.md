@@ -1,3 +1,7 @@
+1.71
+---
+* 给GetSecurityQuotes添加解析后的时间字段 time, 参考  #187, 感谢 @liuyug
+
 1.70
 ---
 * 恢复了从通达信proxy服务器获取历史财务数据的方法，可以通过 HistoryFinancialListCrawler.mode = "http" 切回使用http的方式。

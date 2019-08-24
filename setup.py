@@ -67,13 +67,12 @@ setup(
             'cryptography',
     ],
     entry_points={
-          'console_scripts': [
-              'hqget=pytdx.bin.hqget:main',
-              'hqreader=pytdx.bin.hqreader:main',
-              'get_tts=pytdx.bin.get_tdx_trader_server:main',
-              'hqbenchmark=pytdx.bin.hqbenchmark:main',
-          ]
-      },
+        'console_scripts': [
+            'hqget=pytdx.bin.hqget:main',
+            'hqreader=pytdx.bin.hqreader:main',
+            'get_tts=pytdx.bin.get_tdx_trader_server:main',
+            'hqbenchmark=pytdx.bin.hqbenchmark:main',
+        ]
+    },
     **cythonkw
-    )
-
+)
