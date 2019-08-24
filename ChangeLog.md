@@ -1,3 +1,7 @@
+1.70
+---
+* 恢复了从通达信proxy服务器获取历史财务数据的方法，可以通过 HistoryFinancialListCrawler.mode = "http" 切回使用http的方式。
+
 1.69
 ---
 * 修复了历史财务数据无法下载问题。 by yutiansut
