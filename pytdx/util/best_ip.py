@@ -128,6 +128,16 @@ def ping(ip, port=7709, type_='stock'):
 
 
 def select_best_ip(_type='stock'):
+    """目前这里给的是单线程的选优, 如果需要多进程的选优/ 最优ip缓存 可以参考
+    https://github.com/QUANTAXIS/QUANTAXIS/blob/master/QUANTAXIS/QAFetch/QATdx.py#L106
+
+
+    Keyword Arguments:
+        _type {str} -- [description] (default: {'stock'})
+    
+    Returns:
+        [type] -- [description]
+    """
     best_ip = {
         'stock': {
             'ip': None, 'port': None
