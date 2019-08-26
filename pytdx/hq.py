@@ -32,6 +32,7 @@ from pytdx.parser.get_security_list import GetSecurityList
 from pytdx.parser.get_security_quotes import GetSecurityQuotesCmd
 from pytdx.parser.get_transaction_data import GetTransactionData
 from pytdx.parser.get_xdxr_info import GetXdXrInfo
+from pytdx.parser.get_report_file import GetReportFile
 from pytdx.parser.setup_commands import SetupCmd1, SetupCmd2, SetupCmd3
 from pytdx.util import get_real_trade_date, trade_date_sse
 try:
@@ -164,6 +165,39 @@ class TdxHq_API(BaseSocketClient):
 
     def get_and_parse_block_info(self, blockfile):
         return get_and_parse_block_info(self, blockfile)
+
+    @update_last_ack_time
+    def get_report_file(self, filename, offset):
+        cmd = GetReportFile(self.client, lock=self.lock)
+        cmd.setParams(filename, offset)
+        return cmd.call_api()
+
+    def get_report_file_by_size(self, filename, filesize=0, reporthook=None):
+        """
+        Download file from proxy server
+
+        :param filename the filename to download
+        :param filesize the filesize to download , if you do not known the actually filesize, leave this value 0
+        """
+        filecontent = bytearray(filesize)
+        current_downloaded_size = 0
+        get_zero_length_package_times = 0
+        while current_downloaded_size < filesize or filesize == 0:
+            response = self.get_report_file(filename, current_downloaded_size)
+            if response["chunksize"] > 0:
+                current_downloaded_size = current_downloaded_size + \
+                    response["chunksize"]
+                filecontent.extend(response["chunkdata"])
+                if reporthook is not None:
+                    reporthook(current_downloaded_size,filesize)
+            else:
+                get_zero_length_package_times = get_zero_length_package_times + 1
+                if filesize == 0:
+                    break
+                elif get_zero_length_package_times > 2:
+                    break
+
+        return filecontent
 
     def do_heartbeat(self):
         self.get_security_count(random.randint(0, 1))

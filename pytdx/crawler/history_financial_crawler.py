@@ -21,8 +21,26 @@ https://github.com/rainx/pytdx/issues/133
 
 class HistoryFinancialListCrawler(BaseCralwer):
 
+    def __init__(self):
+        self.mode = "content"
+
     def get_url(self, *args, **kwargs):
         return "https://gitee.com/yutiansut/QADATA/raw/master/financial/content.txt"
+    
+    def get_content(self, reporthook=None, path_to_download=None, proxies=None, chunksize=1024 * 50, *args, **kwargs):
+        from pytdx.hq import TdxHq_API
+        api = TdxHq_API()
+        api.need_setup = False
+        # calc.tdx.com.cn, calc2.tdx.com.cn
+        with api.connect(ip="120.76.152.87"):
+            content = api.get_report_file_by_size("tdxfin/gpcw.txt")
+            if path_to_download is None:
+                download_file = tempfile.NamedTemporaryFile(delete=True)
+            else:
+                download_file = open(path_to_download, 'wb')
+            download_file.write(content)    
+            download_file.seek(0)
+            return download_file
 
     def parse(self, download_file, *args, **kwargs):
         content = download_file.read()
@@ -40,6 +58,9 @@ class HistoryFinancialListCrawler(BaseCralwer):
 
 class HistoryFinancialCrawler(BaseCralwer):
 
+    def __init__(self):
+        self.mode = "content"
+
     def get_url(self, *args, **kwargs):
         if 'filename' in kwargs:
             filename = kwargs['filename']
@@ -47,6 +68,32 @@ class HistoryFinancialCrawler(BaseCralwer):
             raise Exception("Param filename is not set")
 
         return "http://data.yutiansut.com/{}".format(filename)
+
+    
+    def get_content(self, reporthook=None, path_to_download=None, proxies=None, chunksize=1024 * 50, *args, **kwargs):
+        if 'filename' in kwargs:
+            filename = kwargs['filename']
+        else:
+            raise Exception("Param filename is not set")
+
+        if "filesize" in kwargs:
+            filesize = kwargs["filesize"]
+        else:
+            filesize = 0
+
+        from pytdx.hq import TdxHq_API
+        api = TdxHq_API()
+        api.need_setup = False
+        # calc.tdx.com.cn, calc2.tdx.com.cn
+        with api.connect(ip="120.76.152.87"):
+            content = api.get_report_file_by_size("tdxfin/" + filename, filesize=filesize, reporthook=reporthook)
+            if path_to_download is None:
+                download_file = tempfile.NamedTemporaryFile(delete=True)
+            else:
+                download_file = open(path_to_download, 'wb')
+            download_file.write(content)    
+            download_file.seek(0)
+            return download_file
 
     def parse(self, download_file, *args, **kwargs):
 
@@ -124,17 +171,22 @@ if __name__ == '__main__':
     from pytdx.crawler.base_crawler import demo_reporthook
     crawler = HistoryFinancialListCrawler()
     #
-    # list_data = crawler.fetch_and_parse(reporthook=demo_reporthook)
-    # print(pd.DataFrame(data=list_data))
+    list_data = crawler.fetch_and_parse(reporthook=demo_reporthook)
+    df = pd.DataFrame(data=list_data)
+
+    print(df["filename"])
+    print(df["filename"].str.contains("gpcw20190630.zip").any())
 
     # 读取其中一个
-    #
+    
     # filename = list_data[1]['filename']
-    #
-    datacrawler = HistoryFinancialCrawler()
-    pd.set_option('display.max_columns', None)
+    # filesize = list_data[1]["filesize"]
+    
+    # datacrawler = HistoryFinancialCrawler()
+    # pd.set_option('display.max_columns', None)
 
-    # result = datacrawler.fetch_and_parse(reporthook=demo_reporthook, filename=filename, path_to_download="/tmp/tmpfile.zip")
-    with open(r"/tmp/tmpfile.zip", "rb") as fp:
-        result = datacrawler.parse(download_file=fp)
-        print(datacrawler.to_df(data=result))
+    # result = datacrawler.fetch_and_parse(reporthook=demo_reporthook, filename=filename, filesize=filesize, path_to_download="/tmp/tmpfile.zip")
+    # print(result)
+    # with open(r"/tmp/tmpfile.zip", "rb") as fp:
+    #     result = datacrawler.parse(download_file=fp)
+    #     print(datacrawler.to_df(data=result))
