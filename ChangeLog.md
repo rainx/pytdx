@@ -1,6 +1,10 @@
+1.72
+---
+* 给GetSecurityQuotes添加解析后的时间字段 servertime, 参考  #187, 感谢 @liuyug
+
 1.71
 ---
-* 给GetSecurityQuotes添加解析后的时间字段 time, 参考  #187, 感谢 @liuyug
+* 更新了最优ip获取部分 #217
 
 1.70
 ---

@@ -135,7 +135,7 @@ class GetSecurityQuotesCmd(BaseParser):
                 ("open", self._cal_price(price, open_diff)),
                 ("high", self._cal_price(price, high_diff)),
                 ("low", self._cal_price(price, low_diff)),
-                ("time", self._format_time('%s' % reversed_bytes0)),
+                ("servertime", self._format_time('%s' % reversed_bytes0)),
                 ("reversed_bytes0", reversed_bytes0),
                 ("reversed_bytes1", reversed_bytes1),
                 ("vol", vol),
