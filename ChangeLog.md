@@ -1,3 +1,11 @@
+1.72
+---
+* 给GetSecurityQuotes添加解析后的时间字段 servertime, 参考  #187, 感谢 @liuyug
+
+1.71
+---
+* 更新了最优ip获取部分 #217
+
 1.70
 ---
 * 恢复了从通达信proxy服务器获取历史财务数据的方法，可以通过 HistoryFinancialListCrawler.mode = "http" 切回使用http的方式。

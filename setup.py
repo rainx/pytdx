@@ -53,7 +53,7 @@ print(30 * '-')
 
 setup(
     name=pkg_name,
-    version='1.71',
+    version='1.72',
     description='A Python Interface to TDX protocol',
     long_description=long_description,
     author=['RainX<Jing Xu>', 'yutiansut'],
@@ -67,13 +67,12 @@ setup(
             'cryptography',
     ],
     entry_points={
-          'console_scripts': [
-              'hqget=pytdx.bin.hqget:main',
-              'hqreader=pytdx.bin.hqreader:main',
-              'get_tts=pytdx.bin.get_tdx_trader_server:main',
-              'hqbenchmark=pytdx.bin.hqbenchmark:main',
-          ]
-      },
+        'console_scripts': [
+            'hqget=pytdx.bin.hqget:main',
+            'hqreader=pytdx.bin.hqreader:main',
+            'get_tts=pytdx.bin.get_tdx_trader_server:main',
+            'hqbenchmark=pytdx.bin.hqbenchmark:main',
+        ]
+    },
     **cythonkw
-    )
-
+)
