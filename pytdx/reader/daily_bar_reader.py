@@ -105,7 +105,7 @@ class TdxDailyBarReader(BaseReader):
             elif code_head in ["10", "11", "12", "13", "14"]:
                 return "SZ_BOND"
         elif exchange == self.SECURITY_EXCHANGE[1]:
-            if code_head in ["60"]:
+            if code_head in ["60", "68"]:
                 return "SH_A_STOCK"
             elif code_head in ["90"]:
                 return "SH_B_STOCK"
