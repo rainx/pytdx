@@ -65,7 +65,7 @@ class TdxDailyBarReader(BaseReader):
         data = [self._df_convert(row, coefficient) for row in self.parse_data_by_file(fname)]
 
         df = pd.DataFrame(data=data, columns=('date', 'open', 'high', 'low', 'close', 'amount', 'volume'))
-        df.index = pd.to_datetime(df.date)
+        df.index = pd.to_datetime(df.date, errors='coerce')
         return df[['open', 'high', 'low', 'close', 'amount', 'volume']]
 
     def get_df_by_code(self, code, exchange):
