@@ -23,6 +23,7 @@
 
 ```
 from pytdx.hq import TdxHq_API
+from pytdx.pool.hqpool import TdxHqPool_API
 from pytdx.pool.ippool import AvailableIPPool
 from pytdx.config.hosts import hq_hosts
 import random
