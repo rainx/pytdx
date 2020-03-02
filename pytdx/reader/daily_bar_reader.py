@@ -16,22 +16,22 @@ from pytdx.reader.base_reader import BaseReader
 class TdxDailyBarReader(BaseReader):
 
     def __init__(self, vipdoc_path=None):
-        
+
         self.vipdoc_path = vipdoc_path
 
     def generate_filename(self, code, exchange):
-        
+
         if self.vipdoc_path == None:
             raise TdxNotAssignVipdocPathException(r"Please provide a vipdoc path , such as c:\\newtdx\\vipdoc")
 
         fname = os.path.join(self.vipdoc_path, exchange)
         fname = os.path.join(fname, 'lday')
-        fname = os.path.join(fname, '%s%s.day' % (exchange, code))        
+        fname = os.path.join(fname, '%s%s.day' % (exchange, code))
         return fname
-    
+
     def get_kline_by_code(self, code, exchange):
-        
-        fname = self.generate_filename(code, exchange)        
+
+        fname = self.generate_filename(code, exchange)
         return self.parse_data_by_file(fname)
 
     def parse_data_by_file(self, fname):
@@ -43,19 +43,19 @@ class TdxDailyBarReader(BaseReader):
             content = f.read()
             return self.unpack_records('<IIIIIfII', content)
         return []
-    
+
     def get_df(self, code_or_file, exchange=None):
 
         if exchange == None:
             return self.get_df_by_file(code_or_file)
         else:
             return self.get_df_by_code(code_or_file, exchange)
-        
+
     def get_df_by_file(self, fname):
 
         if not os.path.isfile(fname):
             raise TdxFileNotFoundException('no tdx kline data, pleaes check path %s', fname)
-            
+
         security_type = self.get_security_type(fname)
         if security_type not in self.SECURITY_TYPE:
             print("Unknown security type !\n")
@@ -105,7 +105,9 @@ class TdxDailyBarReader(BaseReader):
             elif code_head in ["10", "11", "12", "13", "14"]:
                 return "SZ_BOND"
         elif exchange == self.SECURITY_EXCHANGE[1]:
-            if code_head in ["60", "68"]:
+
+
+            if code_head in ["60", "68"]: # 688XXX科创板
                 return "SH_A_STOCK"
             elif code_head in ["90"]:
                 return "SH_B_STOCK"
