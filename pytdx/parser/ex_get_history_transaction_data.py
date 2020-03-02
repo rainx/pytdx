@@ -40,6 +40,7 @@ class GetHistoryTransactionData(BaseParser):
             second = direction % 10000
             nature = direction #### 为了老用户接口的兼容性，已经转换为使用 nature_value
             value = direction // 10000
+            nature_name = '换手'
             # 对于大于59秒的值，属于无效数值
             if second > 59:
                 second = 0
