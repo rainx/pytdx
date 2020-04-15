@@ -1,9 +1,0 @@
-
-click
-pandas
-six
-cryptography
-pylint
-pytest
-pypandoc
-gitpython

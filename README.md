@@ -1,78 +1,13 @@
-# Pytdx - Python tdx数据接口
+# pytdx 项目 archive 声明
 
-[![Build Status](https://travis-ci.org/rainx/pytdx.svg?branch=master)](https://travis-ci.org/rainx/pytdx)
+感谢大家对 `pytdx` 项目的关注
 
-文档
----
-用户文档会逐步转移到gitbook上，您可以在
+1. `pytdx` 为个人学习目的开发的项目
+1. 请不要将该项目代码用于任何商业目的。
+1. 早在 `2` 年前(2018年)我加入新的公司之后，该项目一直处于没有维护的状态，目前也没有更多精力维护此项目，项目代码已经老旧过时。
+1. 谢谢大家的关注，希望后续关注我的其他项目（目前专注于前端开发语言 `TypeScript`, `Swift`, `Kotlin`, 和一些系统级开发语言 `Rust`, `Golang`)。
+1. 关于 `Python` 的新版本，新特性，已经很久没有跟进学习了，后续会补上。希望后续与大家更多的交流。
 
-https://rainx.gitbooks.io/pytdx/content/
+经过慎重的考虑，决定在Github上Archive本项目。希望可以得到大家的理解。再次感谢。
 
-阅读使用该api接口的详细文档。
-
-概述
----
-
-Pytdx 是一款纯Python语言开发的类似TradeX的行情数据接口的实现。
-
-特点
----
-* 纯python实现，无须引入动态连接库```.dll/.so```文件
-* 支持```python2.7+```/```3.5+```， 以及全平台```Windows/MacOS/Linux```
-* 可以通过设置参数提供```线程安全```接口调用
-* 实现```心跳包```机制,可以在长时间没有交互的情况下保持不断线
-* (试验）支持多连接构成的连接池机制，和failover处理机制，保证稳定性。
-* 可以自定义的自动重连策略
-* (试验）支持异步行情接口 ，由 @JaysonAlbert 提供实现, 详情查看*async*分支
-
-> pytdx将重点放在底层包的解析，对于更高层的封装，建议参考或者直接使用[`Quantaxis`](https://github.com/yutiansut/QUANTAXIS/blob/master/QUANTAXIS/QAFetch/QATdx.py)的实现.. 
-
-安装
----
-
-```
-pip install pytdx
-```
-
-接口实现
----
-### 标准行情 pytdx.hq
-用于读取标准行情信息
-
-### 扩展行情 pytdx.exhq
-
-用于读取扩展行情（外盘，期权，期货等）
-
-### 数据文件读取 pytdx.reader
-用于读取行情软件导出的k线数据
-
-### 历史专业财务数据的爬取和解析
-
-感谢 @datochan 根据 <https://github.com/rainx/pytdx/issues/133> 方法实现
-
-### 交易相关 (使用TdxTradeServer(wrapper of trade.dll))
-
-https://rainx.gitbooks.io/pytdx/content/pytdx_trade.html
-
-### pytdx.pool (试验性质)
-用于实现备用连接池以及failover支持的行情接口
-
-
-命令行
----
-我们提供了方便命令行调试和导出数据的命令行工具 `hqget` 以及`hqreader` 具体使用方法请参考这里。
-
-缘起
----
-
-因为之前TradeX的接口是使用Python扩展的方式调用C++代码实现的，功能上有诸多的限制，如只支持32位的Python， 不支持MacOS, Linux等，
-无奈我自己使用的电脑是Mac系统, 服务器又是基于Linux的，所以只能自己重新实现一份。
-
-声明
----
-此代码用于个人对网络协议的研究和习作，不对外提供服务，任何人使用本代码遇到问题请自行解决，也可以在github提issue给我，但是我不保证能即时处理。
-由于我们连接的是既有的行情软件兼容行情服务器，机构请不要使用此代码，对此造成的任何问题本人概不负责。
-
-## 其它
-
-欢迎对量化交易感兴趣的朋友互相交流，可以来我们的智矿社区看看 http://zhikuang.org
+Peace & Love
